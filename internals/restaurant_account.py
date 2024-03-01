@@ -1,5 +1,7 @@
 from account import Account, Profile
 from restaurant import Restaurant
+
+
 class RestaurantAccount(Account):
     def __init__(self, account_id: str, password: str, profile: Profile):
         super().__init__(account_id, password, profile)
@@ -17,3 +19,6 @@ class RestaurantAccount(Account):
 
     def assign_restaurant(self, restaurant: Restaurant):
         self.__restaurant_list.append(restaurant)
+
+    def remove_restaurant(self, restaurant):
+        self.__restaurant_list.remove(restaurant)

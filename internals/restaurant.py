@@ -1,5 +1,7 @@
 from restaurant_account import RestaurantAccount
 from food import Food
+
+
 class Restaurant:
     def __init__(self, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
                  finished_order_list, reviewed_list, owner: RestaurantAccount):
