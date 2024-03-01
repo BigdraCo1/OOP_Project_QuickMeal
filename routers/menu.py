@@ -1,12 +1,13 @@
-from ..schema.food import Food
-from fastapi import FastAPI, HTTPException, status
 from databases import database
+from schema import food
+from fastapi import APIRouter, HTTPException, status
 
-app = FastAPI()
+
+app = APIRouter()
 
 
 @app.put("/{restaurant}/{menu}", tags=['Edit'], status_code=status.HTTP_202_ACCEPTED)
-async def edit_menu(restaurant: str, menu: str, request: Food):
+async def edit_menu(restaurant: str, menu: str, request: food.Food):
     return database.system.edit_menu(restaurant, menu, request)
 
 

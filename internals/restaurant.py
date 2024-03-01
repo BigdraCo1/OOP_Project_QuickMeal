@@ -1,10 +1,8 @@
-from restaurant_account import RestaurantAccount
-from food import Food
-
+from internals.food import Food
 
 class Restaurant:
     def __init__(self, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
-                 finished_order_list, reviewed_list, owner: RestaurantAccount):
+                 finished_order_list, reviewed_list, owner):
         self.__owner = owner
         self.__name_restaurant = name_restaurant
         self.__restaurant_location = restaurant_location

@@ -1,4 +1,4 @@
-from restaurant_account import RestaurantAccount
+from internals.restaurant_account import RestaurantAccount
 class Payment():
     def __init__(self, amount: float, payment_method: str, paid_to: RestaurantAccount, date_time: str, transaction_id: str):
         self.__food_list = []

@@ -1,4 +1,4 @@
-from custom_account import CustomerAccount
+from internals.custom_account import CustomerAccount
 class Review:
     def __init__(self, rate: int, comment: str, customer: CustomerAccount, type: str):
         self.__rate = rate

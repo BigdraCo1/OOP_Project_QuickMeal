@@ -1,6 +1,5 @@
 from internals import restaurant
-import food
-import account
+from constants import food, account
 
 restaurant1 = restaurant.Restaurant("La Piazza",
                                     "Rome",

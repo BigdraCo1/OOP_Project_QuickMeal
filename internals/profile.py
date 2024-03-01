@@ -1,4 +1,3 @@
-from order import Order
 class Profile:
     def __init__(self, username: str, telephone_number: str, email, fullname: str, balance: int):
         self.__username = username

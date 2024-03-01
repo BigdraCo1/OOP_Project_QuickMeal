@@ -1,7 +1,7 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from databases import database
 
-app = FastAPI()
+app = APIRouter()
 
 
 @app.get("/restaurant", tags=['search'], status_code=status.HTTP_200_OK)

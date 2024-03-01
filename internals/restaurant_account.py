@@ -1,5 +1,5 @@
-from account import Account, Profile
-from restaurant import Restaurant
+from internals.account import Account, Profile
+
 
 
 class RestaurantAccount(Account):
@@ -17,7 +17,7 @@ class RestaurantAccount(Account):
     def restaurant_list(self):
         return self.__restaurant_list
 
-    def assign_restaurant(self, restaurant: Restaurant):
+    def assign_restaurant(self, restaurant):
         self.__restaurant_list.append(restaurant)
 
     def remove_restaurant(self, restaurant):
