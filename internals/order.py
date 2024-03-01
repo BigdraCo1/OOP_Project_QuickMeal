@@ -1,5 +1,5 @@
 from payment import Payment
-class Order():
+class Order:
     def __init__(self, order_id, customer, rider, customer_address, order_status, payment: Payment):
         self.__order_id = order_id
         self.__customer = customer
