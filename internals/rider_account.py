@@ -1,5 +1,7 @@
 from internals.account import Account, Profile
 from internals.order import Order
+
+
 class RiderAccount(Account):
     def __init__(self, account_id: str, password: str, profile: Profile, recieve_order_list, reviewed_list):
         super().__init__(account_id, password, profile)

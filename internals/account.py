@@ -1,5 +1,6 @@
 from internals.profile import Profile
 
+
 class Account:
     def __init__(self, account_id: str, password: str, profile: Profile):
         self.__account_id = account_id

@@ -3,6 +3,7 @@ from internals.restaurant_account import RestaurantAccount
 from internals.custom_account import CustomerAccount
 from internals.restaurant import Restaurant
 
+
 class Controller:
     def __init__(self, customer_account_list: list[CustomerAccount], rider_account_list: list[RiderAccount],
                  restaurant_list: list[RestaurantAccount]):
