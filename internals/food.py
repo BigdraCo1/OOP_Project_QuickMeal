@@ -1,5 +1,7 @@
 class Food:
     def __init__(self, name: str, type: str, size: dict, price: int):
+        if price < 0:
+            raise ValueError('Price must be positive')
         self.__name = name
         self.__type = type
         self.__size = size

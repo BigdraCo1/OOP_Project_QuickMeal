@@ -1,5 +1,6 @@
 from internals.food import Food
 
+
 class Restaurant:
     def __init__(self, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
                  finished_order_list, reviewed_list, owner):
@@ -65,3 +66,7 @@ class Restaurant:
             return vars(food)
         else:
             return 'This menu is not found'
+
+    def add_menu(self, request):
+        food_list = self.food_list
+        food_list.append(Food(request.name, request.type, request.size, request.price))

@@ -88,3 +88,8 @@ class Controller:
         if isinstance(real_restaurant, str):
             return real_restaurant
         return real_restaurant.remove_food(menu)
+
+    def new_menu(self, restaurant, request):
+        real_restaurant = self.search_restaurant(restaurant)
+        real_restaurant.add_menu(request)
+        return 'Success'
