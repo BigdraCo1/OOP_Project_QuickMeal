@@ -1,4 +1,5 @@
 from internals.profile import Profile
+from internals.restaurant_account import RestaurantAccount
 
 
 class Account:
@@ -38,8 +39,12 @@ class Account:
         self.__profile = profile
         
     def search_order_by_id(self, order_id : str):
+        if isinstance(self, RestaurantAccount):
+            for restaurant in self.restaurant_list:
+                for order in restaurant.get_order_list():
+                    if order.order_id == order_id:
+                        return order
         for order in self.get_order_list():
             if order.order_id == order_id:
-                print(order.order_id)
                 return order
         return "Order not found"
