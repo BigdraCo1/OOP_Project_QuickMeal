@@ -8,6 +8,8 @@ class CustomerAccount(Account):
         super().__init__(account_id, password, profile)
         self.__address_list = []
         self.__reviewed_list = []
+        self.__current_order = None
+        self.__order_list = []
 
     def add_address(self, address: str):
         self.__address_list.append(address)
