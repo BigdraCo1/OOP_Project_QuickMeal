@@ -11,6 +11,14 @@ class CustomerAccount(Account):
         self.__current_order = None
         self.__order_list = []
 
+    @property
+    def current_order(self):
+        return self.__current_order
+    
+    @property
+    def order_list(self):
+        return self.__order_list
+
     def add_address(self, address: str):
         self.__address_list.append(address)
 
