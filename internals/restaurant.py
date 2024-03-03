@@ -2,8 +2,9 @@ from internals.food import Food
 
 
 class Restaurant:
-    def __init__(self, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
+    def __init__(self, id: str, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
                  finished_order_list, reviewed_list, owner):
+        self.__restaurant_id = id
         self.__owner = owner
         self.__name_restaurant = name_restaurant
         self.__restaurant_location = restaurant_location
@@ -11,6 +12,10 @@ class Restaurant:
         self.__requested_order_list = requested_order_list
         self.__finished_order_list = finished_order_list
         self.__reviewed_list = reviewed_list
+
+    @property
+    def restaurant_id(self):
+        return self.__restaurant_id
 
     @property
     def owner(self):

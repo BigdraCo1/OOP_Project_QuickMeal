@@ -93,3 +93,35 @@ class Controller:
         real_restaurant = self.search_restaurant(restaurant)
         return real_restaurant.add_menu(request)
 
+    def search_current_order_by_id(self, search_order_id):
+        for customer in self.__customer_account_list:
+            if customer.current_order.order_id == search_order_id:
+                return customer.current_order
+        
+    def search_customer_by_id(self, search_account_id):
+        for customer in self.__customer_account_list:
+            if customer.account_id == search_account_id:
+                return customer
+            
+    def search_food_by_id(self, search_food_id):
+        for restaurant in self.__restaurant_list:
+            for food in restaurant.food_list :
+                if food.id == search_food_id:
+                    return food
+            
+    def search_restaurant_by_id(self, search_restaurant_id):
+        for restaurant in self.__restaurant_list:
+            if restaurant.restaurant_id == search_restaurant_id:
+                return restaurant   
+                         
+    def search_restaurant_by_food_id(self, search_food_id):
+        for restaurant in self.__restaurant_list:
+            for food in restaurant.food_list:
+                if food.id == search_food_id:
+                    return food
+                
+    def search_order_by_id(self, search_order_id):
+        for customer in self.__customer_account_list:
+            for order in customer.order_list:
+                if order.order_id == search_order_id:
+                    return order
