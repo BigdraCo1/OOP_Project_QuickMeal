@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from databases import database
 
-app = APIRouter(prefix="/search",
-                   tags=["search"], responses={404: {"description": "Not found"}})
+app = APIRouter(prefix="/search", tags=["search"], responses={404: {"description": "Not found"}})
 
 
 @app.get("/restaurant", status_code=status.HTTP_200_OK)
