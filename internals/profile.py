@@ -12,7 +12,7 @@ class Profile:
         return self.__username
 
     @username.setter
-    def username(self, name:str):
+    def username(self, name: str):
         self.__username = name
 
     @property
