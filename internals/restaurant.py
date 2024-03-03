@@ -69,4 +69,6 @@ class Restaurant:
 
     def add_menu(self, request):
         food_list = self.food_list
-        food_list.append(Food(request.name, request.type, request.size, request.price))
+        new_menu = Food(request.name, request.type, request.size, request.price)
+        food_list.append(new_menu)
+        return new_menu

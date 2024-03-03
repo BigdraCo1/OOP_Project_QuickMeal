@@ -91,5 +91,5 @@ class Controller:
 
     def new_menu(self, restaurant, request):
         real_restaurant = self.search_restaurant(restaurant)
-        real_restaurant.add_menu(request)
-        return 'Success'
+        return real_restaurant.add_menu(request)
+
