@@ -1,5 +1,4 @@
 from internals.profile import Profile
-from internals.restaurant_account import RestaurantAccount
 
 class Account:
     def __init__(self, account_id: str, password: str, profile: Profile):

@@ -3,8 +3,14 @@ from schema import food
 from fastapi import APIRouter, HTTPException, status
 
 
-app = APIRouter(prefix="/edit",
-                   tags=["Editing menu"], responses={404: {"description": "Not found"}})
+app = APIRouter(tags=["Editing menu"], responses={404: {"description": "Not found"}})
+
+
+@app.get("/{restaurant}", status_code=status.HTTP_200_OK)
+async def menu_list(restaurant):
+    if isinstance(database.system.get_menu_list(restaurant), str):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=database.system.get_menu_list(restaurant))
+    return database.system.get_menu_list(restaurant)
 
 
 @app.put("/{restaurant}/{menu}", status_code=status.HTTP_202_ACCEPTED)

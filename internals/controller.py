@@ -57,6 +57,12 @@ class Controller:
                 return response
         return 'Not found restaurant'
 
+    def get_menu_list(self, restaurant_name: str):
+        restaurant = self.search_restaurant(restaurant_name)
+        if isinstance(restaurant, str):
+            return restaurant
+        return restaurant.food_list
+
     def search_menu_and_restaurant(self, key: str):
         show_list = []
         restaurant_list = self.restaurant_list
