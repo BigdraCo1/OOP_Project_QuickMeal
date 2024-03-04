@@ -18,4 +18,4 @@ app.include_router(restaurant.app)
 app.include_router(order_detail.app)
 app.include_router(cancel.app)
 
-print("LOL")
+

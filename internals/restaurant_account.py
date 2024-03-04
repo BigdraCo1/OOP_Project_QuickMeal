@@ -3,8 +3,8 @@ from internals.profile import Profile
 
 
 class RestaurantAccount(Account):
-    def __init__(self, account_id: str, password: str, profile = None):
-        super().__init__(account_id, password, profile)
+    def __init__(self, account_id: str, password: str, profile = None, pocket = None):
+        super().__init__(account_id, password, profile, pocket)
         self.__restaurant_list = []
 
     def search_restaurant(self, name):

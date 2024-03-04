@@ -220,7 +220,7 @@ class Controller:
                 for restaurant in order.restaurant_list:
                     self.cancel_restaurant_order(restaurant, order)
             order.change_payment_status("Refunded")
-            customer_account.profile.top_up(order.payment.amount)
+            customer_account.pocket.top_up(order.payment.amount)
             self.change_order_state(order, "Cancelled by Customer")
             return customer_account_id + " " + order_id + " is cancelled. Payment is refunded."
         
@@ -243,8 +243,8 @@ class Controller:
             order.remove_restaurant_from_order(restaurant)
             
         self.change_order_state(order,food_name + " Cancelled : " + string)
-        order.rider.profile.pay_out(food.price)
-        order.customer.profile.top_up(food.price)
+        order.rider.pocket.pay_out(food.price)
+        order.customer.pocket.top_up(food.price)
         order.change_payment_status("Food : " + food_name + " is Refunded")
         return restaurant_account_id + " " + food.name + " in " + order_id + " is refund."
 
@@ -271,8 +271,29 @@ class Controller:
         order_detail["Payment"] = order.payment.payment_status
         return order_detail
     
+    def show_pocket_detail(self, account_id: str):
+        account = self.search_account_from_id(account_id)
+        pocket = account.pocket
+        pocket_detail = dict()
+        pocket_detail["Account_ID"] = account_id
+        pocket_detail["Balance"] = pocket.balance
+        return pocket_detail
+    
+    def show_payment_detail(self, account_id: str):
+        account = self.search_account_from_id(account_id)
+        payment_dict = dict()
+        if isinstance(account, RestaurantAccount):
+            for restaurant in account.restaurant_list:
+                for order in restaurant.get_order_list():
+                    payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
+        else : 
+            for order in account.get_order_list():
+                payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
+                
+        return payment_dict
+    
     def cancel_rider_order(self, rider_account: RiderAccount, order: Order):
         return "Order cancelled from rider"
     def cancel_restaurant_order(self, restaurant_account: RestaurantAccount, order: Order):
-        order.rider.profile.pay_out(order.payment.amount)
+        order.rider.pocket.pay_out(order.payment.amount)
         return "Order cancelled from restaurant"
