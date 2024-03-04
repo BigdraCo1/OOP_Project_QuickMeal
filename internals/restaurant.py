@@ -1,9 +1,9 @@
 from internals.food import Food
-
+from internals.review import Review
 
 class Restaurant:
     def __init__(self,id: str, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
-                 finished_order_list, reviewed_list, owner):
+                 finished_order_list, reviewed_list: list[Review], owner):
         self.__restaurant_id = id
         self.__owner = owner
         self.__name_restaurant = name_restaurant
@@ -12,6 +12,14 @@ class Restaurant:
         self.__requested_order_list = requested_order_list
         self.__finished_order_list = finished_order_list
         self.__reviewed_list = reviewed_list
+        rate = sum([review.rate for review in self.__reviewed_list]) / len(self.__reviewed_list)
+        self.__rate = rate
+
+    @property
+    def rate(self):
+        self.__rate = sum([review.rate for review in self.__reviewed_list])/len(self.__reviewed_list)
+        return self.__rate
+
 
     @property
     def restaurant_id(self):

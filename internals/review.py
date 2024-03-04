@@ -7,3 +7,7 @@ class Review:
         self.__comment = comment
         self.__customer = customer
         self.__type = type
+
+    @property
+    def rate(self):
+        return self.__rate
