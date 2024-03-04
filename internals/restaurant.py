@@ -1,8 +1,8 @@
 import internals.food as Food
 
 class Restaurant :
-    def __init__(self,restaurant_id: str,owner ,restaurant_name: str, restaurant_location: str, food_list: list = [] ,requested_order_list: list = None,
-                 current_order_list: list = [], finished_order_list: list = [], reviewed_list = []):
+    def __init__(self,restaurant_id: str, restaurant_name: str, restaurant_location: str, food_list: list = [] ,requested_order_list: list = None,
+                 current_order_list: list = [], finished_order_list: list = [], reviewed_list = [], owner = None):
         self.__restaurant_id = id
         self.__owner = owner
         self.__restaurant_name = restaurant_name

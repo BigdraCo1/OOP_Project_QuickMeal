@@ -1,7 +1,8 @@
 from databases import database
-from fastapi import FastAPI
+from fastapi import APIRouter, HTTPException, status
 
-app = FastAPI()
+
+app = APIRouter()
 
 @app.get("/get_order_state", tags = ["Orders"])
 async def get_order_state(account_id: str) -> dict:

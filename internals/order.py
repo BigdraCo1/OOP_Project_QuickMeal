@@ -1,5 +1,5 @@
 from internals.food import Food
-from internals.restaurant_account import RestaurantAccount
+from internals.restaurant import Restaurant
 
 class Order:
     def __init__(self,order_id = None, customer = None,customer_address = None, rider = None, restaurant_list = [], food_list = [], order_state = None, payment = None) :
@@ -51,7 +51,7 @@ class Order:
     #method
     def change_payment_status(self, status: str):
         self.__payment.payment_status = status
-    def remove_restaurant_from_order(self, restaurant: RestaurantAccount):
+    def remove_restaurant_from_order(self, restaurant: Restaurant):
         self.__restaurant_list.remove(restaurant)
     def remove_food_from_order(self, food: Food):
         self.__food_list.remove(food)

@@ -15,6 +15,16 @@ maccu_lano = food.Food('3',"maccu",
                        {"Grande":40, "Large":35,"Small":0},
                        54)
 
+fried_chicken = food.Food('4',"Fried Chicken",
+                          "Food",
+                          {"Large":20,"Medium":15,"Small":0},
+                          30)
+
+grilled_chicken = food.Food('5',"Grilled Chicken",
+                            "Food",
+                            {"Large":20,"Medium":15,"Small":0},
+                            30)
+
 italian_dishes1 = [
     Fondue_lal, Capuliato_pop, maccu_lano
 ]
@@ -26,4 +36,7 @@ italian_dishes3 = [
 ]
 italian_dishes4 = [
     Fondue_lal, maccu_lano
+]
+kfc_dishes = [
+    fried_chicken, grilled_chicken
 ]

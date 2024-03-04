@@ -1,4 +1,5 @@
-from internals.account import Account, Profile
+from internals.account import Account
+from internals.profile import Profile
 
 
 class CustomerAccount(Account) :
@@ -16,7 +17,7 @@ class CustomerAccount(Account) :
     #setter
     @current_order.setter
     def current_order(self, order):
-        self.__current_order = order
+        self.__current_order.append(order)
 
     #method
     def get_order_list(self):

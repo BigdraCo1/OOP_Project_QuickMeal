@@ -1,8 +1,9 @@
-from internals.account import Account, Profile
+from internals.account import Account
+from internals.profile import Profile
 
 
 class RestaurantAccount(Account):
-    def __init__(self, account_id: str, password: str, profile: Profile):
+    def __init__(self, account_id: str, password: str, profile = None):
         super().__init__(account_id, password, profile)
         self.__restaurant_list = []
 

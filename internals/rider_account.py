@@ -1,4 +1,5 @@
-from internals.account import Account, Profile
+from internals.account import Account
+from internals.profile import Profile
 from internals.order import Order
 
 

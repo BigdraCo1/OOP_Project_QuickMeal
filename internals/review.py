@@ -1,4 +1,4 @@
-from internals.custom_account import CustomerAccount
+from internals.customer_account import CustomerAccount
 
 
 class Review:
