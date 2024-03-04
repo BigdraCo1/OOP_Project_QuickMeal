@@ -1,14 +1,18 @@
+from internals.account import Account
 from internals.rider_account import RiderAccount
 from internals.restaurant_account import RestaurantAccount
 from internals.custom_account import CustomerAccount
 from internals.restaurant import Restaurant
+from internals.order import Order
+from internals.food import Food
 
 
 class Controller :
-    def __init__(self):
-        self.__customer_account_list = []
-        self.__rider_account_list = []
-        self.__restaurant_list = []
+    def __init__(self, customer_account_list: list[CustomerAccount], rider_account_list: list[RiderAccount],
+                 restaurant_list: list[RestaurantAccount]):
+        self.__customer_account_list = customer_account_list
+        self.__rider_account_list = rider_account_list
+        self.__restaurant_list = restaurant_list
         self.__approval_list = []
 
     @property
