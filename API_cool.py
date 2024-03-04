@@ -1,21 +1,10 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
+import requests
+import json
 
 app = FastAPI()
-
-from constants import account, restaurant
-from internals import controller
-
-system = controller.Controller([],
-                               [],
-                               [])
-
-system.add_restaurant(account.restaurant_owner_account1)
-system.add_restaurant(account.restaurant_owner_account2)
-account.restaurant_owner_account1.assign_restaurant(restaurant.restaurant1)
-account.restaurant_owner_account1.assign_restaurant(restaurant.restaurant2)
-account.restaurant_owner_account2.assign_restaurant(restaurant.restaurant3)
 class ClassController:
     def __init__(self):
         self.__customer_account_list = []
@@ -354,3 +343,14 @@ customer1.order_list.append(order1)
 
 if __name__ == "__main__":
     uvicorn.run("API_cool:app", host="127.0.0.1", port=8000, log_level="info")
+
+data1 = {
+  "customer_id": "101",
+  "rating": 4,
+  "comment": "อาหารอร่อยมาก",
+  "order_id": "1",
+  "restaurant_id": "201"
+}
+r = requests.post("http://127.0.0.1:8000/restaurant", data=json.dumps(data1))
+print(r)
+print(r.json())
