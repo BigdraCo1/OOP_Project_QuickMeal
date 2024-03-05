@@ -1,15 +1,15 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+import base
 import uvicorn
 import requests
 import json
 
 app = FastAPI()
+
 class ClassController:
     def __init__(self):
         self.__customer_account_list = []
         self.__restaurant_account_list = []
-        self.__cc_food_list = []
     
     @property
     def customer_account_list(self):
@@ -27,14 +27,6 @@ class ClassController:
     def restaurant_account_list(self, new):
         self.__restaurant_account_list = new
 
-    @property
-    def cc_food_list(self):
-        return self.__cc_food_list
-    
-    @cc_food_list.setter
-    def cc_food_list(self, new):
-        self.__cc_food_list = new
-
     def search_current_order_by_id(self, search_order_id):
         for customer in self.__customer_account_list:
             if customer.current_order.order_id == search_order_id:
@@ -44,17 +36,20 @@ class ClassController:
         for customer in self.__customer_account_list:
             if customer.account_id == search_account_id:
                 return customer
+        return "Not Found"
             
     def search_food_by_id(self, search_food_id):
         for restaurant in self.__restaurant_account_list:
             for food in restaurant.restaurant_food_list :
                 if food.food_id == search_food_id:
                     return food
+        return "Not Found"
             
     def search_restaurant_by_id(self, search_restaurant_id):
         for restaurant in self.__restaurant_account_list:
             if restaurant.account_id == search_restaurant_id:
-                return restaurant   
+                return restaurant  
+        return "Not Found"
                          
     def search_restaurant_by_food_id(self, search_food_id):
         for restaurant in self.__restaurant_account_list:
@@ -79,7 +74,12 @@ class ClassController:
     def add_food_to_cart(self, account_id, food_id):
         customer = self.search_customer_by_id(account_id)
         food = self.search_food_by_id(food_id)
+        restaurant = self.search_restaurant_by_food_id(food_id)
+        if customer == "Not Found" or food == "Not Found" or restaurant == "Not Found" : 
+            return "fail to add food to your card"
         customer.add_food(food)
+        if restaurant not in customer.current_order.restaurant_list:
+            customer.current_order.restaurant_list.append(restaurant)
         return str(food.food_name) + " is added to your cart!"
     
     def remove_food_from_cart(self, account_id, food_id):
@@ -118,6 +118,27 @@ class ClassController:
                 customer.review_list.remove(review)
                 del review
         return "you have remove a review from " + str(restaurant.name)
+    
+    def show_restaurant(self):
+        return [restaurant.name for restaurant in self.__restaurant_account_list]
+    
+    def show_restaurant_menu(self, restaurant_name):
+        for restaurant in self.__restaurant_account_list:
+            if restaurant.name == restaurant_name:
+                return [food.food_name for food in restaurant.restaurant_food_list]
+            
+    def search_food_r_f_name(self, restaurant_name, food_name):
+        for restaurant in self.__restaurant_account_list:
+            if restaurant.name == restaurant_name:
+                for food in restaurant.restaurant_food_list:
+                    if food.food_name == food_name: return food
+
+    def show_food_detail(self, restaurant_name, food_name):
+        food = self.search_food_r_f_name(restaurant_name, food_name)
+        return {"restaurant_name" : restaurant_name,
+                "food_name" : food_name,
+                "food_price" : food.food_price,
+                "food_id" : food.food_id}
 
 class Account :
     def __init__(self, account_id):
@@ -142,6 +163,10 @@ class Customer(Account) :
     @property
     def current_order(self):
         return self.__current_order
+    
+    @current_order.setter
+    def current_order(self, new):
+        self.__current_order = new
     
     @property
     def review_list(self):
@@ -255,6 +280,10 @@ class Food :
     def food_id(self):
         return self.__food_id
     
+    @property
+    def food_price(self):
+        return self.__food_price
+    
 class Review :
     def __init__(self, owner, rate, comment, order):
         self.__owner = owner
@@ -273,84 +302,67 @@ class Review :
     def comment(self):
         return self.__comment
 
-class add_food_api(BaseModel):
-    account_id: str
-    food_id: str
+system = ClassController()  
+def create_instance():
+    customer1 = Customer('101', 'Ken')
+    restaurant1 = Restaurant('201', 'Thai Restaurant')
+    restaurant2 = Restaurant('202', 'Japanese Restaurant')
+    restaurant3 = Restaurant('203', 'Italian Restaurant')
+    food1 = Food('001', 'ข้าวมันไก่', 60)
+    food2 = Food('002', 'ไก่ทอด', 40)
+    food3 = Food('003', 'อาหารญี่ปุ่น', 80)
+    food4 = Food('004', 'ขนมหวาน', 55)
 
-class add_review_api(BaseModel):
-    customer_id: str 
-    rating: int 
-    comment: str
-    order_id: str 
-    restaurant_id: str
+    system.customer_account_list.append(customer1)
+    system.restaurant_account_list.append(restaurant1)
+    system.restaurant_account_list.append(restaurant2)
+    system.restaurant_account_list.append(restaurant3)
+    restaurant1.add_food(food1)
+    restaurant1.add_food(food2)
+    restaurant2.add_food(food3)
+    restaurant3.add_food(food4)
+    order1 = Order(customer1, [restaurant1], [food1, food2])
+    customer1.order_list.append(order1)
 
-class remove_review_api(BaseModel):
-    customer_id: str 
-    restaurant_id: str
+create_instance()
 
-controller = ClassController()  
-customer1 = Customer('101', 'Ken')
-restaurant1 = Restaurant('201', 'ร้านอาหาร 1')
-food1 = Food('001', 'ข้าวมันไก่', 60)
-food2 = Food('002', 'ไก่ทอด', 40)
+@app.get("/show/restaurant", tags=["Show"])
+async def show_restaurant() -> list:
+    return system.show_restaurant()
 
-controller.customer_account_list.append(customer1)
-controller.restaurant_account_list.append(restaurant1)
-controller.cc_food_list.append(food1)
-controller.cc_food_list.append(food2)
-restaurant1.add_food(food1)
-restaurant1.add_food(food2)
+@app.post("/show/menu", tags=["Show"])
+async def restaurant_menu(body: base.restaurant_name) -> list:
+    return system.show_restaurant_menu(body.restaurant_name)
 
-#Cart
-# GET -- > Read Current Order
-@app.get("/cart", tags=['Cart'])
-async def get_order(account_id: str) -> list:
-    return controller.show_cart(account_id)
+@app.get("/show/food_detail", tags=["Show"])
+async def food_detail(data: dict) -> dict:
+    return system.show_food_detail(data["restaurant_name"], data["food_name"])
 
-# Post -- > Add Food To Current Order
+@app.post("/show/food_detail", tags=["Cart"])
+async def add_food(data: dict) -> str:
+    return system.add_food_to_cart(data["account_id"], data["food_id"])
+
 @app.post("/cart", tags=["Cart"])
-async def add_food(body: add_food_api) -> str:
-    return controller.add_food_to_cart(body.account_id, body.food_id)
+async def get_order(data: dict) -> list:
+    return system.show_cart(data["account_id"])
 
-# DELETE --> Remove Food From Current Order
 @app.delete("/cart", tags=["Cart"])
-async def remove_food(body: add_food_api) -> str:
-    return controller.remove_food_from_cart(body.account_id, body.food_id)
+async def remove_food(body: base.add_food_api) -> str:
+    return system.remove_food_from_cart(body.account_id, body.food_id)
 
-order1 = Order(customer1, [restaurant1], [food1, food2])
-customer1.order_list.append(order1)
-
-#Review
-# GET -- > Read Review of Restaurant
 @app.get("/restaurant", tags=['Review'])
 async def get_restaurant_review(restaurant_id: str) -> list:
-    return controller.show_review(restaurant_id)
+    return system.show_review(restaurant_id)
 
-# Post -- > Add Review To Restaurant
 @app.post("/restaurant", tags=["Review"])
-async def add_restaurant_review(body: add_review_api) -> str:
-    return controller.add_review_to_restaurant(
+async def add_restaurant_review(body: base.add_review_api) -> str:
+    return system.add_review_to_restaurant(
         body.customer_id, body.rating, body.comment, 
         body.order_id, body.restaurant_id)
 
-# DELETE --> Remove Review From Restaurant
 @app.delete("/restaurant", tags=["Review"])
-async def remove_restaurant_review(body: remove_review_api) -> str:
-    return controller.remove_review_from_restaurant(body.customer_id, body.restaurant_id)
-
-order1 = Order(customer1, [restaurant1], [food1, food2])
-customer1.order_list.append(order1)
+async def remove_restaurant_review(body: base.remove_review_api) -> str:
+    return system.remove_review_from_restaurant(body.customer_id, body.restaurant_id)
 
 if __name__ == "__main__":
-    uvicorn.run("API_cool:app", host="127.0.0.1", port=8000, log_level="info")
-
-data1 = {
-  "customer_id": "101",
-  "rating": 4,
-  "comment": "อาหารอร่อยมาก",
-  "order_id": "1",
-  "restaurant_id": "201"
-}
-r = requests.post("http://127.0.0.1:8000/restaurant", data=json.dumps(data1))
-print(r)
-print(r.json())
+    uvicorn.run("my_meeting_with_api:app", host="127.0.0.1", port=8000, log_level="info")
