@@ -149,6 +149,12 @@ class Controller:
                 if order.order_id == search_order_id:
                     return order
                 
+    def search_rider_order_by_id(self, search_order_id):
+        for rider in self.__rider_account_list:
+            for order in rider.recieve_order_list:
+                if order.order_id == search_order_id:
+                    return order
+                
     def search_restaurant_order_by_id(self, search_order_id):
         for restaurant_acc in self.__restaurant_account_list:
             for restaurant in restaurant_acc.restaurant_list:
@@ -179,31 +185,6 @@ class Controller:
     def change_order_state(self, order: Order, order_state: str):
         order.order_state = order_state
         return "Order state changed"
-            
-    def get_account_order_state(self, account_id: str):
-        account = self.search_account_from_id(account_id)
-        order_dict = dict()
-        if isinstance(account, RestaurantAccount):
-            for restaurant in account.restaurant_list:
-                for order in restaurant.get_order_list():
-                    order_dict[order.order_id] = order.order_state
-        else :
-            for order in account.get_order_list():
-                order_dict[order.order_id] = order.order_state
-        return order_dict
-            
-    def get_account_payment_status(self, account_id: str):
-        payment_dict = dict()
-        account = self.search_account_from_id(account_id)
-        if isinstance(account, RestaurantAccount):
-            for restaurant in account.restaurant_list:
-                for order in restaurant.get_order_list():
-                    payment_dict[order.payment.transaction_id] = order.payment.payment_status
-        else : 
-            for order in account.get_order_list():
-                payment_dict[order.payment.transaction_id] = order.payment.payment_status
-        
-        return payment_dict
             
     def customer_cancel_order(self, customer_account_id: str, order_id : str):
         customer_account = self.search_account_from_id(customer_account_id)
@@ -247,6 +228,18 @@ class Controller:
         order.customer.pocket.top_up(food.price)
         order.change_payment_status("Food : " + food_name + " is Refunded")
         return restaurant_account_id + " " + food.name + " in " + order_id + " is refund."
+    
+    def rider_cancel_order(self, rider_account_id: str, order_id: str):
+        rider_account = self.search_account_from_id(rider_account_id)
+        order = self.search_rider_order_by_id(order_id)
+        order_state = order.order_state
+        if order_state == "Delivering":
+            return "Cant cancel order, rider is delivering"
+        else :
+            self.change_order_state(order, "Cancelled by Rider")
+            order.change_payment_status("Refunded")
+            rider_account.pocket.pay_out(order.payment.amount)
+            return rider_account_id + " " + order_id + " is cancelled. Payment is refunded."
 
     def show_order_detail(self, order_id: str, account_id: str):
         if self.search_customer_order_by_id(order_id) != None:

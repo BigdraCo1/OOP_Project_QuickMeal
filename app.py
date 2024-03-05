@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import menu, search, restaurant, order_detail, cancel
+import uvicorn
 app = FastAPI()
 
 app.add_middleware(
@@ -18,4 +19,6 @@ app.include_router(restaurant.app)
 app.include_router(order_detail.app)
 app.include_router(cancel.app)
 
+if __name__ == "__main__":
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, log_level="info")
 
