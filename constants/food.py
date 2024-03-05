@@ -1,16 +1,16 @@
-from internals import food
+from internals.food import Food
 
-Fondue_lal = food.Food('1',"Fondue",
+Fondue_lal = Food('1',"Fondue",
                        "Food",
                        {"Big":10,"Small": 0},
                        20)
 
-Capuliato_pop = food.Food('2',"Capuliato",
+Capuliato_pop = Food('2',"Capuliato",
                           "Drinks",
                           {"Large":20,"Medium":15,"Small":0},
                           35)
 
-maccu_lano = food.Food('3',"maccu",
+maccu_lano = Food('3',"maccu",
                        "Drinks",
                        {"Grande":40, "Large":35,"Small":0},
                        54)

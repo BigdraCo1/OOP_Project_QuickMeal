@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import menu, search, restaurant
+from routers import menu, search, restaurants
 
 app = FastAPI()
 
@@ -15,4 +15,4 @@ app.add_middleware(
 
 app.include_router(menu.app)
 app.include_router(search.app)
-app.include_router(restaurant.app)
+app.include_router(restaurants.app)

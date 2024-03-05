@@ -1,12 +1,12 @@
-from internals import restaurant_account
-from constants import profiles
+from internals.restaurant_account import RestaurantAccount
+from constants.profiles import *
 
-restaurant_owner_account1 = restaurant_account.RestaurantAccount("Brunos",
+restaurant_owner_account1 = RestaurantAccount("Brunos",
                                                                  "5756456646",
-                                                                 profiles.restaurant_owner_profile1)
+                                                                 restaurant_owner_profile1)
 
 
-restaurant_owner_account2 = restaurant_account.RestaurantAccount("Bruno mars",
+restaurant_owner_account2 = RestaurantAccount("Bruno mars",
                                                                  "5756456646",
-                                                                 profiles.restaurant_owner_profile2)
+                                                                 restaurant_owner_profile2)
 
