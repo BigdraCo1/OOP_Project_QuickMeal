@@ -5,6 +5,9 @@ from internals.custom_account import CustomerAccount
 from internals.rider_account import RiderAccount
 from internals.restaurant_account import RestaurantAccount
 from internals.restaurant import Restaurant
+from internals.review import Review
+
+
 
 class Controller:
     def __init__(self, customer_account_list: list[CustomerAccount], rider_account_list: list[RiderAccount],
@@ -32,20 +35,20 @@ class Controller:
     def add_rider_account(self, new_rider: RiderAccount):
         self.__rider_account_list.append(new_rider)
 
-    def add_restaurant(self, new_restaurant: RestaurantAccount):
+    def add_restaurant_account(self, new_restaurant: RestaurantAccount):
         self.__restaurant_account_list.append(new_restaurant)
 
-    def remove_customer_account(self, customer: CustomerAccount):
-        self.__customer_account_list.remove(customer)
-        del customer
+    def remove_customer_account(self, customer_account: CustomerAccount):
+        self.__customer_account_list.remove(customer_account)
+        del customer_account
         
-    def remove_rider_account(self, rider: RiderAccount):
-        self.__rider_account_list.remove(rider)
-        del rider
+    def remove_rider_account(self, rider_account: RiderAccount):
+        self.__rider_account_list.remove(rider_account)
+        del rider_account
         
-    def remove_restaurant_account(self, restaurant: RestaurantAccount):
-        self.__restaurant_account_list.remove(restaurant)
-        del restaurant
+    def remove_restaurant_account(self, restaurant_account: RestaurantAccount):
+        self.__restaurant_account_list.remove(restaurant_account)
+        del restaurant_account
 
     def remove_restaurant(self, restaurant_name: str):
         restaurant = self.search_restaurant(restaurant_name)
@@ -166,3 +169,102 @@ class Controller:
             for order in customer.order_list:
                 if order.order_id == search_order_id:
                     return order
+                
+    def show_restaurant(self):
+        restaurant_dict = {}
+        for restaurant_account in self.__restaurant_account_list:
+            for restaurant in restaurant_account.restaurant_list:
+                restaurant_dict[restaurant.restaurant_id] = [
+                    restaurant.name_restaurant, restaurant.restaurant_location, restaurant.rate ]
+        return restaurant_dict
+    
+    def show_restaurant_menu(self, restaurant_id):
+        food_dict = {}
+        restaurant = self.search_restaurant_by_id(restaurant_id)
+        for food in restaurant.food_list:
+                food_dict[food.id] = [ food.name, food.price ]
+        return food_dict
+        
+    def show_basket(self, customer_id):
+        customer = self.search_customer_by_id(customer_id)
+        order = customer.current_order
+        order_dict = {}
+        already_add = []
+        if order != None :
+            for food in order.food_list:
+                if food not in already_add:
+                    amount = len([f for f in order.food_list if f.name == food.name])
+                    order_dict[amount] = [ food.id, food.name, food.price, food.current_size ]
+                    already_add.append(food)
+        return order_dict
+    
+    def add_address_to_basket(self, customer_id, address):
+        customer = self.search_customer_by_id(customer_id)
+        order = customer.current_order
+        order.customer_address = address
+        return "the address of your order has been set!"
+    
+    def show_food_detail(self, food_id):
+        food = self.search_food_by_id(food_id)
+        return {"food_id"    : food.id,
+                "food_name"  : food.name,
+                "food_type"  : food.type,
+                "food_size"  : food.size,
+                "food_price" : food.price}
+    
+    def add_food_to_basket(self, customer_id, food_id, size, amount):
+        customer = self.search_customer_by_id(customer_id)
+        food = self.search_food_by_id(food_id)
+        restaurant = self.search_restaurant_by_food_id(food_id)
+        customer.add_food(food, size, amount)
+        if restaurant not in customer.current_order.restaurant_list:
+            customer.current_order.restaurant_list.append(restaurant)
+        return str(amount) + str(food.food_name) + " is added to your cart!"
+
+    def change_amount(self, customer_id, food_id, amount, new_amount, size):
+        customer = self.search_customer_by_id(customer_id)
+        food = self.search_food_by_id(food_id)
+        restaurant = self.search_restaurant_by_food_id(food_id)
+        customer.remove_food(food_id, size, amount)
+        customer.add_food(food, size, new_amount)
+        if restaurant not in customer.current_order.restaurant_list:
+            customer.current_order.restaurant_list.append(restaurant)
+        return str(food.food_name) + " is now" + str(new_amount)
+
+    def change_size(self, customer_id, food_id, size, new_size):
+        customer = self.search_customer_by_id(customer_id)
+        order = customer.current_order
+        food = self.search_food_by_id(food_id)
+        for customer_food in order.food_list:
+            if customer_food.id == food.id and customer_food.current_size == size:
+                customer_food.current_size = new_size
+        return str(food.food_name) + " is now" + str(new_size)
+    
+    def show_review(self, restaurant_id):
+        restaurant = self.search_restaurant_by_id(restaurant_id)
+        if restaurant.review_list == [] :
+            return {}
+        else:
+            dct = {}
+            for review in restaurant.review_list:
+                dct[review.customer.profile.fullname] =  [review.rate, review.comment]
+        return dct
+    
+    def add_review_to_restaurant(self, customer_id, rating, comment, restaurant_id):
+        customer = self.search_customer_by_id(customer_id)
+        restaurant = self.search_restaurant_by_id(restaurant_id)
+        review = Review(rating, comment, customer, "TYPE")
+        customer.reviewed_list.append(review)
+        restaurant.reviewed_list.append(review)
+        return "you have writing a review to " + str(restaurant.name_restaurant)
+    
+    def remove_review_from_restaurant(self, customer_id, restaurant_id):
+        customer = self.search_customer_by_id(customer_id)
+        restaurant = self.search_restaurant_by_id(restaurant_id)
+        for review in restaurant.review_list:
+            if review.customer == customer:
+                restaurant.review_list.remove(review)
+                customer.review_list.remove(review)
+                del review
+        return "you have remove a review from " + str(restaurant.name)
+    
