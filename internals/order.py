@@ -3,9 +3,11 @@ from internals.restaurant_account import RestaurantAccount
 
 
 class Order:
-    def __init__(self, order_id=None, customer=None, customer_address=None, rider=None, restaurant_list=[],
+    ID = 1
+    def __init__(self, customer=None, customer_address=None, rider=None, restaurant_list=[],
                  food_list=[], order_state=None, payment=None):
-        self.__order_id = order_id
+        self.__order_id = str(Order.ID)
+        Order.ID += 1
         self.__customer = customer
         self.__customer_address = customer_address
         self.__rider = rider
