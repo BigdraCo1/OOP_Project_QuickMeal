@@ -51,6 +51,10 @@ class Order:
     @order_state.setter
     def order_state(self, new_order_state: str):
         self.__order_state = new_order_state
+        
+    @payment.setter
+    def payment(self, new_payment):
+        self.__payment = new_payment
 
     # method
     def change_payment_status(self, status: str):
