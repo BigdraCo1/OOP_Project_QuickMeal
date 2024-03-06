@@ -3,6 +3,7 @@ from internals.rider_account import RiderAccount
 from internals.restaurant_account import RestaurantAccount
 from internals.restaurant import Restaurant
 
+
 class Controller:
     def __init__(self, customer_account_list: list[CustomerAccount], rider_account_list: list[RiderAccount],
                 restaurant_account_list: list[RestaurantAccount]):
@@ -22,10 +23,6 @@ class Controller:
     @property
     def restaurant_account_list(self):
         return self.__restaurant_account_list
-    
-    @property
-    def restaurant_list(self):
-        return self.__restaurant_list
 
     def add_customer_account(self, new_customer: CustomerAccount):
         self.__customer_account_list.append(new_customer)
@@ -33,27 +30,20 @@ class Controller:
     def add_rider_account(self, new_rider: RiderAccount):
         self.__rider_account_list.append(new_rider)
 
-    def add_restaurant(self, new_restaurant: RestaurantAccount):
+    def add_restaurant_account(self, new_restaurant: RestaurantAccount):
         self.__restaurant_account_list.append(new_restaurant)
-        
-    def add_restaurant_list(self, new_restaurant: Restaurant):
-        self.__restaurant_list.append(new_restaurant)
 
-    def remove_customer_account(self, customer: CustomerAccount):
-        self.__customer_account_list.remove(customer)
-        del customer
+    def remove_customer_account(self, customer_account: CustomerAccount):
+        self.__customer_account_list.remove(customer_account)
+        del customer_account
         
-    def remove_rider_account(self, rider: RiderAccount):
-        self.__rider_account_list.remove(rider)
-        del rider
+    def remove_rider_account(self, rider_account: RiderAccount):
+        self.__rider_account_list.remove(rider_account)
+        del rider_account
         
-    def remove_restaurant_account(self, restaurant: RestaurantAccount):
-        self.__restaurant_account_list.remove(restaurant)
-        del restaurant
-        
-    def remove_restaurant_list(self, restaurant: Restaurant):
-        self.__restaurant_list.remove(restaurant)
-        del restaurant
+    def remove_restaurant_account(self, restaurant_account: RestaurantAccount):
+        self.__restaurant_account_list.remove(restaurant_account)
+        del restaurant_account
 
     def remove_restaurant(self, restaurant_name: str):
         restaurant = self.search_restaurant(restaurant_name)
