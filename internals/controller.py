@@ -1,4 +1,4 @@
-import datetime from datetime
+from datetime import datetime
 from internals.payment import Payment
 
 from internals.custom_account import CustomerAccount
@@ -25,10 +25,6 @@ class Controller:
     @property
     def restaurant_account_list(self):
         return self.__restaurant_account_list
-    
-    @property
-    def restaurant_list(self):
-        return self.__restaurant_list
 
     def add_customer_account(self, new_customer: CustomerAccount):
         self.__customer_account_list.append(new_customer)
@@ -38,9 +34,6 @@ class Controller:
 
     def add_restaurant(self, new_restaurant: RestaurantAccount):
         self.__restaurant_account_list.append(new_restaurant)
-        
-    def add_restaurant_list(self, new_restaurant: Restaurant):
-        self.__restaurant_list.append(new_restaurant)
 
     def remove_customer_account(self, customer: CustomerAccount):
         self.__customer_account_list.remove(customer)
@@ -52,10 +45,6 @@ class Controller:
         
     def remove_restaurant_account(self, restaurant: RestaurantAccount):
         self.__restaurant_account_list.remove(restaurant)
-        del restaurant
-        
-    def remove_restaurant_list(self, restaurant: Restaurant):
-        self.__restaurant_list.remove(restaurant)
         del restaurant
 
     def remove_restaurant(self, restaurant_name: str):
