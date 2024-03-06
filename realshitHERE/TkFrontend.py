@@ -10,10 +10,22 @@ API_ENDPOINT2 = "http://127.0.0.1:8000/show/menu"
 API_ENDPOINT3= "http://127.0.0.1:8000/show/food_detail"
 API_ENDPOINT4= "http://127.0.0.1:8000/cart"
 
+def login(user_id, user_password):
+    print("click")
+
+
 def show_home():
     clear_menu()
-    show_btn = ttk.Button(frame, text="Show Available Restaurants", command=show_restaurants, bootstyle="SUCCESS")
-    show_btn.grid(row=0, column=0, padx=10, pady=5)
+
+    login_id = ttk.Entry(frame, bootstyle="SUCCESS")
+    login_id.grid(row=1, column=1, padx=10, pady=5, sticky="news")
+
+    login_pass = ttk.Entry(frame, bootstyle="SUCCESS")
+    login_pass.grid(row=2, column=1, padx=10, pady=5, sticky="news")
+
+    login_show_btn = ttk.Button(frame, text="Login", 
+        command= login, bootstyle="SUCCESS")
+    login_show_btn.grid(row=3, column=1, padx=10, pady=5)
 
 def show_cart():
     pass
@@ -58,11 +70,11 @@ def show_food_detail(food, restaurant):
     price_label = ttk.Label(frame, text=food_detail["food_price"])
     price_label.grid(row=2, column=1, padx=10, pady=5, sticky="news")
 
-    add_btn = ttk.Button(frame, text="Add", command=lambda f=food_detail["food_id"]: add_to_cart(str(entry.get()), f), bootstyle="SUCCESS")
+    add_btn = ttk.Button(frame, text="Add", command=lambda f=food_detail["food_id"]: add_to_cart(str(temp_entry.get()), f), bootstyle="SUCCESS")
     add_btn.grid(row=3, column=0, padx=10, pady=5, sticky="news")
 
-    entry = ttk.Entry(frame, bootstyle="SUCCESS")
-    entry.grid(row=3, column=1, padx=10, pady=5, sticky="news")
+    temp_entry = ttk.Entry(frame, bootstyle="SUCCESS")
+    temp_entry.grid(row=3, column=1, padx=10, pady=5, sticky="news")
 
     go_back_btn = ttk.Button(frame, text="Go Back", command=lambda r=restaurant: show_menu(r), bootstyle="SUCCESS")
     go_back_btn.grid(row=3, column=2, padx=10, pady=5, sticky="news")
@@ -101,8 +113,12 @@ root = ttk.Window(themename='journal')
 root.title("QuickMeal") 
 root.geometry("500x500")
 
+title_label = ttk.Label(root, text="QuickMeal", bootstyle="PRIMARY", font=('TkDefaultFont', 20))
+title_label.pack(pady=20, anchor='center')
+
 frame = ttk.Frame(root)
-frame.pack(padx=10, pady=10, expand=True)
+frame.pack(padx=10, expand=False)
+
 
 show_home()
 

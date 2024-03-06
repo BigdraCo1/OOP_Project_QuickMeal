@@ -1,11 +1,3 @@
-from fastapi import FastAPI
-import base
-import uvicorn
-import requests
-import json
-
-app = FastAPI()
-
 class ClassController:
     def __init__(self):
         self.__customer_account_list = []
@@ -120,7 +112,10 @@ class ClassController:
         return "you have remove a review from " + str(restaurant.name)
     
     def show_restaurant(self):
-        return [restaurant.name for restaurant in self.__restaurant_account_list]
+        restaurant_dict = {}
+        for restaurant in self.__restaurant_account_list:
+             restaurant_dict[restaurant.name] = [restaurant.account_id, "detail2", "detail3"]
+        return restaurant_dict
     
     def show_restaurant_menu(self, restaurant_name):
         for restaurant in self.__restaurant_account_list:
@@ -228,7 +223,7 @@ class Restaurant(Account) :
     def review_list(self):
         return self.__review_list
 
-class Order :
+class Order :       
     ID = 1
     def __init__(self, customer, restaurant_list = [], order_food_list = []):
         self.__order_id = str(Order.ID)
@@ -303,66 +298,3 @@ class Review :
         return self.__comment
 
 system = ClassController()  
-def create_instance():
-    customer1 = Customer('101', 'Ken')
-    restaurant1 = Restaurant('201', 'Thai Restaurant')
-    restaurant2 = Restaurant('202', 'Japanese Restaurant')
-    restaurant3 = Restaurant('203', 'Italian Restaurant')
-    food1 = Food('001', 'ข้าวมันไก่', 60)
-    food2 = Food('002', 'ไก่ทอด', 40)
-    food3 = Food('003', 'อาหารญี่ปุ่น', 80)
-    food4 = Food('004', 'ขนมหวาน', 55)
-
-    system.customer_account_list.append(customer1)
-    system.restaurant_account_list.append(restaurant1)
-    system.restaurant_account_list.append(restaurant2)
-    system.restaurant_account_list.append(restaurant3)
-    restaurant1.add_food(food1)
-    restaurant1.add_food(food2)
-    restaurant2.add_food(food3)
-    restaurant3.add_food(food4)
-    order1 = Order(customer1, [restaurant1], [food1, food2])
-    customer1.order_list.append(order1)
-
-create_instance()
-
-@app.get("/show/restaurant", tags=["Show"])
-async def show_restaurant() -> list:
-    return system.show_restaurant()
-
-@app.post("/show/menu", tags=["Show"])
-async def restaurant_menu(body: base.restaurant_name) -> list:
-    return system.show_restaurant_menu(body.restaurant_name)
-
-@app.get("/show/food_detail", tags=["Show"])
-async def food_detail(data: dict) -> dict:
-    return system.show_food_detail(data["restaurant_name"], data["food_name"])
-
-@app.post("/show/food_detail", tags=["Cart"])
-async def add_food(data: dict) -> str:
-    return system.add_food_to_cart(data["account_id"], data["food_id"])
-
-@app.post("/cart", tags=["Cart"])
-async def get_order(data: dict) -> list:
-    return system.show_cart(data["account_id"])
-
-@app.delete("/cart", tags=["Cart"])
-async def remove_food(body: base.add_food_api) -> str:
-    return system.remove_food_from_cart(body.account_id, body.food_id)
-
-@app.get("/restaurant", tags=['Review'])
-async def get_restaurant_review(restaurant_id: str) -> list:
-    return system.show_review(restaurant_id)
-
-@app.post("/restaurant", tags=["Review"])
-async def add_restaurant_review(body: base.add_review_api) -> str:
-    return system.add_review_to_restaurant(
-        body.customer_id, body.rating, body.comment, 
-        body.order_id, body.restaurant_id)
-
-@app.delete("/restaurant", tags=["Review"])
-async def remove_restaurant_review(body: base.remove_review_api) -> str:
-    return system.remove_review_from_restaurant(body.customer_id, body.restaurant_id)
-
-if __name__ == "__main__":
-    uvicorn.run("my_meeting_with_api:app", host="127.0.0.1", port=8000, log_level="info")

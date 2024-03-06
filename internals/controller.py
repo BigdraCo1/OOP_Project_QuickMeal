@@ -134,3 +134,12 @@ class Controller:
             for order in customer.order_list:
                 if order.order_id == search_order_id:
                     return order
+                
+    def show_restaurant(self):
+        restaurant_dict = {}
+        for restaurant_account in self.__restaurant_account_list:
+            for restaurant in restaurant_account.restaurant_list:
+                restaurant_dict[restaurant.name_restaurant] = [
+                    restaurant.account_id, restaurant.restaurant_location, restaurant.rate
+                ]
+        return restaurant_dict
