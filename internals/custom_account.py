@@ -12,7 +12,6 @@ class CustomerAccount(Account):
         self.__reviewed_list = []
         self.__current_order = None
         self.__order_list = []
-        self.__pocket = pocket
 
     @property
     def current_order(self):
@@ -25,6 +24,12 @@ class CustomerAccount(Account):
     @property
     def order_list(self):
         return self.__order_list
+    
+    def add_current_order(self, order):
+        self.__current_order.append(order)
+
+    def add_order_list(self, order):
+        self.__order_list.append(order)
 
     def add_address(self, address: str):
         self.__address_list.append(address)

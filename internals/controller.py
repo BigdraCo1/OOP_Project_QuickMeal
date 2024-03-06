@@ -117,6 +117,19 @@ class Controller:
                 for food in restaurant.food_list:
                     if food.id == search_food_id:
                         return food
+                    
+    def search_food_by_name(self, search_food_name):
+        for restaurant_account in self.__restaurant_account_list:
+            for restaurant in restaurant_account.restaurant_list:
+                for food in restaurant.food_list:
+                    if food.name == search_food_name:
+                        return food
+
+    def search_customer_order_by_id(self, search_order_id):
+        for customer in self.__customer_account_list:
+            for order in customer.current_order:
+                if order.order_id == search_order_id:
+                    return order
             
     def search_restaurant_by_id(self, search_restaurant_id):
         for restaurant_acc in self.restaurant_account_list:
@@ -146,9 +159,12 @@ class Controller:
     def search_restaurant_order_by_id(self, search_order_id):
         for restaurant_acc in self.__restaurant_account_list:
             for restaurant in restaurant_acc.restaurant_list:
-                for order in restaurant.requested_order_list:
-                    if order.order_id == search_order_id:
-                        return order
+                if restaurant.requested_order_list != None:
+                    for order in restaurant.requested_order_list:
+                        if order.order_id == search_order_id:
+                            return order
+                    
+        
                     
     def search_account_from_id(self, account_id: str):
         for customer in self.__customer_account_list:
@@ -227,6 +243,8 @@ class Controller:
             return "Cant cancel order, rider is delivering"
         if order_state == "Cancelled by Customer":
             return "Order already cancelled"
+        if order_state == "Cancelled by Rider":
+            return "Order already cancelled"
         if food_name in order_state:
             return "Food already cancelled"
         order.remove_food_from_order(food)
@@ -244,7 +262,6 @@ class Controller:
         order.change_payment_status(order.payment.payment_status +"Food : " + food_name + " is Refunded")
         return restaurant_account_id + " " + food.name + " in " + order_id + " is refund."
     
-    
         
 
     def show_order_detail(self, order_id: str):
@@ -256,13 +273,17 @@ class Controller:
         else :
             order_detail["Order_Not_Found"] = order_id + " is not found in list"
             return order_detail
+
+        if not isinstance(order, Order):
+            return order
+            
         
         order_detail["Order_ID"] = order.order_id
         order_detail["Customer"] = order.customer.account_id
         order_detail["Rider"] = order.rider.account_id
         restaurant_list = []
         for restaurant in order.restaurant_list:
-            restaurant_list.append(restaurant.restaurant_name)
+            restaurant_list.append(restaurant.name_restaurant)
         order_detail["Restaurant"] = restaurant_list
         food_list = []
         for food in order.food_list:
@@ -286,6 +307,7 @@ class Controller:
     def show_payment_detail(self, account_id: str):
         account = self.search_account_from_id(account_id)
         payment_dict = dict()
+        print(isinstance(account, CustomerAccount))
         if self.search_account_from_id(account_id) == None:
             payment_dict["Account_Not_Found"] = account_id + " is not found in list"
             return payment_dict
@@ -294,7 +316,7 @@ class Controller:
                 for order in restaurant.requested_order_list:
                     payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
         elif isinstance(account, CustomerAccount):
-            for order in account.order_list:
+            for order in account.current_order:
                 payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
         elif isinstance(account, RiderAccount):
             for order in account.recieve_order_list:

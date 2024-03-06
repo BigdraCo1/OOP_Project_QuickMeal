@@ -35,3 +35,8 @@ class Account:
     def profile(self, profile):
         self.__profile = profile
 
+    @property
+    def pocket(self):
+        return self.__pocket
+    
+
