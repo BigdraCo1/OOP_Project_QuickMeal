@@ -1,9 +1,9 @@
 from constants import account, restaurant
-from internals import controller
+from internals.controller import Controller
 
-system = controller.Controller([],
-                               [],
-                               [])
+system = Controller([],
+                    [],
+                    [])
 
 system.add_restaurant(account.restaurant_owner_account1)
 system.add_restaurant(account.restaurant_owner_account2)
