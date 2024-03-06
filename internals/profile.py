@@ -1,5 +1,5 @@
 class Profile:
-    def __init__(self, username: str, telephone_number: str, email, fullname: str, balance: int):
+    def __init__(self, username: str, telephone_number: str, email, fullname: str):
         self.__username = username
         self.__telephone_number = telephone_number
         self.__email = email

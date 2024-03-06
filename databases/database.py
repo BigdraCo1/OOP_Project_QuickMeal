@@ -20,4 +20,3 @@ account.rider_account1.current_order = order.order1
 account.rider_account1.current_order = order.order2
 restaurant.restaurant4.current_order_list = order.order1
 restaurant.restaurant4.current_order_list = order.order2
-

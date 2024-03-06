@@ -5,9 +5,9 @@ from fastapi import APIRouter, HTTPException, status
 app = APIRouter()
 
 @app.get("/show_order_detail", tags = ["Orders"])
-async def show_order_detail(order_id: str, account_id: str) -> dict:
+async def show_order_detail(order_id: str) -> dict:
     return {
-        "data": database.system.show_order_detail(order_id, account_id)
+        "data": database.system.show_order_detail(order_id)
     }
 
 @app.get("/show_pocket", tags = ["Pocket"])
