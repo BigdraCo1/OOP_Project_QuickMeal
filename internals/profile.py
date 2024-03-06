@@ -5,7 +5,6 @@ class Profile:
         self.__email = email
         self.__fullname = fullname
         self.__balance = balance
-        self.__order_list = []
 
     @property
     def username(self):
