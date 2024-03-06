@@ -1,5 +1,6 @@
 from internals.account import Account, Profile
-
+from internals.food import Food
+from internals.order import Order
 
 class CustomerAccount(Account):
     def __init__(self, account_id: str, password: str, profile: Profile):
@@ -22,9 +23,31 @@ class CustomerAccount(Account):
     @property
     def order_list(self):
         return self.__order_list
+    
+    @property
+    def reviewed_list(self):
+        return self.__reviewed_list
 
     def add_address(self, address: str):
         self.__address_list.append(address)
 
     def remove_address(self, address: str):
         self.__address_list.remove(address)
+
+    def add_food(self, food, size, amount):
+        if self.__current_order == None :
+            self.create_basket()
+        customer_food = Food(food.id, food.name, food.type, food.size, food.price, size)
+        for i in range (amount):
+            self.__current_order.food_list.append(customer_food)
+    
+    def create_basket(self):
+        self.__current_order = Order(self)
+        self.__current_order.state = 'Not Comfirm'
+
+    def remove_food(self, food_id, size, amount):
+        for i in range(amount):
+            for food in self.__current_order.food_list:
+                if food.id == food_id and food.current_size == size:
+                    self.__current_order.food_list.remove(food)
+    

@@ -11,3 +11,11 @@ class Review:
     @property
     def rate(self):
         return self.__rate
+    
+    @property
+    def customer(self):
+        return self.__customer
+    
+    @property
+    def comment(self):
+        return self.__comment

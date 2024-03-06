@@ -38,6 +38,10 @@ class Order:
     @property
     def food_list(self):
         return self.__food_list
+    
+    @food_list.setter
+    def food_list(self, new_food_list):
+        self.__food_list = new_food_list
 
     @property
     def order_state(self):

@@ -20,7 +20,6 @@ class Restaurant:
         self.__rate = sum([review.rate for review in self.__reviewed_list])/len(self.__reviewed_list)
         return self.__rate
 
-
     @property
     def restaurant_id(self):
         return self.__restaurant_id
