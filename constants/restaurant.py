@@ -26,3 +26,11 @@ restaurant3 = Restaurant('3',"Fondue0",
                                     None,
                                     review_list3,
                                     restaurant_owner_account2)
+
+restaurant4 = Restaurant('4',"KFC",
+                                    "Rome",
+                                    kfc_dishes,
+                                    [],
+                                    [],
+                                    review_list4,
+                                    restaurant_owner_account3)

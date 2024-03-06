@@ -1,10 +1,12 @@
 from internals.profile import Profile
+from internals.pocket import Pocket
 
 class Account:
-    def __init__(self, account_id: str, password: str, profile: Profile):
+    def __init__(self, account_id: str, password: str, profile: Profile, pocket : Pocket):
         self.__account_id = account_id
         self.__password = password
         self.__profile = profile
+        self.__pocket = pocket
 
     def get_name(self):
         return self.__profile.username

@@ -10,6 +10,7 @@ class Restaurant:
         self.__name_restaurant = name_restaurant
         self.__restaurant_location = restaurant_location
         self.__food_list = food_list
+        self.__request_order_list = []
         self.__requested_order_list = requested_order_list
         self.__finished_order_list = finished_order_list
         self.__reviewed_list = reviewed_list
@@ -53,6 +54,10 @@ class Restaurant:
     @property
     def reviewed_list(self):
         return self.__reviewed_list
+    
+    @property
+    def request_order_list(self):
+        return self.__request_order_list
 
     def search_menu(self, menu: str) -> object:
         for food in self.__food_list:
@@ -86,3 +91,8 @@ class Restaurant:
         new_menu = Food(request.name, request.type, request.size, request.price)
         food_list.append(new_menu)
         return new_menu
+    
+    def receive_order_from_customer(self, order):
+        for order in self.__request_order_list:
+            self.__current_order_list.append(order)
+            self.__request_order_list.remove(order)
