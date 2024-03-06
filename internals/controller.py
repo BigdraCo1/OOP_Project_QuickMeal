@@ -5,11 +5,10 @@ from internals.restaurant import Restaurant
 
 class Controller:
     def __init__(self, customer_account_list: list[CustomerAccount], rider_account_list: list[RiderAccount],
-                restaurant_account_list: list[RestaurantAccount], restaurant_list: list[RestaurantAccount]):
+                restaurant_account_list: list[RestaurantAccount]):
         self.__customer_account_list = customer_account_list
         self.__rider_account_list = rider_account_list
         self.__restaurant_account_list = restaurant_account_list
-        self.__restaurant_list = restaurant_list
         self.__approval_list = None
 
     @property
