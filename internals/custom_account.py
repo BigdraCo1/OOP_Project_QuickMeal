@@ -10,6 +10,11 @@ class CustomerAccount(Account):
         self.__reviewed_list = []
         self.__current_order = None
         self.__order_list = []
+        
+        # ตอนนี้คิดว่ามีแค่นี้พอ แต่ดูก่อนก็ได้
+        # self.__order_list = []
+        # self.__address_list = []
+        # self.__reviewed_list = []
 
     @property
     def current_order(self):
@@ -28,3 +33,8 @@ class CustomerAccount(Account):
 
     def remove_address(self, address: str):
         self.__address_list.remove(address)
+        
+    def search_order_by_id(self, order_id):
+        for order in self.__order_cart:
+            if order.order_id == order_id: return order
+        return None

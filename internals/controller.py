@@ -1,3 +1,6 @@
+import datetime from datetime
+from internals.payment import Payment
+
 from internals.custom_account import CustomerAccount
 from internals.rider_account import RiderAccount
 from internals.restaurant_account import RestaurantAccount
@@ -103,6 +106,33 @@ class Controller:
         if isinstance(acc_restaurant, str):
             return acc_restaurant
         return acc_restaurant.edit_menu(menu, request)
+    
+    def confirm_customer_order(self, customer_id, order_id):
+        # search to find customer
+        customer = self.search_customer_by_id(customer_id)
+        if customer == None: return f"customer_id : {customer_id} not found"
+        
+        # search inside of customer_order_lsit
+        order = customer.search_order_by_id(order_id)
+        if order == None: return f"order_id : {order_id} not found"
+        
+        # calculate amount
+        amount = sum(food.food_price for food in order.order_food_list)
+        
+        # access into customer pocket
+        if customer.pocket.balance < amount:
+            return "Insufficient balance"
+        
+        # ตัดเงินออกก่อน
+        customer.pocket.pay_out(amount)
+        payment_time = datetime.now()
+        
+        # create payment object
+        payment = Payment("paid", payment_time.strftime("%c"), amount)
+        order.order_state = "confirmed"
+        order.order_payment = payment
+        # return f"order_id : {order.order_id} confirmed, amount : {amount}"
+        return [{"order_id": order.order_id, "order_state": order.order_state, "amount": amount}]
 
     def remove_menu(self, restaurant, menu):
         real_restaurant = self.search_restaurant(restaurant)
