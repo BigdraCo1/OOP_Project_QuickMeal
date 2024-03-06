@@ -6,15 +6,11 @@ class add_food_api(BaseModel):
     size: str
     amount: int
 
-class change_amount_api(BaseModel):
-    customer_id: str
-    food_id: str
-    amount: int
-
-class change_size_api(BaseModel):
+class adjust_food_api(BaseModel):
     customer_id: str
     food_id: str
     size: str
+    amount: int
 
 class add_review_api(BaseModel):
     customer_id: str 
