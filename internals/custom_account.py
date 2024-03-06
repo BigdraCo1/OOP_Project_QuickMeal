@@ -10,11 +10,6 @@ class CustomerAccount(Account):
         self.__reviewed_list = []
         self.__current_order = None
         self.__order_list = []
-        
-        # ตอนนี้คิดว่ามีแค่นี้พอ แต่ดูก่อนก็ได้
-        # self.__order_list = []
-        # self.__address_list = []
-        # self.__reviewed_list = []
 
     @property
     def current_order(self):
