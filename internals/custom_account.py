@@ -29,7 +29,9 @@ class CustomerAccount(Account):
     def remove_address(self, address: str):
         self.__address_list.remove(address)
         
+    # use for search order by order_id in 
+    # current_order:list (cart) to confirm order
     def search_order_by_id(self, order_id):
-        for order in self.__order_cart:
+        for order in self.__current_order:
             if order.order_id == order_id: return order
         return None
