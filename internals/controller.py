@@ -21,7 +21,7 @@ class Controller:
         return self.__rider_account_list
 
     @property
-    def restaurant_list(self):
+    def restaurant_account_list(self):
         return self.__restaurant_account_list
 
     def add_customer_account(self, new_customer: CustomerAccount):
@@ -65,7 +65,7 @@ class Controller:
 
     def search_menu_and_restaurant(self, key: str):
         show_list = []
-        restaurant_list = self.restaurant_list
+        restaurant_list = self.restaurant_account_list
         for restaurant_acc in restaurant_list:
             for restaurant in restaurant_acc.restaurant_list:
                 name = restaurant.name_restaurant
@@ -100,24 +100,24 @@ class Controller:
         return real_restaurant.add_menu(request)
 
     def search_current_order_by_id(self, search_order_id):
-        for customer in self.__customer_account_list:
+        for customer in self.customer_account_list:
             if customer.current_order.order_id == search_order_id:
                 return customer.current_order
         
     def search_customer_by_id(self, search_account_id):
-        for customer in self.__customer_account_list:
+        for customer in self.customer_account_list:
             if customer.account_id == search_account_id:
                 return customer
             
     def search_food_by_id(self, search_food_id):
-        for restaurant_acc in self.__restaurant_account_list:
+        for restaurant_acc in self.restaurant_account_list:
             for restaurant in restaurant_acc.restaurant_list:
                 for food in restaurant.food_list:
                     if food.id == search_food_id:
                         return food
             
     def search_restaurant_by_id(self, search_restaurant_id):
-        for restaurant_acc in self.__restaurant_account_list:
+        for restaurant_acc in self.restaurant_account_list:
             for restaurant in restaurant_acc.restaurant_list:
                 if restaurant.restaurant_id == search_restaurant_id:
                     return restaurant

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from databases.database import system
+from constants.controller import system
 
 app = APIRouter(prefix="/search", tags=["search"], responses={404: {"description": "Not found"}})
 
@@ -7,7 +7,7 @@ app = APIRouter(prefix="/search", tags=["search"], responses={404: {"description
 @app.get("/restaurant", status_code=status.HTTP_200_OK)
 async def show():
     show_list = []
-    for restaurant_acc in system.restaurant_list:
+    for restaurant_acc in system.restaurant_account_list:
         for restaurant in restaurant_acc.restaurant_list:
             restaurant_raw_attribute = vars(restaurant)
             restaurant_attributes = {key: value for key, value in restaurant_raw_attribute.items() if

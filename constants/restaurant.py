@@ -1,27 +1,28 @@
-from internals import restaurant
-from constants import food, account
-from constants import review
+from internals.restaurant import Restaurant
+from constants.food import *
+from constants.account import *
+from constants.review import *
 
-restaurant1 = restaurant.Restaurant('1',"La Piazza",
+restaurant1 = Restaurant('1',"La Piazza",
                                     "Rome",
-                                    food.italian_dishes1,
+                                    italian_dishes1,
                                     None,
                                     None,
-                                    review.review_list1,
-                                    account.restaurant_owner_account1)
+                                    review_list1,
+                                    restaurant_owner_account1)
 
-restaurant2 = restaurant.Restaurant('2',"Trattoria da Luigi",
+restaurant2 = Restaurant('2',"Trattoria da Luigi",
                                     "Milan",
-                                    food.italian_dishes2,
+                                    italian_dishes2,
                                     None,
                                     None,
-                                    review.review_list2,
-                                    account.restaurant_owner_account1)
+                                    review_list2,
+                                    restaurant_owner_account1)
 
-restaurant3 = restaurant.Restaurant('3',"Fondue0",
+restaurant3 = Restaurant('3',"Fondue0",
                                     "Naples",
-                                    food.italian_dishes3,
+                                    italian_dishes3,
                                     None,
                                     None,
-                                    review.review_list3,
-                                    account.restaurant_owner_account2)
+                                    review_list3,
+                                    restaurant_owner_account2)
