@@ -194,8 +194,8 @@ class Controller:
         if order != None :
             for food in order.food_list:
                 if food not in already_add:
-                    amount = len([f for f in order.food_list if (f.id == food.id and f.current_size == food.current_size)])
-                    order_dict[f"id-{food.id} {food.current_size}"] = [amount, food.id, 
+                    quantity = len([f for f in order.food_list if (f.id == food.id and f.current_size == food.current_size)])
+                    order_dict[f"id-{food.id} {food.current_size}"] = [quantity, food.id, 
                         food.name, food.price + food.size[str(food.current_size)], food.current_size]
                     already_add.append(food)
         return order_dict 
@@ -214,23 +214,23 @@ class Controller:
                 "food_size"  : food.size,
                 "food_price" : food.price}
     
-    def add_food_to_basket(self, customer_id, food_id, size, amount):
+    def add_food_to_basket(self, customer_id, food_id, size, quantity):
         customer = self.search_customer_by_id(customer_id)
         food = self.search_food_by_id(food_id)
         restaurant = self.search_restaurant_by_food_id(food_id)
-        customer.add_food(food, size, amount)
+        customer.add_food(food, size, quantity)
         if restaurant not in customer.current_order.restaurant_list:
             customer.current_order.restaurant_list.append(restaurant)
-        return str(amount) + " x " + str(food.name) + " is added to your cart!"
+        return str(quantity) + " x " + str(food.name) + " is added to your cart!"
 
-    def change_amount(self, customer_id, food_id, amount, new_amount, size):
+    def change_quantity(self, customer_id, food_id, quantity, new_quantity, size):
         customer = self.search_customer_by_id(customer_id)
         food = self.search_food_by_id(food_id)
         restaurant = self.search_restaurant_by_food_id(food_id)
-        customer.remove_food(food_id, size, amount)
-        if new_amount > 0:
-            customer.add_food(food, size, new_amount)
-            return str(food.name) + " is now" + str(new_amount)
+        customer.remove_food(food_id, size, quantity)
+        if new_quantity > 0:
+            customer.add_food(food, size, new_quantity)
+            return str(food.name) + " is now " + str(new_quantity)
         else :
             for f in customer.current_order.food_list:
                 if self.search_restaurant_by_food_id(f.id) == restaurant:
@@ -245,7 +245,7 @@ class Controller:
         for customer_food in order.food_list:
             if customer_food.id == food.id and customer_food.current_size == size:
                 customer_food.current_size = new_size
-        return str(food.name) + " is now" + str(new_size)
+        return str(food.name) + " is now " + str(new_size)
     
     def show_review(self, restaurant_id):
         restaurant = self.search_restaurant_by_id(restaurant_id)
