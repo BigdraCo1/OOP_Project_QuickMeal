@@ -347,7 +347,7 @@ class Controller:
         self.change_order_state(order, "Cancelled by Customer")
         customer_account.pocket.add_payment(order.payment)
         return customer_account_id + " " + order_id + " is cancelled. Payment is refunded."
-    
+     
     def rider_cancel_order(self, rider_account_id: str, order_id: str):
         rider_account = self.search_account_from_id(rider_account_id)
         if not isinstance(rider_account, RiderAccount):

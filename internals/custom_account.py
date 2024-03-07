@@ -9,7 +9,7 @@ class CustomerAccount(Account):
             ValueError("Error")
         if not isinstance(pocket, Pocket):
             ValueError("Error")
-        super().__init__(account_id, password, profile, Pocket)
+        super().__init__(account_id, password, profile, pocket)
         self.__address_list = []
         self.__reviewed_list = []
         self.__current_order = None
