@@ -6,6 +6,7 @@ from internals.rider_account import RiderAccount
 from internals.restaurant_account import RestaurantAccount
 from internals.restaurant import Restaurant
 from internals.review import Review
+from internals.order import Order
 
 
 
