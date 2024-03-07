@@ -3,19 +3,18 @@ from internals.review import Review
 
 
 class Restaurant:
-    def __init__(self, id: str, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
-                 finished_order_list, reviewed_list: list[Review], owner):
+    def __init__(self, id: str, name_restaurant: str, restaurant_location: str, food_list, owner):
         self.__restaurant_id = id
         self.__owner = owner
         self.__name_restaurant = name_restaurant
         self.__restaurant_location = restaurant_location
         self.__food_list = food_list
         self.__request_order_list = []
-        self.__requested_order_list = requested_order_list
-        self.__finished_order_list = finished_order_list
-        self.__reviewed_list = reviewed_list
-        rate = sum([review.rate for review in self.__reviewed_list]) / len(self.__reviewed_list)
-        self.__rate = rate
+        self.__requested_order_list = []
+        self.__finished_order_list = []
+        self.__reviewed_list = []
+        if len(self.__reviewed_list) == 0:
+            self.__rate = 0
 
     @property
     def rate(self):
@@ -54,7 +53,14 @@ class Restaurant:
     @property
     def reviewed_list(self):
         return self.__reviewed_list
-    
+
+################### Temp ###########################
+
+    def add_reviewed(self, review):
+        self.reviewed_list.append(review)
+
+####################################################
+
     @property
     def request_order_list(self):
         return self.__request_order_list
@@ -98,5 +104,5 @@ class Restaurant:
     
     def receive_order_from_customer(self, order):
         for order in self.__request_order_list:
-            self.__current_order_list.append(order)
+            self.__requested_order_list.append(order)
             self.__request_order_list.remove(order)
