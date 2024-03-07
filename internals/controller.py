@@ -229,6 +229,9 @@ class Controller:
             food_list.append(food)
         # !!! about order_id change to order.order_id because idk how to random order_id from now
         payment = Payment(food_list,amount,"paid",order.restaurant_list,payment_time.strftime("%c"),order_id)
+        order.order_state = "confirmed"
+        order.payment = payment
+        return [{"order_id": order.order_id, "order_state": order.order_state, "amount": amount}]
     
     def add_review_to_restaurant(self, customer_id, rating, comment, restaurant_id):
         customer = self.search_customer_by_id(customer_id)
@@ -263,12 +266,12 @@ class Controller:
         if order.order_state == "confirmed":
             order.order_state = "received"
             order.rider = rider.account_id
+            rider.add_received_order_food(order)
             for food in order.food_list:
                 restaurant = self.search_restaurant_by_food_id(food.id)
-                if restaurant not in rider.restaurant_list:
-                    rider.restaurant_list.append(restaurant)
-                restaurant.add_requested_order(food)
-            rider.add_order(order)
+                if restaurant not in order.restaurant_list:
+                    order.restaurant_list.append(restaurant)
+                restaurant.add_requested_order_food(food)
             return [{"order_id" : order.order_id, "order_state" : order.order_state, "rider_id" : order.rider}]
     
     # [method] -> actions about restaurant_account
@@ -294,6 +297,12 @@ class Controller:
         if isinstance(acc_restaurant, str):
             return acc_restaurant
         return acc_restaurant.edit_menu(menu, request)
+    
+    def process_cooking_order_food(self, restaurant_id, food_id):
+        restaurant = self.search_restaurant_by_id(restaurant_id)
+        if restaurant == None:
+            return f"restaurant_id : {restaurant_id} not found"
+        
     
     # [method] about order 
 

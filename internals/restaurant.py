@@ -2,23 +2,18 @@ from internals.food import Food
 from internals.review import Review
 
 class Restaurant:
-    def __init__(self, id: str, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
-                 finished_order_list, reviewed_list: list[Review], owner):
+    def __init__(self, id: str, name_restaurant: str, restaurant_location: str, food_list, requested_order_food_list,
+                 finished_order_food_list, reviewed_list: list[Review], owner):
         self.__restaurant_id = id
         self.__owner = owner
         self.__name_restaurant = name_restaurant
         self.__restaurant_location = restaurant_location
-        self.__food_list = food_list
-        self.__requested_order_list = requested_order_list
-        self.__finished_order_list = finished_order_list
+        self.__food_menu_list = food_list
+        self.__requested_order_food_list = requested_order_food_list
+        self.__finished_order_food_list = finished_order_food_list
         self.__reviewed_list = reviewed_list
         rate = sum([review.rate for review in self.__reviewed_list]) / len(self.__reviewed_list)
         self.__rate = rate
-
-    @property
-    def rate(self):
-        self.__rate = sum([review.rate for review in self.__reviewed_list])/len(self.__reviewed_list)
-        return self.__rate
 
     @property
     def restaurant_id(self):
@@ -38,22 +33,27 @@ class Restaurant:
 
     @property
     def food_list(self):
-        return self.__food_list
+        return self.__food_menu_list
 
     @property
     def requested_order_list(self):
-        return self.__requested_order_list
+        return self.__requested_order_food_list
 
     @property
     def finished_order_list(self):
-        return self.__finished_order_list
+        return self.__finished_order_food_list
 
     @property
     def reviewed_list(self):
         return self.__reviewed_list
+    
+    @property
+    def rate(self):
+        self.__rate = sum([review.rate for review in self.__reviewed_list])/len(self.__reviewed_list)
+        return self.__rate
 
     def search_menu(self, menu: str) -> object:
-        for food in self.__food_list:
+        for food in self.__food_menu_list:
             food_name = food.name
             if menu == food_name:
                 return food
@@ -86,26 +86,26 @@ class Restaurant:
         return new_menu
     
     #increase method
-    def add_requested_order(self, order):
-        self.__requested_order_list.append(order)
+    def add_requested_order_food(self, order):
+        self.__requested_order_food_list.append(order)
         
-    def remove_requested_order(self, order):
-        self.__requested_order_list.remove(order)
+    def remove_requested_order_food(self, order):
+        self.__requested_order_food_list.remove(order)
         
-    def add_finished_order(self, order):
-        self.__finished_order_list.append(order)
+    def add_finished_order_food(self, order):
+        self.__finished_order_food_list.append(order)
         
-    def remove_finished_order(self, order):
-        self.__finished_order_list.remove(order)
+    def remove_finished_order_food(self, order):
+        self.__finished_order_food_list.remove(order)
         
-    def search_requested_order_by_id(self, order_id):
-        for order in self.__requested_order_list:
+    def search_requested_order_food_by_id(self, order_id):
+        for order in self.__requested_order_food_list:
             if order.order_id == order_id:
                 return order
         return None
     
-    def search_finished_order_by_id(self, order_id):
-        for order in self.__finished_order_list:
+    def search_finished_order_food_by_id(self, order_id):
+        for order in self.__finished_order_food_list:
             if order.order_id == order_id:
                 return order
         return None
