@@ -5,7 +5,7 @@ from fastapi import APIRouter
 app = APIRouter()
 
 #show basket 
-@app.get("/basket", tags=["Basket"])
+@app.get("/basket/{customer_id}", tags=["Basket"])
 async def get_basket(customer_id: str) -> dict:
     return system.show_basket(customer_id)
 
