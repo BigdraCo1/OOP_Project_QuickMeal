@@ -7,7 +7,6 @@ from internals.restaurant_account import RestaurantAccount
 from internals.restaurant import Restaurant
 from internals.review import Review
 from internals.order import Order
-from internals.pocket import Pocket
 
 
 
