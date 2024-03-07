@@ -37,20 +37,20 @@ class CustomerAccount(Account):
     def remove_address(self, address: str):
         self.__address_list.remove(address)
 
-    def add_food(self, food, size, amount):
-        if self.__current_order_cart == None :
+    def add_food(self, food, size, quantity):
+        if self.__current_order == None :
             self.create_basket()
         customer_food = Food(food.id, food.name, food.type, food.size, food.price, size)
-        for i in range (amount):
-            self.__current_order_cart.food_list.append(customer_food)
+        for i in range (quantity):
+            self.__current_order.food_list.append(customer_food)
     
     def create_basket(self):
         self.__current_order_cart = Order(self)
         self.__current_order_cart.state = 'Not Comfirm'
 
-    def remove_food(self, food_id, size, amount):
-        for i in range(amount):
-            for food in self.__current_order_cart.food_list:
+    def remove_food(self, food_id, size, quantity):
+        for i in range(quantity):
+            for food in self.__current_order.food_list:
                 if food.id == food_id and food.current_size == size:
                     self.__current_order_cart.food_list.remove(food)
         

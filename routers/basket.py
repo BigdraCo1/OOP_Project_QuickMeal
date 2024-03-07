@@ -12,17 +12,17 @@ async def get_basket(customer_id: str) -> dict:
 #add food to basket 
 @app.post("/basket/{food_id}", tags=["Basket"])
 async def add_food(body: basket.add_food_api) -> str:
-    return system.add_food_to_basket(body.customer_id, body.food_id, body.size, body.amount)
+    return system.add_food_to_basket(body.customer_id, body.food_id, body.size, body.quantity)
 
 #add address for basket
 @app.post("/basket/address", tags=["Basket"])
 async def add_address(body: basket.add_address_api) -> str:
     return system.add_address_to_basket(body.customer_id, body.address)
 
-#change amount of food in basket
-@app.put("/basket/{food_id}/amount", tags=["Basket"])
-async def change_amount(body: basket.amount_food_api) -> str:
-    return system.change_amount(body.customer_id, body.food_id, body.amount, body.new_amount, body.size)
+#change quantity of food in basket
+@app.put("/basket/{food_id}/quantity", tags=["Basket"])
+async def change_quantity(body: basket.quantity_food_api) -> str:
+    return system.change_quantity(body.customer_id, body.food_id, body.quantity, body.new_quantity, body.size)
 
 #change size of food in basket
 @app.put("/basket/{food_id}/size", tags=["Basket"])
