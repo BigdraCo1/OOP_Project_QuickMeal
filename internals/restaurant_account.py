@@ -2,8 +2,8 @@ from internals.account import Account, Profile
 
 
 class RestaurantAccount(Account):
-    def __init__(self, account_id: str, password: str, profile: Profile):
-        super().__init__(account_id, password, profile)
+    def __init__(self, account_id: str, password: str, profile: Profile, pocket : object):
+        super().__init__(account_id, password, profile, pocket)
         self.__restaurant_list = []
 
     def search_restaurant(self, name):
