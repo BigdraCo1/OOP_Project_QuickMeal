@@ -20,6 +20,14 @@ class CustomerAccount(Account):
     @current_order.setter
     def current_order(self, order):
         self.__current_order = order
+
+    @property
+    def order_list(self):
+        return self.__order_list
+    
+    @order_list.setter
+    def order_list(self, order):
+        self.__order_list = order
     
     @property
     def order_list(self):

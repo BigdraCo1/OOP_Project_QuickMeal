@@ -105,6 +105,7 @@ class Controller:
         for customer in self.customer_account_list:
             if customer.current_order.order_id == search_order_id:
                 return customer.current_order
+
         
     def search_customer_by_id(self, search_account_id):
         for customer in self.customer_account_list:
@@ -125,9 +126,15 @@ class Controller:
                     if food.name == search_food_name:
                         return food
 
-    def search_customer_order_by_id(self, search_order_id):
+    def search_customer_current_order_by_id(self, search_order_id):
         for customer in self.__customer_account_list:
             for order in customer.current_order:
+                if order.order_id == search_order_id:
+                    return order
+                
+    def search_customer_order_list_by_id(self, search_order_id):
+        for customer in self.__customer_account_list:
+            for order in customer.order_list:
                 if order.order_id == search_order_id:
                     return order
             
@@ -194,9 +201,9 @@ class Controller:
         customer_account = self.search_account_from_id(customer_account_id)
         if not isinstance(customer_account, CustomerAccount):
             return "Account is not customer account"
-        if self.search_customer_order_by_id(order_id) == None:
+        if self.search_customer_order_list_by_id(order_id) == None:
             return "Order not found"
-        order = self.search_customer_order_by_id(order_id)
+        order = self.search_customer_order_list_by_id(order_id)
         order_state = order.order_state
         if order_state == "Delivering":
             return "Cant cancel order, rider is delivering"
@@ -207,6 +214,7 @@ class Controller:
         order.change_payment_status("Refunded")
         customer_account.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Customer")
+        customer_account.pocket.add_payment(order.payment)
         return customer_account_id + " " + order_id + " is cancelled. Payment is refunded."
     
     def rider_cancel_order(self, rider_account_id: str, order_id: str):
@@ -226,6 +234,7 @@ class Controller:
         order.change_payment_status("Refunded")
         order.customer.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Rider")
+        rider_account.pocket.add_payment(order.payment)
         return rider_account_id + " " + order_id + " is cancelled."
     
     def restaurant_cancel_order(self, restaurant_account_id: str, order_id: str, food_name: str, string : str):
@@ -236,8 +245,11 @@ class Controller:
         if self.search_restaurant_order_by_id(order_id) == None:
             return "Order not found"
         order = self.search_restaurant_order_by_id(order_id)
+        if self.search_food_by_name(food_name) == None:
+            return "Food not found"
         food = self.search_food_by_name(food_name)
-        
+        if food not in restaurant.food_list:
+            return "Food not found in restaurant"
         order_state = order.order_state
         if order_state == "Delivering":
             return "Cant cancel order, rider is delivering"
@@ -266,10 +278,8 @@ class Controller:
 
     def show_order_detail(self, order_id: str):
         order_detail = dict()
-        if self.search_customer_order_by_id(order_id) != None:
-            order = self.search_customer_order_by_id(order_id)
-        elif self.search_restaurant_order_by_id(order_id) != None:
-            order = self.search_restaurant_order_by_id(order_id)
+        if self.search_customer_order_list_by_id(order_id) != None:
+            order = self.search_customer_order_list_by_id(order_id)
         else :
             order_detail["Order_Not_Found"] = order_id + " is not found in list"
             return order_detail
@@ -307,7 +317,6 @@ class Controller:
     def show_payment_detail(self, account_id: str):
         account = self.search_account_from_id(account_id)
         payment_dict = dict()
-        print(isinstance(account, CustomerAccount))
         if self.search_account_from_id(account_id) == None:
             payment_dict["Account_Not_Found"] = account_id + " is not found in list"
             return payment_dict
@@ -316,7 +325,7 @@ class Controller:
                 for order in restaurant.requested_order_list:
                     payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
         elif isinstance(account, CustomerAccount):
-            for order in account.current_order:
+            for order in account.order_list:
                 payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
         elif isinstance(account, RiderAccount):
             for order in account.recieve_order_list:

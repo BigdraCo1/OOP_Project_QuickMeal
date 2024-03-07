@@ -19,9 +19,8 @@ system.add_restaurant(restaurant_owner_account3)
 system.add_customer_account(customer_account1)
 system.add_rider_account(rider_account1)
 restaurant_owner_account3.assign_restaurant(restaurant4)
-customer_account1.current_order = []
-customer_account1.add_current_order(order1)
-customer_account1.add_current_order(order2)
+customer_account1.add_order_list(order1)
+customer_account1.add_order_list(order2)
 rider_account1.recieve_order_list = order1
 rider_account1.recieve_order_list = order2
 restaurant4.requested_order_list = order1
