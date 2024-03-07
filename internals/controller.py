@@ -220,7 +220,7 @@ class Controller:
         customer.add_food(food, size, amount)
         if restaurant not in customer.current_order.restaurant_list:
             customer.current_order.restaurant_list.append(restaurant)
-        return str(amount) + str(food.food_name) + " is added to your cart!"
+        return str(amount) + " x " + str(food.name) + " is added to your cart!"
 
     def change_amount(self, customer_id, food_id, amount, new_amount, size):
         customer = self.search_customer_by_id(customer_id)
