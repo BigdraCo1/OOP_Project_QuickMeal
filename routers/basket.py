@@ -9,13 +9,18 @@ app = APIRouter()
 async def get_basket(customer_id: str) -> dict:
     return system.show_basket(customer_id)
 
+#show address 
+@app.get("/basket/address/{customer_id}", tags=["Basket"])
+async def show_address(customer_id: str) -> list:
+    return system.show_address(customer_id)
+
 #add food to basket 
-@app.post("/basket/{food_id}", tags=["Basket"])
+@app.post("/basket/add/{food_id}", tags=["Basket"])
 async def add_food(body: basket.add_food_api) -> str:
     return system.add_food_to_basket(body.customer_id, body.food_id, body.size, body.quantity)
 
 #add address for basket
-@app.post("/basket/address", tags=["Basket"])
+@app.post("/basket/{body.customer_id}/address", tags=["Basket"])
 async def add_address(body: basket.add_address_api) -> str:
     return system.add_address_to_basket(body.customer_id, body.address)
 
