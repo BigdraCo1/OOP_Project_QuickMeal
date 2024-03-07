@@ -353,10 +353,7 @@ class Controller:
         return acc_restaurant.edit_menu(menu, request)
     
     def process_cooking_order_food(self, restaurant_id, food_id):
-        restaurant = self.search_restaurant_by_id(restaurant_id)
-        for food in restaurant.food_list:
-                food_dict[food.id] = [ food.name, food.price ]
-        return food_dict
+        pass
         
     def show_basket(self, customer_id):
         customer = self.search_customer_by_id(customer_id)
