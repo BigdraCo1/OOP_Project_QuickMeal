@@ -4,20 +4,20 @@ from fastapi import APIRouter, HTTPException, status
 
 app = APIRouter()
 
-@app.get("/show_order_detail/{order_id}", tags = ["Orders"])
-async def show_order_detail(order_id: str) -> dict:
+@app.post("/cancel_by_customer/{account_id}/{order_id}", tags = ["Cancel"])
+async def cancel_order(account_id: str, order_id: str) -> dict:
     return {
-        "data": system.show_order_detail(order_id)
+        "data": system.customer_cancel_order(account_id, order_id)
     }
 
-@app.get("/show_pocket/{account_id}", tags = ["Pocket"])
-async def show_pocket(account_id: str) -> dict:
+@app.post("/cancel_by_restaurant/{restaurant_account_id}/{order_id}/{food_name}/{string}", tags = ["Cancel"])
+async def cancel_food(restaurant_account_id: str, order_id: str, food_name: str, string: str) -> dict:
     return {
-        "data": system.show_pocket_detail(account_id)
+        "data": system.restaurant_cancel_order(restaurant_account_id, order_id, food_name, string)
     }
 
-@app.get("/show_payment/{account_id}", tags = ["Payment"])
-async def show_payment(account_id: str) -> dict:
+@app.post("/cancel_by_rider/{rider_account_id}/{order_id}", tags = ["Cancel"])
+async def cancel_rider(rider_account_id: str, order_id: str) -> dict:
     return {
-        "data": system.show_payment_detail(account_id)
+        "data": system.rider_cancel_order(rider_account_id, order_id)
     }
