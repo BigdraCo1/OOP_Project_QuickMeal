@@ -57,7 +57,7 @@ class Controller:
             response = restaurant_account.search_restaurant(name)
             if isinstance(response, Restaurant):
                 return response
-        return 'Not found restaurantssssssssssssssssssssssssssssssss'
+        return 'Not found restaurants'
 
     def get_menu_list(self, restaurant_name: str):
         restaurant = self.search_restaurant(restaurant_name)
@@ -191,7 +191,7 @@ class Controller:
                 for order in restaurant.requested_order_list:
                     if order.order_id == order_id:
                         return restaurant
-        return "Not found restaurantsssssxcxcxcxcxcx"
+        return "Not found restaurants"
 
     def change_order_state(self, order: Order, order_state: str):
         order.order_state = order_state
@@ -287,7 +287,6 @@ class Controller:
         if not isinstance(order, Order):
             return order
             
-        
         order_detail["Order_ID"] = order.order_id
         order_detail["Customer"] = order.customer.account_id
         order_detail["Rider"] = order.rider.account_id
