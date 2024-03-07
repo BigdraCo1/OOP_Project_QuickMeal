@@ -3,11 +3,29 @@ from internals.profile import Profile
 restaurant_owner_profile1 = Profile("chingchongma",
                                             "1212343563",
                                             "nigga@gmail.com",
-                                            "boon",
-                                            10000)
+                                            "boon"
+                                            )
 
 restaurant_owner_profile2 = Profile("mama_mia",
                                             "987654321",
                                             "mamamia@gmail.com",
-                                            "pizzapasta",
-                                            15000)
+                                            "pizzapasta"
+                                            )
+
+restaurant_owner_profile3 = Profile("Restaurant3",
+                                            "0801234567",
+                                            "restaurant@gmail.com",
+                                            "Restaurant Fullname"
+                                            )
+
+customer_profile1 = Profile("Customer",
+                                    "0801234567",
+                                    "customer@gmail.com",
+                                    "Customer Fullname"
+                                    )
+
+rider_profile1 = Profile("Rider",
+                                 "0801234567",
+                                 "rider@gmail.com",
+                                 "Rider Fullname"
+                                 )

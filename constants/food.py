@@ -27,3 +27,17 @@ italian_dishes3 = [
 italian_dishes4 = [
     Fondue_lal, maccu_lano
 ]
+
+fried_chicken = Food('4',"Fried Chicken",
+                          "Food",
+                          {"Large":20,"Medium":15,"Small":0},
+                          30)
+
+grilled_chicken = Food('5',"Grilled Chicken",
+                            "Food",
+                            {"Large":20,"Medium":15,"Small":0},
+                            30)
+
+kfc_dishes = [
+    fried_chicken, grilled_chicken
+]

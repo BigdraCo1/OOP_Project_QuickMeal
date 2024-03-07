@@ -6,6 +6,9 @@ from internals.restaurant_account import RestaurantAccount
 from internals.restaurant import Restaurant
 from internals.payment import Payment
 from internals.review import Review
+from internals.order import Order
+
+
 
 class Controller:
     def __init__(self, customer_account_list: list[CustomerAccount], 
@@ -291,6 +294,57 @@ class Controller:
         if isinstance(real_restaurant, str):
             return real_restaurant
         return real_restaurant.remove_food(menu)
+
+    def new_menu(self, restaurant, request):
+        real_restaurant = self.search_restaurant(restaurant)
+        return real_restaurant.add_menu(request)
+
+    def search_current_order_by_id(self, search_order_id):
+        for customer in self.customer_account_list:
+            if customer.current_order.order_id == search_order_id:
+                return customer.current_order
+        
+    def search_customer_by_id(self, search_account_id):
+        for customer in self.customer_account_list:
+            if customer.account_id == search_account_id:
+                return customer
+            
+    def search_food_by_id(self, search_food_id):
+        for restaurant_acc in self.restaurant_account_list:
+            for restaurant in restaurant_acc.restaurant_list:
+                for food in restaurant.food_list:
+                    if food.id == search_food_id:
+                        return food
+            
+    def search_restaurant_by_id(self, search_restaurant_id):
+        for restaurant_acc in self.restaurant_account_list:
+            for restaurant in restaurant_acc.restaurant_list:
+                if restaurant.restaurant_id == search_restaurant_id:
+                    return restaurant
+                         
+    def search_restaurant_by_food_id(self, search_food_id):
+        for restaurant_acc in self.__restaurant_account_list:
+            for restaurant in restaurant_acc.restaurant_list:
+                for food in restaurant.food_list:
+                    if food.id == search_food_id:
+                        return restaurant
+                
+    def search_order_by_id(self, search_order_id):
+        for customer in self.__customer_account_list:
+            for order in customer.order_list:
+                if order.order_id == search_order_id:
+                    return order
+                
+    def show_restaurant(self):
+        restaurant_dict = {}
+        for restaurant_account in self.__restaurant_account_list:
+            for restaurant in restaurant_account.restaurant_list:
+                restaurant_dict[restaurant.restaurant_id] = [
+                    restaurant.name_restaurant, restaurant.restaurant_location, restaurant.rate ]
+        return restaurant_dict
+    
+    def show_restaurant_menu(self, restaurant_id):
+        food_dict = {}
     
     def edit_menu(self, restaurant, menu, request):
         acc_restaurant = self.search_restaurant(restaurant)
@@ -311,10 +365,15 @@ class Controller:
         food = self.search_food_by_id(food_id)
         restaurant = self.search_restaurant_by_food_id(food_id)
         customer.remove_food(food_id, size, amount)
-        customer.add_food(food, size, new_amount)
-        if restaurant not in customer.current_order.restaurant_list:
-            customer.current_order.restaurant_list.append(restaurant)
-        return str(food.food_name) + " is now" + str(new_amount)
+        if new_amount > 0:
+            customer.add_food(food, size, new_amount)
+            return str(food.name) + " is now" + str(new_amount)
+        else :
+            for f in customer.current_order.food_list:
+                if self.search_restaurant_by_food_id(f.id) == restaurant:
+                    return str(food.name) + " is remove from basket"
+            customer.current_order.restaurant_list.remove(restaurant)
+            return str(food.name) + " is remove from basket"
 
     def change_size(self, customer_id, food_id, size, new_size):
         customer = self.search_customer_by_id(customer_id)

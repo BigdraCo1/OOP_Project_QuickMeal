@@ -3,10 +3,9 @@ from internals.order import Order
 
 
 class RiderAccount(Account) :
-    def __init__(self,account_id : str, password : str, profile = None):
-        super().__init__(account_id, password, profile)
-        self.__received_order_food_list = []
-        self.__holding_order_food_list = []
+    def __init__(self,account_id : str, password : str, profile = None, pocket = None):
+        super().__init__(account_id, password, profile, pocket)
+        self.__recieve_order_list = []
         self.__review_list = []
         # getter
 

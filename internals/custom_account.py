@@ -1,12 +1,15 @@
 from internals.account import Account, Profile
 from internals.food import Food
 from internals.order import Order
+from internals.pocket import Pocket
 
 class CustomerAccount(Account):
-    def __init__(self, account_id: str, password: str, profile: Profile):
+    def __init__(self, account_id: str, password: str, profile: Profile, pocket : Pocket):
         if not isinstance(profile, Profile):
             ValueError("Error")
-        super().__init__(account_id, password, profile)
+        if not isinstance(pocket, Pocket):
+            ValueError("Error")
+        super().__init__(account_id, password, profile, pocket)
         self.__address_list = []
         self.__reviewed_list = []
         self.__current_order_cart = None # actually list
@@ -57,3 +60,9 @@ class CustomerAccount(Account):
         for order in self.__current_order_cart:
             if order.order_id == order_id: return order
         return None
+    
+    def add_current_order(self, order):
+        self.__current_order.append(order)
+
+    def add_order_list(self, order):
+        self.__order_list.append(order)

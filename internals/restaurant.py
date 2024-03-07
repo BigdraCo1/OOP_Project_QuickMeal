@@ -8,9 +8,10 @@ class Restaurant:
         self.__owner = owner
         self.__name_restaurant = name_restaurant
         self.__restaurant_location = restaurant_location
-        self.__food_menu_list = food_list
-        self.__requested_order_food_list = requested_order_food_list
-        self.__finished_order_food_list = finished_order_food_list
+        self.__food_list = food_list
+        self.__request_order_list = []
+        self.__requested_order_list = requested_order_list
+        self.__finished_order_list = finished_order_list
         self.__reviewed_list = reviewed_list
         rate = sum([review.rate for review in self.__reviewed_list]) / len(self.__reviewed_list)
         self.__rate = rate
@@ -48,9 +49,12 @@ class Restaurant:
         return self.__reviewed_list
     
     @property
-    def rate(self):
-        self.__rate = sum([review.rate for review in self.__reviewed_list])/len(self.__reviewed_list)
-        return self.__rate
+    def request_order_list(self):
+        return self.__request_order_list
+    
+    @requested_order_list.setter
+    def requested_order_list(self, order):
+        self.__requested_order_list.append(order)
 
     def search_menu(self, menu: str) -> object:
         for food in self.__food_menu_list:
@@ -83,29 +87,8 @@ class Restaurant:
         food_list = self.food_list
         new_menu = Food(request.name, request.type, request.size, request.price)
         food_list.append(new_menu)
-        return new_menu
     
-    #increase method
-    def add_requested_order_food(self, order):
-        self.__requested_order_food_list.append(order)
-        
-    def remove_requested_order_food(self, order):
-        self.__requested_order_food_list.remove(order)
-        
-    def add_finished_order_food(self, order):
-        self.__finished_order_food_list.append(order)
-        
-    def remove_finished_order_food(self, order):
-        self.__finished_order_food_list.remove(order)
-        
-    def search_requested_order_food_by_id(self, order_id):
-        for order in self.__requested_order_food_list:
-            if order.order_id == order_id:
-                return order
-        return None
-    
-    def search_finished_order_food_by_id(self, order_id):
-        for order in self.__finished_order_food_list:
-            if order.order_id == order_id:
-                return order
-        return None
+    def receive_order_from_customer(self, order):
+        for order in self.__request_order_list:
+            self.__current_order_list.append(order)
+            self.__request_order_list.remove(order)
