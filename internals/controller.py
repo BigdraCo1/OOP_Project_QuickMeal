@@ -194,10 +194,11 @@ class Controller:
         if order != None :
             for food in order.food_list:
                 if food not in already_add:
-                    amount = len([f for f in order.food_list if f.name == food.name])
-                    order_dict[amount] = [ food.id, food.name, food.price, food.current_size ]
+                    amount = len([f for f in order.food_list if (f.id == food.id and f.current_size == food.current_size)])
+                    order_dict[f"id-{food.id} {food.current_size}"] = [amount, food.id, 
+                        food.name, food.price + food.size[str(food.current_size)], food.current_size]
                     already_add.append(food)
-        return order_dict
+        return order_dict 
     
     def add_address_to_basket(self, customer_id, address):
         customer = self.search_customer_by_id(customer_id)
