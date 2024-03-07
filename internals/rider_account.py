@@ -5,25 +5,45 @@ from internals.order import Order
 class RiderAccount(Account) :
     def __init__(self,account_id : str, password : str, profile = None):
         super().__init__(account_id, password, profile)
-        self.__recieve_order_list = []
+        self.__received_order_list = []
+        self.__holding_order_list = []
         self.__review_list = []
         # getter
 
+    #there is change in correcting word
     @property
-    def recieve_order_list(self):
-        return self.__recieve_order_list
+    def received_order_list(self):
+        return self.__received_order_list
 
     # setter
-    @recieve_order_list.setter
-    def recieve_order_list(self, order):
-        self.__recieve_order_list.append(order)
+    @received_order_list.setter
+    def received_order_list(self, order):
+        self.__received_order_list.append(order)
 
-    @property
+    @property #why it have the same setter as the above property?
     def order_list(self):
-        return self.__recieve_order_list
+        return self.__received_order_list
 
-    def add_order(self, order: Order):
-        self.__recieve_order_list.append(order)
+    #increase method
+    def add_received_order(self, order: Order):
+        self.__received_order_list.append(order)
 
-    def remove_order(self, order: Order):
-        self.__recieve_order_list.remove(order)
+    def remove_received_order(self, order: Order):
+        self.__received_order_list.remove(order)
+        
+    def add_holding_order(self, order: Order):
+        self.__holding_order_list.append(order)
+        
+    def remove_holding_order(self, order: Order):
+        self.__holding_order_list.remove(order)
+        
+    def search_order_by_id(self, order_id):
+        for order in self.__received_order_list:
+            if order.order_id == order_id:
+                return order
+            
+    def search_holding_order_by_id(self, order_id):
+        for order in self.__holding_order_list:
+            if order.order_id == order_id:
+                return order
+        return None

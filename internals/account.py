@@ -42,4 +42,3 @@ class Account:
     @pocket.setter
     def pocket(self, pocket):
         self.__pocket = pocket
-

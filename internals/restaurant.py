@@ -1,7 +1,6 @@
 from internals.food import Food
 from internals.review import Review
 
-
 class Restaurant:
     def __init__(self, id: str, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
                  finished_order_list, reviewed_list: list[Review], owner):
@@ -20,7 +19,6 @@ class Restaurant:
     def rate(self):
         self.__rate = sum([review.rate for review in self.__reviewed_list])/len(self.__reviewed_list)
         return self.__rate
-
 
     @property
     def restaurant_id(self):
@@ -86,3 +84,28 @@ class Restaurant:
         new_menu = Food(request.name, request.type, request.size, request.price)
         food_list.append(new_menu)
         return new_menu
+    
+    #increase method
+    def add_requested_order(self, order):
+        self.__requested_order_list.append(order)
+        
+    def remove_requested_order(self, order):
+        self.__requested_order_list.remove(order)
+        
+    def add_finished_order(self, order):
+        self.__finished_order_list.append(order)
+        
+    def remove_finished_order(self, order):
+        self.__finished_order_list.remove(order)
+        
+    def search_requested_order_by_id(self, order_id):
+        for order in self.__requested_order_list:
+            if order.order_id == order_id:
+                return order
+        return None
+    
+    def search_finished_order_by_id(self, order_id):
+        for order in self.__finished_order_list:
+            if order.order_id == order_id:
+                return order
+        return None

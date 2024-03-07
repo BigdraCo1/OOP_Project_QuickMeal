@@ -7,8 +7,6 @@ from internals.restaurant_account import RestaurantAccount
 from internals.restaurant import Restaurant
 from internals.review import Review
 
-
-
 class Controller:
     def __init__(self, customer_account_list: list[CustomerAccount], rider_account_list: list[RiderAccount],
                 restaurant_account_list: list[RestaurantAccount]):
@@ -144,6 +142,11 @@ class Controller:
             if customer.account_id == search_account_id:
                 return customer
             
+    def search_rider_by_id(self, search_account_id):
+        for rider in self.rider_account_list:
+            if rider.account_id == search_account_id:
+                return rider
+            
     def search_food_by_id(self, search_food_id):
         for restaurant_acc in self.restaurant_account_list:
             for restaurant in restaurant_acc.restaurant_list:
@@ -268,3 +271,23 @@ class Controller:
                 del review
         return "you have remove a review from " + str(restaurant.name)
     
+    def receive_confirmed_customer_order(self, rider_id, customer_id, order_id):
+        rider = self.search_rider_by_id(rider_id)
+        if rider == None:
+            return f"rider_id : {rider_id} not found"
+        customer = self.search_customer_by_id(customer_id)
+        if customer == None:
+            return f"customer_id : {customer_id} not found"
+        order = customer.search_order_by_id(order_id)
+        if order == None:
+            return f"order_id : {order_id} not found"
+        if order.order_state == "confirmed":
+            order.order_state = "received"
+            order.rider = rider.account_id
+            for food in order.food_list:
+                restaurant = self.search_restaurant_by_food_id(food.id)
+                if restaurant not in rider.restaurant_list:
+                    rider.restaurant_list.append(restaurant)
+                restaurant.add_requested_order(food)
+            rider.add_order(order)
+            return [{"order_id" : order.order_id, "order_state" : order.order_state, "rider_id" : order.rider}]
