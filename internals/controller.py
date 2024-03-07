@@ -163,7 +163,7 @@ class Controller:
             for restaurant in restaurant_acc.restaurant_list:
                 for food in restaurant.food_list:
                     if food.id == search_food_id:
-                        return food
+                        return restaurant
                 
     def search_order_by_id(self, search_order_id):
         for customer in self.__customer_account_list:
