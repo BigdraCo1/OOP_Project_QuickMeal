@@ -1,10 +1,10 @@
 class Profile:
-    def __init__(self, username: str, telephone_number: str, email, fullname: str, balance: int):
+    def __init__(self, username: str, telephone_number: str, email, fullname: str):
         self.__username = username
         self.__telephone_number = telephone_number
         self.__email = email
         self.__fullname = fullname
-        self.__balance = balance
+        
 
     @property
     def username(self):
@@ -51,4 +51,3 @@ class Profile:
 
     def top_up(self, amount: int):
         self.__balance += amount
-
