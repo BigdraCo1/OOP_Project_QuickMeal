@@ -5,7 +5,7 @@ from internals.pocket import Pocket
 
 class CustomerAccount(Account):
     def __init__(self, account_id: str, password: str, profile: Profile, pocket : Pocket):
-        if not isinstance(profile, Profile):
+        if not isinstance(profile, Profile, Pocket):
             ValueError("Error")
         super().__init__(account_id, password, profile, Pocket)
         self.__address_list = []
