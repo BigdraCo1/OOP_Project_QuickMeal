@@ -228,10 +228,15 @@ class Controller:
         food = self.search_food_by_id(food_id)
         restaurant = self.search_restaurant_by_food_id(food_id)
         customer.remove_food(food_id, size, amount)
-        customer.add_food(food, size, new_amount)
-        if restaurant not in customer.current_order.restaurant_list:
-            customer.current_order.restaurant_list.append(restaurant)
-        return str(food.food_name) + " is now" + str(new_amount)
+        if new_amount > 0:
+            customer.add_food(food, size, new_amount)
+            return str(food.name) + " is now" + str(new_amount)
+        else :
+            for f in customer.current_order.food_list:
+                if self.search_restaurant_by_food_id(f.id) == restaurant:
+                    return str(food.name) + " is remove from basket"
+            customer.current_order.restaurant_list.remove(restaurant)
+            return str(food.name) + " is remove from basket"
 
     def change_size(self, customer_id, food_id, size, new_size):
         customer = self.search_customer_by_id(customer_id)
@@ -240,7 +245,7 @@ class Controller:
         for customer_food in order.food_list:
             if customer_food.id == food.id and customer_food.current_size == size:
                 customer_food.current_size = new_size
-        return str(food.food_name) + " is now" + str(new_size)
+        return str(food.name) + " is now" + str(new_size)
     
     def show_review(self, restaurant_id):
         restaurant = self.search_restaurant_by_id(restaurant_id)
