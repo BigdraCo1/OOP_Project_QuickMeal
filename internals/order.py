@@ -61,8 +61,5 @@ class Order:
     def change_payment_status(self, status: str):
         self.__payment.payment_status = status
 
-    def remove_restaurant_from_order(self, restaurant: RestaurantAccount):
-        self.__restaurant = None
-
     def remove_food_from_order(self, food: Food):
         self.__food_list.remove(food)
