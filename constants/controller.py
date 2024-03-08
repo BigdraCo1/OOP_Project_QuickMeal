@@ -9,6 +9,9 @@ system = Controller([],
                     [],
                     [])
 
+system.add_customer_account(customer_account1)
+system.add_customer_account(customer_account2)
+system.add_rider_account(rider_account1)
 system.add_restaurant_account(restaurant_owner_account1)
 system.add_restaurant_account(restaurant_owner_account2)
 restaurant_owner_account1.assign_restaurant(restaurant1)

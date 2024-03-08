@@ -5,7 +5,7 @@ from constants.restaurant import *
 from constants.food import *
 
 order1 = Order(
-    customer = customer_account1,
+    #customer = customer_account1,
     customer_address="xxx",
     #rider = rider_account1,
     #restaurant_list = [restaurant4],
@@ -14,7 +14,7 @@ order1 = Order(
     #payment = Payment(fried_chicken.price,"Online",restaurant4,"2021-01-01 12:00:00","P1","Paid")
 )
 order2 = Order(
-    customer = customer_account1,
+    #customer = customer_account1,
     customer_address="xxx",
     #rider = rider_account1,
     #restaurant_list = [restaurant4],
