@@ -322,8 +322,16 @@ class Controller:
     def search_restaurant_order_by_id(self, search_order_id):
         for restaurant_acc in self.__restaurant_account_list:
             for restaurant in restaurant_acc.restaurant_list:
-                if restaurant.requested_order_list != None:
+                if (restaurant.requested_order_list) != None:
                     for order in restaurant.requested_order_list:
+                        if order.order_id == search_order_id:
+                            return order
+                if (restaurant.request_order_list) != None:
+                    for order in restaurant.request_order_list:
+                        if order.order_id == search_order_id:
+                            return order
+                if (restaurant.finished_order_list) != None:
+                    for order in restaurant.finished_order_list:
                         if order.order_id == search_order_id:
                             return order
                     
@@ -340,14 +348,20 @@ class Controller:
             if restaurant.account_id == account_id:
                 return restaurant
             
-    def search_restaurant_by_order_id_and_account_id(self, order_id: str, account_id: str):
-        account = self.search_account_from_id(account_id)
-        if isinstance(account, RestaurantAccount):
-            for restaurant in account.restaurant_list:
-                for order in restaurant.requested_order_list:
-                    if order.order_id == order_id:
-                        return restaurant
+    def search_restaurant_by_order_id(self, order_id: str):
+        order = self.search_restaurant_order_by_id(order_id)
+        restaurant = order.restaurant
+        for order in restaurant.requested_order_list:
+            if order.order_id == order_id:
+                return restaurant
+        for order in restaurant.request_order_list:
+            if order.order_id == order_id:
+                return restaurant
+        for order in restaurant.finish_order_list:
+            if order.order_id == order_id:
+                return restaurant
         return "Not found restaurants"
+
 
     def change_order_state(self, order: Order, order_state: str):
         order.order_state = order_state
@@ -365,8 +379,6 @@ class Controller:
         order_state = order.order_state
         if self.check_order_state(order_state) != None :
             return self.check_order_state(order_state)
-        if order_state == "Get_Restaurant":
-            order.rider.pocket.pay_out(order.payment.amount)
         order.change_payment_status("Refunded")
         customer_account.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Customer")
@@ -381,8 +393,6 @@ class Controller:
         order_state = order.order_state
         if self.check_order_state(order_state) != None :
             return self.check_order_state(order_state)
-        if order_state == "Get_Restaurant":
-            order.rider.pocket.pay_out(order.payment.amount)
         order.change_payment_status("Refunded")
         order.customer.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Rider")
@@ -393,20 +403,22 @@ class Controller:
         restaurant_account = self.search_account_from_id(restaurant_account_id)
         if not isinstance(restaurant_account, RestaurantAccount):
             return "Account is not restaurant account"
-        restaurant = self.search_restaurant_by_order_id_and_account_id(order_id, restaurant_account_id)
+        restaurant = self.search_restaurant_by_order_id(order_id)
         if self.search_restaurant_order_by_id(order_id) == None:
             return "Order not found"
         order = self.search_restaurant_order_by_id(order_id)
         if self.search_food_by_name(food_name) == None:
-            return "Food not found"
+            return "Food not found."
         food = self.search_food_by_name(food_name)
         if food not in restaurant.food_list:
-            return "Food not found in restaurant"
+            return "Food not found in restaurant."
+        if food not in order.food_list:
+            return "Food not found in order."
         order_state = order.order_state
         if self.check_order_state(order_state) != None :
             return self.check_order_state(order_state)
         if food_name in order_state:
-            return "Food already cancelled"
+            return "Food already cancelled."
         order.remove_food_from_order(food)
         food_count = 0
         for food_in_restaurant in restaurant.food_list:
@@ -415,7 +427,7 @@ class Controller:
                     food_count += 1
         self.change_order_state(order,order_state + "\n" + food_name + " Cancelled : " + string)
         if food_count == 0:
-            self.change_order_state(order, "Cancelled by Restaurant")
+            self.change_order_state(order, "Cancelled by Restaurant.")
             
         order.rider.pocket.pay_out(food.price)
         order.customer.pocket.top_up(food.price)
@@ -521,7 +533,25 @@ class Controller:
         finish_order_dict = dict()
         order_detail_list = list()
         for restaurant in restaurant_account.restaurant_list:
-            for finish_order in restaurant.requested_order_list:
-                order_detail_list.append(self.show_order_detail(finish_order.order_id))
+            for finished_order in restaurant.finished_order_list:
+                order_detail_list.append(self.show_order_detail(finished_order.order_id))
         finish_order_dict[restaurant.name_restaurant] = order_detail_list
         return finish_order_dict
+    
+    def restaurant_receive_order_from_customer(self, restaurant_account_id:str, order_id:str):
+        restaurant_account = self.search_account_from_id(restaurant_account_id)
+        restaurant = self.search_restaurant_by_order_id(order_id)
+        restaurant.receive_order_from_customer(order_id)
+        order = self.search_restaurant_order_by_id(order_id)
+        for rider in self.rider_account_list:
+            rider.add_request_order(order)
+        return f"{restaurant_account_id} Order : {order_id} is recieve."
+
+    def restaurant_deny_receive_order_from_customer(self, restaurant_account_id:str, order_id:str):
+        restaurant_account = self.search_account_from_id(restaurant_account_id)
+        restaurant = self.search_restaurant_by_order_id(order_id)
+        order = self.search_restaurant_order_by_id(order_id)
+        order.state = "Deny by restaurant."
+        order.payment.payment_status = "Refunded"
+        restaurant.remove_request_order(order)
+        return f"{restaurant_account_id} Order : {order_id} is deny."

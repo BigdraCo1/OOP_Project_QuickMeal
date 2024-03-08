@@ -63,6 +63,10 @@ class Restaurant:
     def requested_order_list(self, order):
         self.__requested_order_list.append(order)
 
+    @request_order_list.setter
+    def request_order_list(self, order):
+        self.__request_order_list.append(order)
+
     def search_menu(self, menu: str) -> object:
         for food in self.__food_list:
             food_name = food.name
@@ -98,6 +102,12 @@ class Restaurant:
     
     def receive_order_from_customer(self, order):
         for order in self.__request_order_list:
-            self.__current_order_list.append(order)
+            self.__requested_order_list.append(order)
             order.state = "Get_Restaurant"
             self.__request_order_list.remove(order)
+
+    def remove_request_order(self, order):
+        self.__request_order_list.remove(order)
+
+    def add_request_order(self, order):
+        self.__request_order_list.append(order)
