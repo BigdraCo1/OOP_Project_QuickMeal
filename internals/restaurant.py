@@ -99,4 +99,5 @@ class Restaurant:
     def receive_order_from_customer(self, order):
         for order in self.__request_order_list:
             self.__current_order_list.append(order)
+            order.state = "Get_Restaurant"
             self.__request_order_list.remove(order)
