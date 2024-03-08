@@ -10,8 +10,12 @@ async def show():
     for restaurant_acc in system.restaurant_account_list:
         for restaurant in restaurant_acc.restaurant_list:
             restaurant_raw_attribute = vars(restaurant)
-            restaurant_attributes = {key: value for key, value in restaurant_raw_attribute.items() if
-                                     key != '_Restaurant__owner'}
+            restaurant_attributes = {
+                key: value
+                for key, value in restaurant_raw_attribute.items()
+                if key != '_Restaurant__owner'
+            }
+
             show_list.append(restaurant_attributes)
     return show_list
 

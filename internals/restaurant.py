@@ -1,4 +1,5 @@
 from internals.food import Food
+import random
 from internals.review import Review
 
 
@@ -18,7 +19,6 @@ class Restaurant:
 
     @property
     def rate(self):
-        self.__rate = sum([review.rate for review in self.__reviewed_list])/len(self.__reviewed_list)
         return self.__rate
 
 
@@ -58,6 +58,10 @@ class Restaurant:
 
     def add_reviewed(self, review):
         self.reviewed_list.append(review)
+        self.__rate = sum([review.rate for review in self.__reviewed_list]) / len(self.__reviewed_list)
+
+    def add_requested(self, order):
+        self.requested_order_list.append(order)
 
 ####################################################
 
@@ -98,7 +102,7 @@ class Restaurant:
 
     def add_menu(self, request):
         food_list = self.food_list
-        new_menu = Food(request.name, request.type, request.size, request.price)
+        new_menu = Food(str(random.randint(1,2000)),request.name, request.type, request.size, request.price)
         food_list.append(new_menu)
         return new_menu
     

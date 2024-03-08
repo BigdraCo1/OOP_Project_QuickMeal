@@ -4,17 +4,20 @@ from internals.restaurant_account import RestaurantAccount
 
 class Order:
     ID = 1
-    def __init__(self, customer=None, customer_address=None, rider=None, restaurant_list=[],
-                 food_list=[], order_state=None, payment=None):
+    def __init__(self, customer=None, customer_address=None, rider=None #restaurant_list=[],
+                 ,food_list=[], order_state=None #,payment=None
+                 ):
         self.__order_id = str(Order.ID)
         Order.ID += 1
-        self.__customer = customer
+        #self.__customer = customer
         self.__customer_address = customer_address
-        self.__rider = rider
-        self.__restaurant_list = restaurant_list
+        #self.__rider = rider
+        #self.__restaurant_list = restaurant_list
         self.__food_list = food_list
         self.__order_state = order_state
-        self.__payment = payment
+        #self.__payment = payment
+
+
 
     # getter
     @property
