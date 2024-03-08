@@ -24,6 +24,12 @@ customer_profile1 = Profile("Customer",
                                     "Customer Fullname"
                                     )
 
+customer_profile2 = Profile("kenidID",
+                                    "4565464564",
+                                    "kkeenn@gmail.com",
+                                    "ken Fullname"
+                                    )
+
 rider_profile1 = Profile("Rider",
                                  "0801234567",
                                  "rider@gmail.com",
