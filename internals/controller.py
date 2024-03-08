@@ -361,6 +361,7 @@ class Controller:
         order_dict = {}
         already_add = []
         if order != None :
+            order_dict["address"] = order.customer_address
             for food in order.food_list:
                 if food not in already_add:
                     quantity = len([f for f in order.food_list if (f.id == food.id and f.current_size == food.current_size)])
@@ -369,11 +370,15 @@ class Controller:
                     already_add.append(food)
         return order_dict 
     
+    def show_address(self, customer_id):
+        customer = self.search_customer_by_id(customer_id)
+        return [ad for ad in customer.address_list]
+
     def add_address_to_basket(self, customer_id, address):
         customer = self.search_customer_by_id(customer_id)
         order = customer.current_order
         order.customer_address = address
-        return "the address of your order has been set!"
+        return f"{address} is now set as address of your order"
     
     def show_food_detail(self, food_id):
         food = self.search_food_by_id(food_id)
@@ -390,7 +395,7 @@ class Controller:
         customer.add_food(food, size, quantity)
         if restaurant not in customer.current_order.restaurant_list:
             customer.current_order.restaurant_list.append(restaurant)
-        return str(quantity) + " x " + str(food.name) + " is added to your cart!"
+        return f"{quantity} x {size} {food.name} is added to your cart!"
 
     def change_quantity(self, customer_id, food_id, quantity, new_quantity, size):
         customer = self.search_customer_by_id(customer_id)
@@ -399,14 +404,15 @@ class Controller:
         customer.remove_food(food_id, size, quantity)
         if new_quantity > 0:
             customer.add_food(food, size, new_quantity)
-            return str(food.name) + " is now " + str(new_quantity)
+            return f"{size} {food.name} is now {new_quantity}"
         else :
             for f in customer.current_order.food_list:
                 if self.search_restaurant_by_food_id(f.id) == restaurant:
-                    return str(food.name) + " is remove from basket"
+                    return f"{size} {food.name} is remove from basket"
             customer.current_order.restaurant_list.remove(restaurant)
-            return str(food.name) + " is remove from basket"
-
+            return f"{size} {food.name} is remove from basket"
+        
+    #ถ้ามาพร้อม change_quantity ให้ change_quantity ก่อน
     def change_size(self, customer_id, food_id, size, new_size):
         customer = self.search_customer_by_id(customer_id)
         order = customer.current_order
@@ -414,16 +420,17 @@ class Controller:
         for customer_food in order.food_list:
             if customer_food.id == food.id and customer_food.current_size == size:
                 customer_food.current_size = new_size
-        return str(food.name) + " is now " + str(new_size)
+        return f"{size} {food.name} is now {new_size}"
     
     def show_review(self, restaurant_id):
         restaurant = self.search_restaurant_by_id(restaurant_id)
-        if restaurant.review_list == [] :
-            return {}
+        if restaurant.reviewed_list == [] : return {}
         else:
             dct = {}
-            for review in restaurant.review_list:
-                dct[review.customer.profile.fullname] =  [review.rate, review.comment]
+            num = 1
+            for review in restaurant.reviewed_list:
+                dct[f"{num}"] =  [review.rate, review.comment]
+                num += 1
         return dct
     
     def add_review_to_restaurant(self, customer_id, rating, comment, restaurant_id):
@@ -432,17 +439,17 @@ class Controller:
         review = Review(rating, comment, customer, "TYPE")
         customer.reviewed_list.append(review)
         restaurant.reviewed_list.append(review)
-        return "you have writing a review to " + str(restaurant.name_restaurant)
+        return f"you have writing a review to {restaurant.name_restaurant}"
     
     def remove_review_from_restaurant(self, customer_id, restaurant_id):
         customer = self.search_customer_by_id(customer_id)
         restaurant = self.search_restaurant_by_id(restaurant_id)
-        for review in restaurant.review_list:
+        for review in restaurant.reviewed_list:
             if review.customer == customer:
-                restaurant.review_list.remove(review)
-                customer.review_list.remove(review)
+                restaurant.reviewed_list.remove(review)
+                customer.reviewed_list.remove(review)
                 del review
-        return "you have remove a review from " + str(restaurant.name)
+        return f"you have remove a review from {restaurant.name_restaurant}"
     
     def search_food_by_name(self, search_food_name):
         for restaurant_account in self.__restaurant_account_list:

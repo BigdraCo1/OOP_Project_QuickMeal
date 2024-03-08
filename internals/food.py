@@ -50,3 +50,7 @@ class Food:
         if new_price < 0:
             raise ValueError("This value must be positive")
         self.__price = new_price
+
+    @current_size.setter
+    def current_size(self, new_current_size):
+        self.__current_size = new_current_size
