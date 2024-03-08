@@ -5,7 +5,7 @@ app = APIRouter()
 
 #show every restaurant
 @app.get("/show/restaurant", tags=["General"])
-async def show_restaurant() -> dict:
+async def show_restaurant():
     return system.show_restaurant()
 
 #show every menu in clicked restaurant
