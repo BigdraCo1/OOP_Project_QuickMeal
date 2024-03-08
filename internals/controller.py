@@ -185,30 +185,42 @@ class Controller:
         for food in restaurant.food_list:
                 food_dict[food.id] = [ food.name, food.price ]
         return food_dict
-        
+    
+    def calculate_total_of_basket(self, customer_id):
+        customer = self.search_customer_by_id(customer_id)
+        basket = customer.current_order
+        total = 0
+        for order in basket:
+            for food in order.food_list:
+                total += food.price + food.size[food.current_size]
+        return total
+
     def show_basket(self, customer_id):
         customer = self.search_customer_by_id(customer_id)
-        order = customer.current_order
-        order_dict = {}
-        already_add = []
-        if order != None :
-            order_dict["address"] = order.customer_address
-            for food in order.food_list:
-                if food not in already_add:
-                    quantity = len([f for f in order.food_list if (f.id == food.id and f.current_size == food.current_size)])
-                    order_dict[f"id-{food.id} {food.current_size}"] = [quantity, food.id, 
-                        food.name, food.price + food.size[str(food.current_size)], food.current_size]
-                    already_add.append(food)
-        return order_dict 
+        basket = customer.current_order
+        basket_dict = {}
+        if basket != [] :
+            basket_dict["total"] = self.calculate_total_of_basket(customer_id)
+            basket_dict["address"] = basket[0].customer_address
+            for order in basket:
+                already_add = []
+                for food in order.food_list:
+                    if food not in already_add:
+                        quantity = len([f for f in order.food_list if (f.id == food.id and f.current_size == food.current_size)])
+                        basket_dict[f"id-{food.id} {food.current_size}"] = [quantity, food.id, 
+                            food.name, food.price + food.size[str(food.current_size)], food.current_size]
+                        already_add.append(food)
+        return basket_dict 
     
     def show_address(self, customer_id):
         customer = self.search_customer_by_id(customer_id)
-        return [ad for ad in customer.address_list]
+        return [address for address in customer.address_list]
 
     def add_address_to_basket(self, customer_id, address):
         customer = self.search_customer_by_id(customer_id)
-        order = customer.current_order
-        order.customer_address = address
+        basket = customer.current_order
+        for order in basket:
+            order.customer_address = address
         return f"{address} is now set as address of your order"
     
     def show_food_detail(self, food_id):
@@ -223,34 +235,34 @@ class Controller:
         customer = self.search_customer_by_id(customer_id)
         food = self.search_food_by_id(food_id)
         restaurant = self.search_restaurant_by_food_id(food_id)
-        customer.add_food(food, size, quantity)
-        if restaurant not in customer.current_order.restaurant_list:
-            customer.current_order.restaurant_list.append(restaurant)
-        return f"{quantity} x {size} {food.name} is added to your cart!"
+        customer.add_food(food, size, quantity, restaurant)
+        return f"{quantity} x {size} {food.name} is added to your basket!"
 
     def change_quantity(self, customer_id, food_id, quantity, new_quantity, size):
         customer = self.search_customer_by_id(customer_id)
         food = self.search_food_by_id(food_id)
         restaurant = self.search_restaurant_by_food_id(food_id)
-        customer.remove_food(food_id, size, quantity)
+        customer.remove_food(food_id, size, quantity, restaurant)
         if new_quantity > 0:
-            customer.add_food(food, size, new_quantity)
+            customer.add_food(food, size, new_quantity, restaurant)
             return f"{size} {food.name} is now {new_quantity}"
         else :
-            for f in customer.current_order.food_list:
-                if self.search_restaurant_by_food_id(f.id) == restaurant:
+            for order in customer.current_order:
+                if order.restaurant == restaurant :
+                    if order.food_list != [] :
+                        return f"{size} {food.name} is remove from basket"
+                    customer.current_order.remove(order)
                     return f"{size} {food.name} is remove from basket"
-            customer.current_order.restaurant_list.remove(restaurant)
-            return f"{size} {food.name} is remove from basket"
         
     #ถ้ามาพร้อม change_quantity ให้ change_quantity ก่อน
     def change_size(self, customer_id, food_id, size, new_size):
         customer = self.search_customer_by_id(customer_id)
-        order = customer.current_order
+        basket = customer.current_order
         food = self.search_food_by_id(food_id)
-        for customer_food in order.food_list:
-            if customer_food.id == food.id and customer_food.current_size == size:
-                customer_food.current_size = new_size
+        for order in basket:
+            for customer_food in order.food_list:
+                if customer_food.id == food.id and customer_food.current_size == size:
+                    customer_food.current_size = new_size
         return f"{size} {food.name} is now {new_size}"
     
     def show_review(self, restaurant_id):
