@@ -30,6 +30,14 @@ class CustomerAccount(Account):
     @property
     def reviewed_list(self):
         return self.__reviewed_list
+    
+    @reviewed_list.setter
+    def reviewed_list(self, new_reviewed_list):
+        self.__reviewed_list = new_reviewed_list
+
+    @property
+    def address_list(self):
+        return self.__address_list
 
     def add_address(self, address: str):
         self.__address_list.append(address)

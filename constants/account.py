@@ -25,6 +25,8 @@ customer_account1 = CustomerAccount("Customer_Account_ID",
                                                      customer_profile1,
                                                      customer_account1_pocket)
 
+customer_account2 = CustomerAccount("101", "717", customer_profile2, customer_account2_pocket)
+
 rider_account1 = RiderAccount("Rider_Account_ID",
                                             "AccountPassword",
                                             rider_profile1,
