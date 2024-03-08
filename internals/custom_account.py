@@ -53,9 +53,7 @@ class CustomerAccount(Account):
             for food in self.__current_order.food_list:
                 if food.id == food_id and food.current_size == size:
                     self.__current_order.food_list.remove(food)
-        
-    # use for search order by order_id in 
-    # current_order:list (cart) to confirm order
+                    
     def search_order_by_id(self, order_id):
         for order in self.__current_order:
             if order.order_id == order_id: return order
