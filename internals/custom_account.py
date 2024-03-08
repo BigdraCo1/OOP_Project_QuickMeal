@@ -30,6 +30,14 @@ class CustomerAccount(Account):
     @property
     def reviewed_list(self):
         return self.__reviewed_list
+    
+    @reviewed_list.setter
+    def reviewed_list(self, new_reviewed_list):
+        self.__reviewed_list = new_reviewed_list
+
+    @property
+    def address_list(self):
+        return self.__address_list
 
     def add_address(self, address: str):
         self.__address_list.append(address)
@@ -37,19 +45,19 @@ class CustomerAccount(Account):
     def remove_address(self, address: str):
         self.__address_list.remove(address)
 
-    def add_food(self, food, size, amount):
+    def add_food(self, food, size, quantity):
         if self.__current_order == None :
             self.create_basket()
         customer_food = Food(food.id, food.name, food.type, food.size, food.price, size)
-        for i in range (amount):
+        for i in range (quantity):
             self.__current_order.food_list.append(customer_food)
     
     def create_basket(self):
         self.__current_order = Order(self)
         self.__current_order.state = 'Not Comfirm'
 
-    def remove_food(self, food_id, size, amount):
-        for i in range(amount):
+    def remove_food(self, food_id, size, quantity):
+        for i in range(quantity):
             for food in self.__current_order.food_list:
                 if food.id == food_id and food.current_size == size:
                     self.__current_order.food_list.remove(food)

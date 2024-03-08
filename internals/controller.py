@@ -328,8 +328,6 @@ class Controller:
         order.order_state = order_state
         return "Order state changed"
     
-    
-            
     def customer_cancel_order(self, customer_account_id: str, order_id : str):
         customer_account = self.search_account_from_id(customer_account_id)
         if not isinstance(customer_account, CustomerAccount):
@@ -390,7 +388,7 @@ class Controller:
                     food_count += 1
         self.change_order_state(order,order_state + "\n" + food_name + " Cancelled : " + string)
         if food_count == 0:
-            order.remove_restaurant_from_order(restaurant)
+            #order.remove_restaurant_from_order(restaurant)
             self.change_order_state(order, "Cancelled by Restaurant")
             
         order.rider.pocket.pay_out(food.price)
