@@ -81,7 +81,10 @@ class Controller:
                 name = restaurant.name_restaurant
                 restaurant_raw_attribute = vars(restaurant)
                 restaurant_attributes = {key: value for key, value in restaurant_raw_attribute.items() if
-                                         key != '_Restaurant__owner'}
+                                         key == '_Restaurant__name_restaurant'
+                                         or key == '_Restaurant__restaurant_location'
+                                         or key == '_Restaurant__rate'
+                                         }
                 if key.lower() in name.lower():
                     show_list.append(restaurant_attributes)
                 food_list = restaurant.food_list
