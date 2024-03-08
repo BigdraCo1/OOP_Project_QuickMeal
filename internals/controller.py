@@ -416,6 +416,8 @@ class Controller:
         if self.search_restaurant_order_by_id(order_id) == None:
             return "Order not found"
         order = self.search_restaurant_order_by_id(order_id)
+        if not order in restaurant.requested_order_list:
+            return "Order not in requested_order_list."
         if self.search_food_by_name(food_name) == None:
             return "Food not found."
         food = self.search_food_by_name(food_name)
