@@ -1,7 +1,6 @@
 from internals.food import Food
 from internals.restaurant_account import RestaurantAccount
 
-
 class Order:
     ID = 1
     def __init__(self, customer=None, customer_address=None, rider=None, restaurant=None,
@@ -58,9 +57,9 @@ class Order:
     def payment(self, new_payment):
         self.__payment = new_payment
 
-    @restaurant_list.setter
-    def restaurant_list(self, new_restaurant_list):
-        self.__restaurant_list = new_restaurant_list
+    @restaurant.setter
+    def restaurant(self, new_restaurant):
+        self.__restaurant = new_restaurant
 
     @customer_address.setter
     def customer_address(self, new_customer_address):
