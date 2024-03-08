@@ -84,7 +84,7 @@ class Controller:
                                          key == '_Restaurant__name_restaurant'
                                          or key == '_Restaurant__restaurant_location'
                                          or key == '_Restaurant__rate'
-                                         }
+                                         or key == '_Restaurant__restaurant_id'}
                 if key.lower() in name.lower():
                     show_list.append(restaurant_attributes)
                 food_list = restaurant.food_list
@@ -175,12 +175,18 @@ class Controller:
                     return order
                 
     def show_restaurant(self):
-        restaurant_dict = {}
-        for restaurant_account in self.__restaurant_account_list:
-            for restaurant in restaurant_account.restaurant_list:
-                restaurant_dict[restaurant.restaurant_id] = [
-                    restaurant.name_restaurant, restaurant.restaurant_location, restaurant.rate ]
-        return restaurant_dict
+        show_list = []
+        restaurant_list = self.restaurant_account_list
+        for restaurant_acc in restaurant_list:
+            for restaurant in restaurant_acc.restaurant_list:
+                restaurant_raw_attribute = vars(restaurant)
+                restaurant_attributes = {key: value for key, value in restaurant_raw_attribute.items() if
+                                         key == '_Restaurant__name_restaurant'
+                                         or key == '_Restaurant__restaurant_location'
+                                         or key == '_Restaurant__rate'
+                                         or key == '_Restaurant__restaurant_id'}
+                show_list.append(restaurant_attributes)
+        return show_list
     
     def show_restaurant_menu(self, restaurant_id):
         food_dict = {}
