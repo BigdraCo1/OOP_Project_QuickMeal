@@ -4,14 +4,14 @@ from internals.restaurant_account import RestaurantAccount
 
 class Order:
     ID = 1
-    def __init__(self, customer=None, customer_address=None, rider=None, restaurant_list=[],
+    def __init__(self, customer=None, customer_address=None, rider=None, restaurant=None,
                  food_list=[], order_state=None, payment=None):
         self.__order_id = str(Order.ID)
         Order.ID += 1
         self.__customer = customer
         self.__customer_address = customer_address
         self.__rider = rider
-        self.__restaurant_list = restaurant_list
+        self.__restaurant = restaurant
         self.__food_list = food_list
         self.__order_state = order_state
         self.__payment = payment
@@ -34,8 +34,8 @@ class Order:
         return self.__rider
 
     @property
-    def restaurant_list(self):
-        return self.__restaurant_list
+    def restaurant(self):
+        return self.__restaurant
 
     @property
     def food_list(self):
@@ -63,7 +63,7 @@ class Order:
         self.__payment.payment_status = status
 
     def remove_restaurant_from_order(self, restaurant: RestaurantAccount):
-        self.__restaurant_list.remove(restaurant)
+        self.__restaurant = None
 
     def remove_food_from_order(self, food: Food):
         self.__food_list.remove(food)
