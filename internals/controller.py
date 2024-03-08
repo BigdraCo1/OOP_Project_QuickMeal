@@ -134,11 +134,6 @@ class Controller:
     def new_menu(self, restaurant, request):
         real_restaurant = self.search_restaurant(restaurant)
         return real_restaurant.add_menu(request)
-
-    def search_current_order_by_id(self, search_order_id):
-        for customer in self.customer_account_list:
-            if customer.current_order.order_id == search_order_id:
-                return customer.current_order
         
     def search_customer_by_id(self, search_account_id):
         for customer in self.customer_account_list:
