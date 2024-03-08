@@ -57,6 +57,14 @@ class Order:
     def payment(self, new_payment):
         self.__payment = new_payment
 
+    @restaurant.setter
+    def restaurant(self, new_restaurant):
+        self.__restaurant = new_restaurant
+
+    @customer_address.setter
+    def customer_address(self, new_customer_address):
+        self.__customer_address = new_customer_address
+
     # method
     def change_payment_status(self, status: str):
         self.__payment.payment_status = status
