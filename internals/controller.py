@@ -366,7 +366,7 @@ class Controller:
         for order in restaurant.request_order_list:
             if order.order_id == order_id:
                 return restaurant
-        for order in restaurant.finish_order_list:
+        for order in restaurant.finished_order_list:
             if order.order_id == order_id:
                 return restaurant
         return "Not found restaurants"
@@ -385,6 +385,9 @@ class Controller:
         if self.search_customer_order_list_by_id(order_id) == None:
             return "Order not found"
         order = self.search_customer_order_list_by_id(order_id)
+        restaurant = self.search_restaurant_by_order_id(order_id)
+        if not order in restaurant.requested_order_list:
+            return "Order not in requested_order_list."
         order_state = order.order_state
         if self.check_order_state(order_state) != None :
             return self.check_order_state(order_state)
@@ -392,6 +395,10 @@ class Controller:
         customer_account.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Customer")
         customer_account.pocket.add_payment(order.payment)
+        order.rider.add_finished_order(order)
+        order.rider.remove_recieved_order(order)
+        order.restaurant.add_finished_order(order)
+        order.restaurant.remove_requested_order(order)
         return customer_account_id + " Order ID : " + order_id + " is cancelled. Payment is refunded."
      
     def rider_cancel_order(self, rider_account_id: str, order_id: str):
@@ -399,6 +406,9 @@ class Controller:
         if not isinstance(rider_account, RiderAccount):
             return "Account is not rider account"
         order = self.search_rider_order_by_id(order_id)
+        restaurant = self.search_restaurant_by_order_id(order_id)
+        if not order in restaurant.requested_order_list:
+            return "Order not in requested_order_list."
         order_state = order.order_state
         if self.check_order_state(order_state) != None :
             return self.check_order_state(order_state)
@@ -406,6 +416,10 @@ class Controller:
         order.customer.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Rider")
         rider_account.pocket.add_payment(order.payment)
+        order.rider.add_finished_order(order)
+        order.rider.remove_recieved_order(order)
+        order.restaurant.add_finished_order(order)
+        order.restaurant.remove_requested_order(order)
         return rider_account_id + " Order ID : " + order_id + " is cancelled."
     
     def restaurant_cancel_order(self, restaurant_account_id: str, order_id: str, food_name: str, string : str):
@@ -431,19 +445,19 @@ class Controller:
         if food_name in order_state:
             return "Food already cancelled."
         order.remove_food_from_order(food)
-        food_count = 0
-        for food_in_restaurant in restaurant.food_list:
-            for food_in_order in order.food_list:
-                if food_in_restaurant == food_in_order:
-                    food_count += 1
         self.change_order_state(order,order_state + "\n" + food_name + " Cancelled : " + string)
-        if food_count == 0:
+        if order.food_list == []:
             self.change_order_state(order, "Cancelled by Restaurant.")
             
         order.rider.pocket.pay_out(food.price)
         order.customer.pocket.top_up(food.price)
         order.change_payment_status(order.payment.payment_status +" Food : " + food_name + " is Refunded")
-        if food_count == 0:
+        if order.food_list == []:
+            order.rider.add_finished_order(order)
+            order.rider.remove_recieved_order(order)
+            order.restaurant.add_finished_order(order)
+            order.restaurant.remove_requested_order(order)
+            order.change_payment_status("Refunded")
             return restaurant_account_id + " Order ID : " + order_id + " is cancelled."
         return restaurant_account_id + " " + food.name + " in " + order_id + " is refund."
     
@@ -511,6 +525,7 @@ class Controller:
             return "Order already cancelled by rider"
         if order_state == "Cancelled by Restaurant":
             return "Order already cancelled by restaurant"
+            
         return None
     
     def show_request_order_list_in_restaurant(self, restaurant_account_id: str):

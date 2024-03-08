@@ -111,3 +111,9 @@ class Restaurant:
 
     def add_request_order(self, order):
         self.__request_order_list.append(order)
+
+    def remove_requested_order(self, order):
+        self.__requested_order_list.remove(order)
+
+    def add_finished_order(self, order):
+        self.__finished_order_list.append(order)

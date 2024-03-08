@@ -7,7 +7,7 @@ class RiderAccount(Account) :
         super().__init__(account_id, password, profile, pocket)
         self.__request_order_list = []
         self.__recieve_order_list = []
-        self.__finish_order_list = []
+        self.__finished_order_list = []
         self.__review_list = []
     # getter
     @property
@@ -31,3 +31,9 @@ class RiderAccount(Account) :
 
     def add_request_order(self, order: Order):
         self.__request_order_list.append(order)
+
+    def add_finished_order(self, order: Order):
+        self.__finished_order_list.append(order)
+
+    def remove_recieved_order(self, order: Order):
+        self.__recieve_order_list.remove(order)
