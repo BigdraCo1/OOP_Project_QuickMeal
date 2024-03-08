@@ -24,5 +24,5 @@ customer_account1.add_order_list(order1)
 customer_account1.add_order_list(order2)
 rider_account1.recieve_order_list = order1
 rider_account1.recieve_order_list = order2
-#restaurant4.requested_order_list = order1
-#restaurant4.requested_order_list = order2
+restaurant4.requested_order_list = order1
+restaurant4.requested_order_list = order2

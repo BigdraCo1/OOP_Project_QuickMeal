@@ -12,7 +12,7 @@ class CustomerAccount(Account):
         super().__init__(account_id, password, profile, pocket)
         self.__address_list = []
         self.__reviewed_list = []
-        self.__current_order = []
+        self.__current_order = None
         self.__order_list = []
 
     @property
@@ -30,14 +30,6 @@ class CustomerAccount(Account):
     @property
     def reviewed_list(self):
         return self.__reviewed_list
-    
-    @reviewed_list.setter
-    def reviewed_list(self, new_reviewed_list):
-        self.__reviewed_list = new_reviewed_list
-
-    @property
-    def address_list(self):
-        return self.__address_list
 
     def add_address(self, address: str):
         self.__address_list.append(address)
@@ -45,34 +37,22 @@ class CustomerAccount(Account):
     def remove_address(self, address: str):
         self.__address_list.remove(address)
 
-    def is_basket_of_restaurant_there(self, restaurant):
-        if self.__current_order == [] :
-            return False
-        for order in self.__current_order:
-            if order.restaurant == restaurant:
-                return True
-        return False 
-
-    def add_food(self, food, size, quantity, restaurant):
+    def add_food(self, food, size, amount):
+        if self.__current_order == None :
+            self.create_basket()
         customer_food = Food(food.id, food.name, food.type, food.size, food.price, size)
-        if self.is_basket_of_restaurant_there(restaurant):
-            for order in self.__current_order:
-                if order.restaurant == restaurant:
-                    for i in range (quantity):
-                        order.food_list.append(customer_food)
-        else:
-            order = Order(self, None, None, restaurant, [], 'Not Comfirm', None)
-            for i in range (quantity):
-                order.food_list.append(customer_food)
-            self.__current_order.append(order)
+        for i in range (amount):
+            self.__current_order.food_list.append(customer_food)
+    
+    def create_basket(self):
+        self.__current_order = Order(self)
+        self.__current_order.state = 'Not Comfirm'
 
-    def remove_food(self, food_id, size, quantity, restaurant):
-        for order in self.__current_order:
-            if order.restaurant == restaurant:
-                for i in range(quantity):
-                    for food in order.food_list:
-                        if food.id == food_id and food.current_size == size:
-                            order.food_list.remove(food)
+    def remove_food(self, food_id, size, amount):
+        for i in range(amount):
+            for food in self.__current_order.food_list:
+                if food.id == food_id and food.current_size == size:
+                    self.__current_order.food_list.remove(food)
         
     # use for search order by order_id in 
     # current_order:list (cart) to confirm order
