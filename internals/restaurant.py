@@ -10,8 +10,8 @@ class Restaurant:
         self.__restaurant_location = restaurant_location
         self.__food_list = food_list
         self.__request_order_list = []
-        self.__requested_order_list = requested_order_list
-        self.__finished_order_list = finished_order_list
+        self.__requested_order_list = requested_order_food_list
+        self.__finished_order_list = finished_order_food_list
         self.__reviewed_list = reviewed_list
         rate = sum([review.rate for review in self.__reviewed_list]) / len(self.__reviewed_list)
         self.__rate = rate
