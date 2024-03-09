@@ -4,10 +4,12 @@ from constants.profiles import *
 from constants.food import *
 from constants.order import *
 from internals.controller import Controller
+from internals.pocket import Pocket
 
 system = Controller([],
                     [],
-                    [])
+                    [],
+                    Pocket(1000000))
 
 system.add_restaurant_account(restaurant_owner_account1)
 system.add_restaurant_account(restaurant_owner_account2)

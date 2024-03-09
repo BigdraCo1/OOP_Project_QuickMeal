@@ -12,9 +12,12 @@ class CustomerAccount(Account):
         super().__init__(account_id, password, profile, pocket)
         self.__address_list = []
         self.__reviewed_list = []
-        self.__current_order = None
+        self.__current_order = []
         self.__order_list = []
-
+        
+    def get_current_order(self):
+        return self.__current_order
+        
     @property
     def current_order(self):
         return self.__current_order
@@ -53,9 +56,7 @@ class CustomerAccount(Account):
             for food in self.__current_order.food_list:
                 if food.id == food_id and food.current_size == size:
                     self.__current_order.food_list.remove(food)
-        
-    # use for search order by order_id in 
-    # current_order:list (cart) to confirm order
+                    
     def search_order_by_id(self, order_id):
         for order in self.__current_order:
             if order.order_id == order_id: return order
@@ -63,6 +64,9 @@ class CustomerAccount(Account):
     
     def add_current_order(self, order):
         self.__current_order.append(order)
+        
+    def remove_current_order(self, order):
+        self.__current_order.remove(order)
 
     def add_order_list(self, order):
         self.__order_list.append(order)

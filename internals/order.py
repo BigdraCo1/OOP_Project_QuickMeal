@@ -15,7 +15,6 @@ class Order:
         self.__order_state = order_state
         self.__payment = payment
 
-    # getter
     @property
     def order_id(self):
         return self.__order_id
@@ -31,6 +30,10 @@ class Order:
     @property
     def rider(self):
         return self.__rider
+    
+    @rider.setter
+    def rider(self, new_rider):
+        self.__rider = new_rider
 
     @property
     def restaurant(self):
@@ -48,7 +51,6 @@ class Order:
     def payment(self):
         return self.__payment
 
-    # setter
     @order_state.setter
     def order_state(self, new_order_state: str):
         self.__order_state = new_order_state

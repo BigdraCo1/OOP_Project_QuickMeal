@@ -7,22 +7,22 @@ restaurant_owner_profile1 = Profile("chingchongma",
                                             )
 
 restaurant_owner_profile2 = Profile("mama_mia",
-                                            "987654321",
-                                            "mamamia@gmail.com",
-                                            "pizzapasta"
-                                            )
+                                    "987654321",
+                                    "mamamia@gmail.com",
+                                    "pizzapasta"
+                                    )
 
 restaurant_owner_profile3 = Profile("Restaurant3",
-                                            "0801234567",
-                                            "restaurant@gmail.com",
-                                            "Restaurant Fullname"
-                                            )
-
-customer_profile1 = Profile("Customer",
                                     "0801234567",
-                                    "customer@gmail.com",
-                                    "Customer Fullname"
+                                    "restaurant@gmail.com",
+                                    "Restaurant Fullname"
                                     )
+
+customer_profile1 = Profile("Gundam_Zeed",
+                            "0801234567",
+                            "customer@gmail.com",
+                            "Customer Fullname"
+                            )
 
 customer_profile2 = Profile("kenidID",
                                     "4565464564",

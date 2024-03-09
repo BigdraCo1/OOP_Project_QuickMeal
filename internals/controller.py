@@ -1,5 +1,4 @@
 from datetime import datetime
-from internals.payment import Payment
 
 from internals.custom_account import CustomerAccount
 from internals.rider_account import RiderAccount
@@ -7,16 +6,17 @@ from internals.restaurant_account import RestaurantAccount
 from internals.restaurant import Restaurant
 from internals.review import Review
 from internals.order import Order
-
-
+from internals.pocket import Pocket
+from internals.payment import Payment
 
 class Controller:
     def __init__(self, customer_account_list: list[CustomerAccount], rider_account_list: list[RiderAccount],
-                restaurant_account_list: list[RestaurantAccount]):
+                restaurant_account_list: list[RestaurantAccount], central_money: Pocket = None):
         self.__customer_account_list = customer_account_list
         self.__rider_account_list = rider_account_list
         self.__restaurant_account_list = restaurant_account_list
-        self.__approval_list = None
+        self.__approval_list = []
+        self.__central_money = central_money
 
     @property
     def customer_account_list(self):
@@ -29,6 +29,20 @@ class Controller:
     @property
     def restaurant_account_list(self):
         return self.__restaurant_account_list
+    
+    @property
+    def approval_list(self):
+        return self.__approval_list
+    
+    @property
+    def central_money(self):
+        return self.__central_money
+    
+    @central_money.setter
+    def central_money(self, new_central_money):
+        self.__central_money = new_central_money
+    
+    # {method} add function
 
     def add_customer_account(self, new_customer: CustomerAccount):
         self.__customer_account_list.append(new_customer)
@@ -38,6 +52,8 @@ class Controller:
 
     def add_restaurant_account(self, new_restaurant: RestaurantAccount):
         self.__restaurant_account_list.append(new_restaurant)
+        
+    # [method] remove function
 
     def remove_customer_account(self, customer_account: CustomerAccount):
         self.__customer_account_list.remove(customer_account)
@@ -59,6 +75,55 @@ class Controller:
             del restaurant
             return 'Success'
         return 'Not Found'
+    
+    # [method] search function
+    
+    def search_current_order_by_id(self, search_order_id):
+        for customer in self.customer_account_list:
+            if customer.current_order.order_id == search_order_id:
+                return customer.current_order
+        
+    def search_customer_by_id(self, search_account_id):
+        for customer in self.customer_account_list:
+            if customer.account_id == search_account_id:
+                return customer
+            
+    def search_rider_by_id(self, rider_id):
+        for rider in self.rider_account_list:
+            if rider.account_id == rider_id:
+                return rider
+            
+    def search_food_by_id(self, search_food_id):
+        for restaurant_acc in self.restaurant_account_list:
+            for restaurant in restaurant_acc.restaurant_list:
+                for food in restaurant.food_list:
+                    if food.id == search_food_id:
+                        return food
+                    
+    def search_restaurant_account_by_restaurant_id(self, search_restaurant_id):
+        for restaurant_acc in self.restaurant_account_list:
+            for restaurant in restaurant_acc.restaurant_list:
+                if restaurant.restaurant_id == search_restaurant_id:
+                    return restaurant_acc
+            
+    def search_restaurant_by_id(self, search_restaurant_id):
+        for restaurant_acc in self.restaurant_account_list:
+            for restaurant in restaurant_acc.restaurant_list:
+                if restaurant.restaurant_id == search_restaurant_id:
+                    return restaurant
+                         
+    def search_restaurant_by_food_id(self, search_food_id):
+        for restaurant_acc in self.__restaurant_account_list:
+            for restaurant in restaurant_acc.restaurant_list:
+                for food in restaurant.food_list:
+                    if food.id == search_food_id:
+                        return restaurant
+                
+    def search_order_by_id(self, search_order_id):
+        for customer in self.__customer_account_list:
+            for order in customer.order_list:
+                if order.order_id == search_order_id:
+                    return order
 
     def search_restaurant(self, name: str):
         for restaurant_account in self.__restaurant_account_list:
@@ -66,13 +131,7 @@ class Controller:
             if isinstance(response, Restaurant):
                 return response
         return 'Not found restaurant'
-
-    def get_menu_list(self, restaurant_name: str):
-        restaurant = self.search_restaurant(restaurant_name)
-        if isinstance(restaurant, str):
-            return restaurant
-        return restaurant.food_list
-
+    
     def search_menu_and_restaurant(self, key: str):
         show_list = []
         restaurant_list = self.restaurant_account_list
@@ -95,6 +154,73 @@ class Controller:
         if len(show_list) < 1:
             return 'Not Found'
         return show_list
+    
+    def search_food_by_name(self, search_food_name):
+        for restaurant_account in self.__restaurant_account_list:
+            for restaurant in restaurant_account.restaurant_list:
+                for food in restaurant.food_list:
+                    if food.name == search_food_name:
+                        return food
+                    
+    def search_customer_current_order_by_id(self, search_order_id):
+        for customer in self.__customer_account_list:
+            for order in customer.current_order:
+                if order.order_id == search_order_id:
+                    return order
+                
+    def search_current_order_list_by_id(self, search_order_id):
+        for customer in self.__customer_account_list:
+            for order in customer.current_order:
+                if order.order_id == search_order_id:
+                    return order
+                
+    def search_customer_order_list_by_id(self, search_order_id):
+        for customer in self.__customer_account_list:
+            for order in customer.order_list:
+                if order.order_id == search_order_id:
+                    return order
+                
+    def search_rider_order_by_id(self, search_order_id):
+        for rider in self.__rider_account_list:
+            for order in rider.recieve_order_list:
+                if order.order_id == search_order_id:
+                    return order
+                
+    def search_restaurant_order_by_id(self, search_order_id):
+        for restaurant_acc in self.__restaurant_account_list:
+            for restaurant in restaurant_acc.restaurant_list:
+                if restaurant.requested_order_list != None:
+                    for order in restaurant.requested_order_list:
+                        if order.order_id == search_order_id:
+                            return order
+                    
+    def search_account_from_id(self, account_id: str):
+        for customer in self.__customer_account_list:
+            if customer.account_id == account_id:
+                return customer
+        for rider in self.__rider_account_list:
+            if rider.account_id == account_id:
+                return rider
+        for restaurant in self.__restaurant_account_list:
+            if restaurant.account_id == account_id:
+                return restaurant
+            
+    def search_restaurant_by_order_id_and_account_id(self, order_id: str, account_id: str):
+        account = self.search_account_from_id(account_id)
+        if isinstance(account, RestaurantAccount):
+            for restaurant in account.restaurant_list:
+                for order in restaurant.requested_order_list:
+                    if order.order_id == order_id:
+                        return restaurant
+        return "Not found restaurants"
+
+    # [method] others function
+
+    def get_menu_list(self, restaurant_name: str):
+        restaurant = self.search_restaurant(restaurant_name)
+        if isinstance(restaurant, str):
+            return restaurant
+        return restaurant.food_list
 
     def edit_menu(self, restaurant, menu, request):
         acc_restaurant = self.search_restaurant(restaurant)
@@ -102,31 +228,188 @@ class Controller:
             return acc_restaurant
         return acc_restaurant.edit_menu(menu, request)
     
-    def confirm_customer_order(self, customer_id, order_id):
-        #search customer from customer_list 
+    # ====================================================
+    
+    def show_current_order(self, customer_id):
+        customer = self.search_customer_by_id(customer_id)
+        if not isinstance(customer, CustomerAccount):
+            return f"customer_id : {customer_id} not found"
+        if customer.current_order == []:
+            return "No current order"
+        display = []
+        for order in customer.current_order:
+            amount = sum(food.price for food in order.food_list)
+            display.append({"order_id": order.order_id,
+                            "order_state": order.order_state,
+                            "order_customer": order.customer.profile.username,
+                            "order_restaurant": order.restaurant.name_restaurant,
+                            "food_list": [food.name for food in order.food_list],
+                            "amount": amount})
+        return display
+
+    def show_order_list(self, customer_id):
+        customer = self.search_customer_by_id(customer_id)
+        if not isinstance(customer, CustomerAccount):
+            return f"customer_id : {customer_id} not found"
+        if customer.order_list == []:
+            return "No current order"
+        return [self.show_order_detail(order.order_id) for order in customer.order_list]
+    
+    def confirm_customer_order(self, customer_id):
         customer = self.search_customer_by_id(customer_id)
         if customer == None:
             return f"customer_id : {customer_id} not found"
-        #search order from order_list
-        order = customer.search_order_by_id(order_id)
+        display_01 = []
+        for order_lp01 in customer.current_order:
+            amount = sum(food.price for food in order_lp01.food_list)
+            if customer.pocket.balance < amount:
+                return "Insufficient balance"
+            order_lp01.order_state = "pending"
+            customer.add_order_list(order_lp01)
+            customer.pocket.pay_out(amount)
+            self.central_money.top_up(amount)
+            restaurant = order_lp01.restaurant
+            restaurant.add_request_order(order_lp01)
+            payment_time = datetime.now()
+            payment = Payment(amount, "online", restaurant, str(payment_time.strftime("%c")), "paid")
+            order_lp01.payment = payment
+            display_01.append({"order_id": order_lp01.order_id, 
+                               "order_state": order_lp01.order_state, 
+                               "restaurant": order_lp01.restaurant.restaurant_id,
+                               "amount": order_lp01.payment.amount})
+        for order_lp02 in reversed(customer.current_order):
+            customer.remove_current_order(order_lp02)
+        # display_02 = [{f"customer {customer_id} balance": customer.pocket.balance, "central balance": self.central_money.balance}]
+        return [display_01]
+
+    def accept_order_by_restaurant(self, restaurant_id, order_id):
+        restaurant = self.search_restaurant_by_id(restaurant_id)
+        if restaurant == None:
+            return f"restaurant_id : {restaurant_id} not found"
+        order = restaurant.search_request_order_by_id(order_id)
         if order == None:
             return f"order_id : {order_id} not found"
-        # calculate amount
-        amount = sum(food.price for food in order.food_list)
-        if customer.pocket.balance < amount:
-            return "Insufficient balance"
-        # pay out
-        customer.pocket.pay_out(amount)
-        # create payment object
-        payment_time = datetime.now()
-        food_list = []
-        for food in order.food_list:
-            food_list.append(food)
-        payment = Payment(food_list,amount,"paid",order.restaurant_list,payment_time.strftime("%c"),order_id)
-        order.order_state = "confirmed"
-        order.payment = payment
-        # return f"order_id : {order.order_id} confirmed, amount : {amount}"
-        return [{"order_id": order.order_id, "order_state": order.order_state, "amount": amount}]
+        if order.order_state != "pending":
+            return "order is not pending"
+        order.order_state = "get_res"
+        for rider in self.rider_account_list:
+            rider.add_request_order(order)
+        return self.show_order_detail(order_id)
+    
+    def deny_order_by_restaurant(self, restaurant_id, order_id):
+        restaurant = self.search_restaurant_by_id(restaurant_id)
+        if restaurant == None:
+            return f"restaurant_id : {restaurant_id} not found"
+        order = restaurant.search_request_order_by_id(order_id)
+        if order == None:
+            return f"order_id : {order_id} not found"
+        if order.order_state != "get_res":
+            return "order is not get_res"
+        order.order_state = "denied_by_restaurant"
+        restaurant.remove_request_order(order)
+        for rider in self.rider_account_list:
+            rider.remove_request_order(order)
+        customer = order.customer
+        pay_back_amount = order.payment.amount
+        self.central_money.pay_out(pay_back_amount)
+        customer.pocket.top_up(pay_back_amount)
+        return self.show_order_detail(order_id)
+    
+    def accept_order_by_rider(self, rider_id, order_id):
+        main_rider = self.search_rider_by_id(rider_id)
+        if main_rider == None:
+            return f"rider_id : {rider_id} not found"
+        main_order = main_rider.search_request_order_by_id(order_id)
+        if main_order == None:
+            return f"order_id : {order_id} not found"
+        if main_order.order_state != "get_res":
+            return "order is not get_res"
+        if main_order.order_state == "get_res":
+            main_order.order_state = "get_ri"
+            main_order.rider = main_rider
+            restaurant = main_order.restaurant
+            main_rider.add_receive_order(main_order)
+            restaurant.add_requested_order(main_order)
+            for rider in self.rider_account_list:
+                rider.remove_request_order(main_order)
+            restaurant.remove_request_order(main_order)
+            return self.show_order_detail(order_id)
+                                      
+    def deny_order_by_rider(self, rider_id, order_id):
+        main_rider = self.search_rider_by_id(rider_id)
+        if main_rider == None:
+            return f"rider_id : {rider_id} not found"
+        main_order = main_rider.search_receive_order_by_id(order_id)
+        if main_order == None:
+            return f"order_id : {order_id} not found"
+        if main_order.order_state != "get_ri":
+            return "order is not get_ri"
+        if main_order.order_state == "get_ri":
+            main_order.order_state = "get_res"
+            main_order.rider = None
+            restaurant = main_order.restaurant
+            restaurant.add_request_order(main_order)
+            for rider in self.rider_account_list:
+                rider.add_request_order(main_order)
+            main_rider.remove_receive_order(main_order)
+            restaurant.remove_requested_order(main_order)
+            return self.show_order_detail(order_id)
+    
+    def receive_order_from_rider(self, rider_id, order_id):
+        rider = self.search_rider_by_id(rider_id)
+        if rider == None:
+            return f"rider_id : {rider_id} not found"
+        order = rider.search_receive_order_by_id(order_id)
+        if order == None:
+            return f"order_id : {order_id} not found"
+        if order.order_state != "get_ri":
+            return "order is not get_ri"
+        order.order_state = "delivering"
+        restaurant_amount = order.payment.amount * 0.8
+        self.central_money.pay_out(restaurant_amount)
+        restaurant = order.restaurant
+        restaurant_account = self.search_restaurant_account_by_restaurant_id(restaurant.restaurant_id)
+        restaurant_account.pocket.top_up(restaurant_amount)
+        return self.show_order_detail(order_id)
+    
+    def deliver_order(self, rider_id, order_id):
+        main_rider = self.search_rider_by_id(rider_id)
+        if main_rider == None:
+            return f"rider_id : {rider_id} not found"
+        main_order = main_rider.search_receive_order_by_id(order_id)
+        if main_order == None:
+            return f"order_id : {order_id} not found"
+        if main_order.order_state != "delivering":
+            return "order is not delivering"
+        if main_order.order_state == "delivering":
+            main_order.order_state = "success"
+            main_rider.remove_receive_order(main_order)
+            main_rider.add_finished_order(main_order)
+            restaurant = main_order.restaurant
+            restaurant.add_finished_order(main_order)
+            restaurant.remove_requested_order(main_order)
+            rider_amount = main_order.payment.amount * 0.1
+            self.central_money.pay_out(rider_amount)
+            main_rider.pocket.top_up(rider_amount)
+            return self.show_order_detail(order_id)
+            
+    def show_request_order(self, rider_id):
+        rider = self.search_rider_by_id(rider_id)
+        if rider == None:
+            return f"rider_id : {rider_id} not found"
+        return [self.show_order_detail(order.order_id) for order in rider.request_order_list]
+    
+    def show_receive_order(self, rider_id):
+        rider = self.search_rider_by_id(rider_id)
+        if rider == None:
+            return f"rider_id : {rider_id} not found"
+        return [self.show_order_detail(order.order_id) for order in rider.recieve_order_list]
+    
+    def show_finished_order(self, rider_id):
+        rider = self.search_rider_by_id(rider_id)
+        if rider == None:
+            return f"rider_id : {rider_id} not found"
+        return [self.show_order_detail(order.order_id) for order in rider.finished_order_list]
 
     def remove_menu(self, restaurant, menu):
         real_restaurant = self.search_restaurant(restaurant)
@@ -375,8 +658,6 @@ class Controller:
     def change_order_state(self, order: Order, order_state: str):
         order.order_state = order_state
         return "Order state changed"
-    
-    
             
     def customer_cancel_order(self, customer_account_id: str, order_id : str):
         customer_account = self.search_account_from_id(customer_account_id)
@@ -461,29 +742,34 @@ class Controller:
             return restaurant_account_id + " Order ID : " + order_id + " is cancelled."
         return restaurant_account_id + " " + food.name + " in " + order_id + " is refund."
     
-        
+    # [method] order function
+
+    def change_order_state(self, order: Order, order_state: str):
+        order.order_state = order_state
+        return "Order state changed"
 
     def show_order_detail(self, order_id: str):
         order_detail = dict()
         if self.search_customer_order_list_by_id(order_id) != None:
             order = self.search_customer_order_list_by_id(order_id)
-        else :
+        else:
             order_detail["Order_Not_Found"] = order_id + " is not found in list"
             return order_detail
-
         if not isinstance(order, Order):
             return order
-            
         order_detail["Order_ID"] = order.order_id
         order_detail["Customer"] = order.customer.account_id
-        order_detail["Rider"] = order.rider.account_id
-        order_detail["Restaurant"] = order.restaurant.name_restaurant
+        if isinstance(order.rider, RiderAccount):
+            order_detail["Rider"] = order.rider.account_id
+        else:
+            order_detail["Rider"] = "No rider_id"
+        order_detail["Restaurant"] = order.restaurant.restaurant_id
         food_list = []
         for food in order.food_list:
             food_list.append(food.name)
         order_detail["Food"] = food_list
         order_detail["Order_State"] = order.order_state
-        order_detail["Payment"] = order.payment.payment_status
+        order_detail["Payment"] = order.payment.payment_status 
         return order_detail
     
     def show_pocket_detail(self, account_id: str):
@@ -512,9 +798,7 @@ class Controller:
                 payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
         elif isinstance(account, RiderAccount):
             for order in account.recieve_order_list:
-                payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
-                
-        return payment_dict
+                payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]   
     
     def check_order_state(self, order_state : str):
         if order_state == "Delivering":
@@ -525,8 +809,11 @@ class Controller:
             return "Order already cancelled by rider"
         if order_state == "Cancelled by Restaurant":
             return "Order already cancelled by restaurant"
+<<<<<<< HEAD
+=======
         if order_state == "Success":
             return "Order already success"
+>>>>>>> 0fd6b75f68b5b81befec3ebcbed6487b0c6a7467
             
         return None
     
@@ -566,4 +853,24 @@ class Controller:
         finish_order_dict[restaurant.name_restaurant] = order_detail_list
         return finish_order_dict
     
+<<<<<<< HEAD
+    def restaurant_receive_order_from_customer(self, restaurant_account_id:str, order_id:str):
+        restaurant_account = self.search_account_from_id(restaurant_account_id)
+        restaurant = self.search_restaurant_by_order_id(order_id)
+        restaurant.receive_order_from_customer(order_id)
+        order = self.search_restaurant_order_by_id(order_id)
+        for rider in self.rider_account_list:
+            rider.add_request_order(order)
+        return f"{restaurant_account_id} Order : {order_id} is recieve."
+
+    def restaurant_deny_receive_order_from_customer(self, restaurant_account_id:str, order_id:str):
+        restaurant_account = self.search_account_from_id(restaurant_account_id)
+        restaurant = self.search_restaurant_by_order_id(order_id)
+        order = self.search_restaurant_order_by_id(order_id)
+        order.state = "Deny by restaurant."
+        order.payment.payment_status = "Refunded"
+        restaurant.remove_request_order(order)
+        return f"{restaurant_account_id} Order : {order_id} is deny."
+=======
     
+>>>>>>> 0fd6b75f68b5b81befec3ebcbed6487b0c6a7467

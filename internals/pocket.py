@@ -2,7 +2,7 @@ from internals.payment import Payment
 from datetime import datetime
 
 class Pocket:
-    def __init__(self, balance):
+    def __init__(self, balance = 0):
         self.__balance = balance
         self.__payment_list = []
 
