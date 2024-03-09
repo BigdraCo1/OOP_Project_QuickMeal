@@ -60,14 +60,6 @@ class Restaurant:
     @property
     def request_order_list(self):
         return self.__request_order_list
-    
-    @requested_order_list.setter
-    def requested_order_list(self, order):
-        self.__requested_order_list.append(order)
-
-    @request_order_list.setter
-    def request_order_list(self, order):
-        self.__request_order_list.append(order)
 
     def search_menu(self, menu: str) -> object:
         for food in self.__food_list:
@@ -116,3 +108,6 @@ class Restaurant:
 
     def add_review(self, review):
         self.__reviewed_list.append(review)
+
+    def add_requested_order(self, order):
+        self.__requested_order_list.append(order)
