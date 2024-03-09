@@ -283,6 +283,8 @@ class Controller:
     def add_review_to_restaurant(self, customer_id, rating, comment, restaurant_id):
         customer = self.search_customer_by_id(customer_id)
         restaurant = self.search_restaurant_by_id(restaurant_id)
+        if not (0 <= rating <= 5):
+            raise ValueError('rating value is between 0 to 5')
         review = Review(rating, comment, customer, "TYPE")
         customer.reviewed_list.append(review)
         restaurant.reviewed_list.append(review)
