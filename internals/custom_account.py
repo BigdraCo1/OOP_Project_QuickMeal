@@ -4,12 +4,12 @@ from internals.order import Order
 from internals.pocket import Pocket
 
 class CustomerAccount(Account):
-    def __init__(self, account_id: str, password: str, profile: Profile, pocket : Pocket):
+    def __init__(self, password: str, profile: Profile, pocket : Pocket):
         if not isinstance(profile, Profile):
             ValueError("Error")
         if not isinstance(pocket, Pocket):
             ValueError("Error")
-        super().__init__(account_id, password, profile, pocket)
+        super().__init__(password, profile, pocket)
         self.__address_list = []
         self.__reviewed_list = []
         self.__current_order = []
@@ -52,7 +52,7 @@ class CustomerAccount(Account):
         self.__current_order.state = 'Not Comfirm'
 
     def remove_food(self, food_id, size, amount):
-        for i in range(amount):
+        for each in range(amount):
             for food in self.__current_order.food_list:
                 if food.id == food_id and food.current_size == size:
                     self.__current_order.food_list.remove(food)
