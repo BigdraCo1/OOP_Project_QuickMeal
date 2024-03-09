@@ -119,3 +119,6 @@ class Restaurant:
 
     def add_finished_order(self, order):
         self.__finished_order_list.append(order)
+
+    def add_review(self, review):
+        self.__reviewed_list.append(review)
