@@ -3,9 +3,10 @@ from internals.pocket import Pocket
 from uuid import uuid4
 
 class Account:
-
+    ID = 1
     def __init__(self, password: str, profile: Profile = None, pocket: Pocket = None):
-        self.__account_id = uuid4()
+        self.__account_id = str(Account.ID)
+        Account.ID += 1
         self.__password = password
         self.__profile = profile
         self.__pocket = pocket
