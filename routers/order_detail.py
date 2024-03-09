@@ -19,13 +19,18 @@ async def show_payment(account_id: str) -> dict:
 
 @app.get("/show_request_order_list_in_restaurant/{account_id}", tags = ["General"])
 async def show_request_order_list_in_restaurant(account_id: str) -> dict:
-    return system.show_request_order_list_in_restaurant(account_id)
-
+    return {
+        "data": system.show_request_order_list_in_restaurant(account_id)
+        }
 
 @app.get("/show_requested_order_list_in_restaurant/{account_id}", tags = ["General"])
 async def show_requested_order_list_in_restaurant(account_id: str) -> dict:
-    return system.show_requested_order_list_in_restaurant(account_id)
+    return {
+        "data": system.show_requested_order_list_in_restaurant(account_id)
+        }
 
 @app.get("/show_finish_order_list_in_restaurant/{account_id}", tags = ["General"])
 async def show_finish_order_list_in_restaurant(account_id: str) -> dict:
-    return system.show_finish_order_list_in_restaurant(account_id)
+    return {
+        "data": system.show_finish_order_list_in_restaurant(account_id)
+        }

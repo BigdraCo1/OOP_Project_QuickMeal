@@ -5,29 +5,32 @@ from constants.profiles import *
 from constants.pocket import *
 
 restaurant_owner_account1 = RestaurantAccount("Brunos",
-                                                                 "5756456646",
-                                                                 restaurant_owner_profile1,
-                                                                 restaurant_owner_account1_pocket)
+                                              "5756456646",
+                                              restaurant_owner_profile1,
+                                              restaurant_owner_account1_pocket)
 
 
 restaurant_owner_account2 = RestaurantAccount("Bruno mars",
-                                                                 "5756456646",
-                                                                 restaurant_owner_profile2,
-                                                                 restaurant_owner_account2_pocket)
+                                              "5756456646",
+                                              restaurant_owner_profile2,
+                                              restaurant_owner_account2_pocket)
 
-restaurant_owner_account3 = RestaurantAccount("Restaurant_Account_ID",
-                                                                 "AccountPassword",
-                                                                 restaurant_owner_profile3,
-                                                                 restaurant_owner_account3_pocket)
+restaurant_owner_account3 = RestaurantAccount("707",
+                                              "AccountPassword",
+                                              restaurant_owner_profile3,
+                                              restaurant_owner_account3_pocket)
 
-customer_account1 = CustomerAccount("Customer_Account_ID",
-                                                     "AccountPassword",
-                                                     customer_profile1,
-                                                     customer_account1_pocket)
+customer_account1 = CustomerAccount("101",
+                                    "601",
+                                    customer_profile1,
+                                    customer_account1_pocket)
 
-customer_account2 = CustomerAccount("101", "717", customer_profile2, customer_account2_pocket)
+customer_account2 = CustomerAccount("102", 
+                                    "602", 
+                                    customer_profile2, 
+                                    customer_account2_pocket)
 
-rider_account1 = RiderAccount("Rider_Account_ID",
-                                            "AccountPassword",
-                                            rider_profile1,
-                                            rider_account1_pocket)
+rider_account1 = RiderAccount("201", 
+                              "801",
+                              rider_profile1,
+                              rider_account1_pocket)
