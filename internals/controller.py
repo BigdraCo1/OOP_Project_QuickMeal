@@ -137,11 +137,6 @@ class Controller:
     def new_menu(self, restaurant, request):
         real_restaurant = self.search_restaurant(restaurant)
         return real_restaurant.add_menu(request)
-
-    def search_current_order_by_id(self, search_order_id):
-        for customer in self.customer_account_list:
-            if customer.current_order.order_id == search_order_id:
-                return customer.current_order
         
     def search_customer_by_id(self, search_account_id):
         for customer in self.customer_account_list:
@@ -288,10 +283,15 @@ class Controller:
     def add_review_to_restaurant(self, customer_id, rating, comment, restaurant_id):
         customer = self.search_customer_by_id(customer_id)
         restaurant = self.search_restaurant_by_id(restaurant_id)
-        review = Review(rating, comment, customer, "TYPE")
-        customer.reviewed_list.append(review)
-        restaurant.reviewed_list.append(review)
-        return f"you have writing a review to {restaurant.name_restaurant}"
+        if not (0 <= rating <= 5):
+            raise ValueError('rating value is between 0 to 5')
+        for order in customer.order_list:
+            if order.restaurant.restaurant_id == restaurant.restaurant_id:
+                review = Review(rating, comment, customer, "TYPE")
+                customer.add_review(review)
+                restaurant.add_review(review)
+                return f"you have writing a review to {restaurant.name_restaurant}"
+        return f"you've never ordered food from {restaurant.name_restaurant}"
     
     def remove_review_from_restaurant(self, customer_id, restaurant_id):
         customer = self.search_customer_by_id(customer_id)
