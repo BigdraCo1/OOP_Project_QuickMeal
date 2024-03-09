@@ -14,9 +14,8 @@ class RiderAccount(Account) :
     def recieve_order_list(self):
         return self.__recieve_order_list
 
-    # setter
-    @recieve_order_list.setter
-    def recieve_order_list(self, order):
+    
+    def add_recieve_order_list(self, order):
         self.__recieve_order_list.append(order)
 
     @property
