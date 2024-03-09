@@ -274,18 +274,16 @@ class Controller:
         if restaurant.reviewed_list == [] : return {}
         else:
             dct = {}
-            num = 1
             for review in restaurant.reviewed_list:
-                dct[f"{num}"] =  [review.rate, review.comment]
-                num += 1
+                dct[f"{review.customer.getname()}"] =  [review.rate, review.comment]
         return dct
     
     def add_review_to_restaurant(self, customer_id, rating, comment, restaurant_id):
         customer = self.search_customer_by_id(customer_id)
         restaurant = self.search_restaurant_by_id(restaurant_id)
         review = Review(rating, comment, customer, "TYPE")
-        customer.reviewed_list.append(review)
-        restaurant.reviewed_list.append(review)
+        customer.add_review(review)
+        restaurant.add_review.append(review)
         return f"you have writing a review to {restaurant.name_restaurant}"
     
     def remove_review_from_restaurant(self, customer_id, restaurant_id):
