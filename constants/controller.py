@@ -24,7 +24,7 @@ system.add_rider_account(rider_account1)
 restaurant_owner_account3.assign_restaurant(restaurant4)
 customer_account1.add_order_list(order1)
 customer_account1.add_order_list(order2)
-rider_account1.add_receive_order = order1
-rider_account1.add_receive_order = order2
-restaurant4.add_request_order(order1)
-restaurant4.add_request_order(order2)
+rider_account1.add_recieve_order_list(order1)
+rider_account1.add_recieve_order_list(order2)
+restaurant4.add_requested_order(order1)
+restaurant4.add_requested_order(order2)
