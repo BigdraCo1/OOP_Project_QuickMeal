@@ -5,22 +5,12 @@ from internals.order import Order
 class RiderAccount(Account) :
     def __init__(self,account_id : str, password : str, profile = None, pocket = None):
         super().__init__(account_id, password, profile, pocket)
-<<<<<<< HEAD
         self.__request_order_list = [] # all riders have all confirmed orders
         self.__receive_order_list = []
-=======
-        self.__request_order_list = []
-        self.__recieve_order_list = []
->>>>>>> 0fd6b75f68b5b81befec3ebcbed6487b0c6a7467
         self.__finished_order_list = []
         self.__review_list = []
     # getter
     @property
-<<<<<<< HEAD
-    def request_order_list(self):
-        return self.__request_order_list
-        
-=======
     def recieve_order_list(self):
         return self.__recieve_order_list
 
@@ -28,7 +18,6 @@ class RiderAccount(Account) :
     def add_recieve_order_list(self, order):
         self.__recieve_order_list.append(order)
 
->>>>>>> 0fd6b75f68b5b81befec3ebcbed6487b0c6a7467
     @property
     def recieve_order_list(self):
         return self.__receive_order_list
@@ -45,7 +34,6 @@ class RiderAccount(Account) :
         self.__request_order_list.append(order)
 
     def remove_order(self, order: Order):
-<<<<<<< HEAD
         self.__request_order_list.remove(order)
         
     # right word and format methods
@@ -85,15 +73,3 @@ class RiderAccount(Account) :
         for order in self.__finished_order_list:
             if order.order_id == order_id: return order
         return None
-=======
-        self.__recieve_order_list.remove(order)
-
-    def add_request_order(self, order: Order):
-        self.__request_order_list.append(order)
-
-    def add_finished_order(self, order: Order):
-        self.__finished_order_list.append(order)
-
-    def remove_recieved_order(self, order: Order):
-        self.__recieve_order_list.remove(order)
->>>>>>> 0fd6b75f68b5b81befec3ebcbed6487b0c6a7467
