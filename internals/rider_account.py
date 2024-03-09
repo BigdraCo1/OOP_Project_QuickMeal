@@ -47,6 +47,9 @@ class RiderAccount(Account) :
     def remove_receive_order(self, order: Order):
         self.__receive_order_list.remove(order)
         
+    def remove_recieved_order(self, order: Order):
+        self.__receive_order_list.remove(order)
+        
     def add_finished_order(self, order: Order):
         self.__finished_order_list.append(order)
 

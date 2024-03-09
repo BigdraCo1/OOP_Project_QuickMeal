@@ -70,6 +70,6 @@ class CustomerAccount(Account):
 
     def add_order_list(self, order):
         self.__order_list.append(order)
-        
-    def remove_order_list(self, order):
-        self.__order_list.remove(order)
+
+    def add_review(self, review):
+        self.__reviewed_list.append(review)

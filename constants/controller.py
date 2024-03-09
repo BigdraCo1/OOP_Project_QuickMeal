@@ -22,11 +22,9 @@ system.add_customer_account(customer_account1)
 system.add_customer_account(customer_account2)
 system.add_rider_account(rider_account1)
 restaurant_owner_account3.assign_restaurant(restaurant4)
-# customer_account1.add_current_order(order1)
-# customer_account1.add_current_order(order2)
-customer_account1.add_current_order(order3)
-customer_account1.add_current_order(order4)
-rider_account1.add_request_order(order1)
-rider_account1.add_request_order(order2)
-restaurant4.requested_order_list = order1
-restaurant4.requested_order_list = order2
+customer_account1.add_order_list(order1)
+customer_account1.add_order_list(order2)
+rider_account1.add_receive_order = order1
+rider_account1.add_receive_order = order2
+restaurant4.add_request_order(order1)
+restaurant4.add_request_order(order2)

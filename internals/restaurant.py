@@ -15,8 +15,10 @@ class Restaurant:
         self.__requested_order_list = requested_order_list
         self.__finished_order_list = finished_order_list
         self.__reviewed_list = reviewed_list
-        rate = sum([review.rate for review in self.__reviewed_list]) / len(self.__reviewed_list)
-        self.__rate = rate
+        if len(self.__reviewed_list) == 0:
+            self.__rate = 0
+        else:
+            self.__rate = sum([review.rate for review in self.__reviewed_list]) / len(self.__reviewed_list)
 
     @property
     def rate(self):
@@ -63,6 +65,10 @@ class Restaurant:
     def requested_order_list(self, order):
         self.__requested_order_list.append(order)
 
+    @request_order_list.setter
+    def request_order_list(self, order):
+        self.__request_order_list.append(order)
+
     def search_menu(self, menu: str) -> object:
         for food in self.__food_list:
             food_name = food.name
@@ -98,7 +104,7 @@ class Restaurant:
     
     def receive_order_from_customer(self, order):
         for order in self.__request_order_list:
-            self.__current_order_list.append(order)
+            self.__requested_order_list.append(order)
             order.state = "Get_Restaurant"
             self.__request_order_list.remove(order)
             
@@ -134,3 +140,6 @@ class Restaurant:
         for order in self.__finished_order_list:
             if order.order_id == order_id: return order
         return None
+
+    def add_review(self, review):
+        self.__reviewed_list.append(review)
