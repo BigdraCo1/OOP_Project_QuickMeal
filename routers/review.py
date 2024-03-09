@@ -9,11 +9,13 @@ app = APIRouter()
 async def get_restaurant_review(restaurant_id: str) -> dict:
     return system.show_review(restaurant_id)
 
+
 #add review to restaurant
 @app.post("/review/add", tags=["Review"])
 async def add_restaurant_review(body: review.add_review_api) -> str:
     return system.add_review_to_restaurant(
         body.customer_id, body.rating, body.comment, body.restaurant_id)
+
 
 #remove review from restaurant
 @app.delete("/review/remove/{customer_id}", tags=["Review"])
