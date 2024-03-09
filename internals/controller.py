@@ -525,6 +525,8 @@ class Controller:
             return "Order already cancelled by rider"
         if order_state == "Cancelled by Restaurant":
             return "Order already cancelled by restaurant"
+        if order_state == "Success":
+            return "Order already success"
             
         return None
     
@@ -564,20 +566,4 @@ class Controller:
         finish_order_dict[restaurant.name_restaurant] = order_detail_list
         return finish_order_dict
     
-    def restaurant_receive_order_from_customer(self, restaurant_account_id:str, order_id:str):
-        restaurant_account = self.search_account_from_id(restaurant_account_id)
-        restaurant = self.search_restaurant_by_order_id(order_id)
-        restaurant.receive_order_from_customer(order_id)
-        order = self.search_restaurant_order_by_id(order_id)
-        for rider in self.rider_account_list:
-            rider.add_request_order(order)
-        return f"{restaurant_account_id} Order : {order_id} is recieve."
-
-    def restaurant_deny_receive_order_from_customer(self, restaurant_account_id:str, order_id:str):
-        restaurant_account = self.search_account_from_id(restaurant_account_id)
-        restaurant = self.search_restaurant_by_order_id(order_id)
-        order = self.search_restaurant_order_by_id(order_id)
-        order.state = "Deny by restaurant."
-        order.payment.payment_status = "Refunded"
-        restaurant.remove_request_order(order)
-        return f"{restaurant_account_id} Order : {order_id} is deny."
+    

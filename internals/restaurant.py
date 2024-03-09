@@ -99,12 +99,6 @@ class Restaurant:
         new_menu = Food(request.name, request.type, request.size, request.price)
         food_list.append(new_menu)
         return new_menu
-    
-    def receive_order_from_customer(self, order):
-        for order in self.__request_order_list:
-            self.__requested_order_list.append(order)
-            order.state = "Get_Restaurant"
-            self.__request_order_list.remove(order)
 
     def remove_request_order(self, order):
         self.__request_order_list.remove(order)
