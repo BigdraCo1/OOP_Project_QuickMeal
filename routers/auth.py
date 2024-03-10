@@ -17,6 +17,8 @@ async def customer_register(request: CreatUserRequest):
         register = system.add_customer_account_by_request(bcrypt_context.hash(request.password), request.username, request.telephone_number, request.email, request.fullname)
     if request.role == 'restaurant':
         register = system.add_restaurant_account_by_request(bcrypt_context.hash(request.password), request.username,request.telephone_number, request.email, request.fullname)
+    if request.role == 'rider':
+        register = system.add_rider_account_by_request(bcrypt_context.hash(request.password), request.username,request.telephone_number, request.email, request.fullname)
     if isinstance(register, str):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=register)
     return register
@@ -27,5 +29,5 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate')
 
-    token = create_access_token(user.get_name(), user.account_id, timedelta(minutes=30))
+    token = create_access_token(user.get_name(), user.account_id, timedelta(minutes=30), system)
     return {'access_token': token, 'token_type': 'bearer'}
