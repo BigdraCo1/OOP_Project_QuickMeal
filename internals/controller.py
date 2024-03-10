@@ -448,6 +448,8 @@ class Controller:
     def add_address_to_basket(self, customer_id, address):
         customer = self.search_customer_by_id(customer_id)
         basket = customer.current_order
+        if address not in customer.address_list:
+            customer.add_address(address)
         for order in basket:
             order.customer_address = address
         return f"{address} is now set as address of your order"
