@@ -1,5 +1,6 @@
 from constants.controller import system
-from fastapi import APIRouter
+from fastapi import APIRouter,HTTPException , status
+from utils.dependencies import user_dependency, restaurant_dependency, rider_dependency
 
 app = APIRouter()
 
@@ -20,5 +21,7 @@ async def food_detail(food_id: str) -> dict:
 
 #show account profile
 @app.get("/show/profile/{account_id}", tags=["General"])
-async def show_account_profile(account_id: str) -> dict:
+async def show_account_profile(account_id: str, user : user_dependency, restaurant_acc : restaurant_dependency, rider : rider_dependency) -> dict:
+    if (user is None) and (restaurant_acc is None) and (rider is None):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.show_account_profile(account_id)
