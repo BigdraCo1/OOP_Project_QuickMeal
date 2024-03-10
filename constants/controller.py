@@ -1,7 +1,3 @@
-from constants.restaurant import *
-from constants.account import *
-from constants.profiles import *
-from constants.food import *
 from constants.order import *
 from internals.controller import Controller
 from internals.pocket import Pocket

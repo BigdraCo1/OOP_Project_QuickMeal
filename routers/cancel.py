@@ -12,10 +12,10 @@ async def cancel_order(account_id: str, order_id: str, user : user_dependency) -
 
 
 @app.post("/cancel_by_restaurant/{restaurant_account_id}/{order_id}/{food_name}/{string}")
-async def cancel_food(restaurant_account_id: str, order_id: str, food_name: str, string: str, restaurant : restaurant_dependency) -> dict:
+async def cancel_food(restaurant_account_id: str, order_id: str, food_name: str, restaurant : restaurant_dependency) -> dict:
     if restaurant is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    return  {"message": system.restaurant_cancel_order(restaurant_account_id, order_id, food_name, string)}
+    return  {"message": system.restaurant_cancel_order(restaurant_account_id, order_id, food_name)}
 
 @app.post("/cancel_by_rider/{rider_account_id}/{order_id}")
 async def cancel_rider(rider_account_id: str, order_id: str, rider : rider_dependency) -> dict:

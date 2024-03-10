@@ -3,12 +3,11 @@ from internals.food import Food
 Fondue_lal = Food("auto", 
                   "Fondue",
                   "Food",
-                  {"Big":10,"Small": 0},
+                  {"Big": 10, "Small": 0},
                   20)
 
-Capuliato_pop = Food("auto", "Capuliato",
-                          "Drinks",
-                          {"Large":20,"Medium":15,"Small":0},
+Capuliato_pop = Food("auto", "Capuliato","Drinks",
+                          {"Large": 20, "Medium": 15, "Small": 0},
                           35)
 
 maccu_lano = Food("auto", "maccu",

@@ -6,10 +6,8 @@ from utils.dependencies import user_dependency
 app = APIRouter(prefix='/review', tags=['Review'])
 
 #review
-@app.get("/show")
-async def get_restaurant_review(restaurant_id: str, user : user_dependency) -> dict:
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+@app.get("/show/{restaurant_id}")
+async def get_restaurant_review(restaurant_id: str) -> dict:
     return system.show_review(restaurant_id)
 
 

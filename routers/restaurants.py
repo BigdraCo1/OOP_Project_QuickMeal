@@ -22,9 +22,7 @@ async def show_restaurant_detail_by_name(restaurant_name: str, restaurant_dep : 
 
 
 @app.get("/show_restaurant_detail_by_id/{restaurant_id}")
-async def show_restaurant_detail_by_id(restaurant_id: str, restaurant_dep : restaurant_dependency) -> dict:
-    if restaurant_dep is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+async def show_restaurant_detail_by_id(restaurant_id: str) -> dict:
     return system.show_restaurant_detail_by_id(restaurant_id)
 
 

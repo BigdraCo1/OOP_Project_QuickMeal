@@ -50,7 +50,7 @@ async def get_current_customer(token: Annotated[str, Depends(oauth2_bearer)]):
         username: str = payload.get('sub')
         user_id: str = payload.get('id')
         user_role: str = payload.get('role')
-        if username is None or user_id is None or user_role != 'customer':
+        if username is None or user_id is None or (user_role != 'customer' and user_role != 'admin'):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate')
         return {'username': username, 'id': user_id, 'role': user_role}
     except JWTError:
@@ -63,7 +63,7 @@ async def get_current_restaurant(token: Annotated[str, Depends(oauth2_bearer)]):
         username: str = payload.get('sub')
         user_id: str = payload.get('id')
         user_role: str = payload.get('role')
-        if username is None or user_id is None or user_role != 'restaurant':
+        if username is None or user_id is None or (user_role != 'restaurant' and user_role != 'admin'):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate')
         return {'username': username, 'id': user_id, 'role': user_role}
     except JWTError:
@@ -89,7 +89,20 @@ async def get_current_rider(token: Annotated[str, Depends(oauth2_bearer)]):
         username: str = payload.get('sub')
         user_id: str = payload.get('id')
         user_role: str = payload.get('role')
-        if username is None or user_id is None or user_role != 'rider':
+        if username is None or user_id is None or (user_role != 'rider' and user_role != 'admin'):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate')
+        return {'username': username, 'id': user_id, 'role': user_role}
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate')
+
+
+async def get_current_account(token: Annotated[str, Depends(oauth2_bearer)]):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get('sub')
+        user_id: str = payload.get('id')
+        user_role: str = payload.get('role')
+        if username is None or user_id is None or (user_role != 'rider' and user_role != 'restaurant' and user_role != 'customer' and user_role != 'admin'):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate')
         return {'username': username, 'id': user_id, 'role': user_role}
     except JWTError:
@@ -99,3 +112,4 @@ user_dependency = Annotated[dict, Depends(get_current_customer)]
 restaurant_dependency = Annotated[dict, Depends(get_current_restaurant)]
 admin_dependency = Annotated[dict, Depends(get_current_admin)]
 rider_dependency = Annotated[dict, Depends(get_current_rider)]
+account_dependency = Annotated[dict, Depends(get_current_account)]

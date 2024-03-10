@@ -18,10 +18,10 @@ class RiderAccount(Account) :
 
     @property
     def receive_order_list(self):
-        return self.__recieve_order_list
+        return self.__receive_order_list
     
     def add_receive_order_list(self, order):
-        self.__recieve_order_list.append(order)
+        self.__receive_order_list.append(order)
         
     @property
     def finished_order_list(self):
@@ -47,9 +47,6 @@ class RiderAccount(Account) :
         self.__receive_order_list.append(order)
 
     def remove_receive_order(self, order: Order):
-        self.__receive_order_list.remove(order)
-        
-    def remove_recieved_order(self, order: Order):
         self.__receive_order_list.remove(order)
         
     def add_finished_order(self, order: Order):

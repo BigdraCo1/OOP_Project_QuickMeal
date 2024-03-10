@@ -448,6 +448,8 @@ class Controller:
     def add_address_to_basket(self, customer_id, address):
         customer = self.search_customer_by_id(customer_id)
         basket = customer.current_order
+        if address not in customer.address_list:
+            customer.add_address(address)
         for order in basket:
             order.customer_address = address
         return f"{address} is now set as address of your order"
@@ -500,10 +502,8 @@ class Controller:
             return {}
         else:
             dct = {}
-            num = 1
             for review in restaurant.reviewed_list:
-                dct[f"{num}"] = [review.rate, review.comment]
-                num += 1
+                dct[f"{review.customer.get_name()}"] = [review.rate, review.comment]
         return dct
 
     def add_review_to_restaurant(self, customer_id, rating, comment, restaurant_id):
@@ -511,6 +511,11 @@ class Controller:
         restaurant = self.search_restaurant_by_id(restaurant_id)
         if not (0 <= rating <= 5):
             raise ValueError('rating value is between 0 to 5')
+        for review in restaurant.reviewed_list:
+            if review.customer == customer:
+                restaurant.reviewed_list.remove(review)
+                customer.reviewed_list.remove(review)
+                del review
         for order in customer.order_list:
             if order.restaurant.restaurant_id == restaurant.restaurant_id:
                 review = Review(rating, comment, customer)
@@ -542,8 +547,6 @@ class Controller:
             return "Order not found"
         order = self.search_customer_order_list_by_id(order_id)
         restaurant = self.search_restaurant_by_order_id(order_id)
-        if not order in restaurant.requested_order_list:
-            return "Order not in requested_order_list."
         order_state = order.order_state
         if self.check_order_state(order_state) != None:
             return self.check_order_state(order_state)
@@ -551,8 +554,9 @@ class Controller:
         customer_account.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Customer")
         customer_account.pocket.add_payment(order.payment)
-        order.rider.add_finished_order(order)
-        order.rider.remove_received_order(order)
+        if (isinstance(order.rider, RiderAccount)):
+            order.rider.add_finished_order(order)
+            order.rider.remove_receive_order(order)
         order.restaurant.add_finished_order(order)
         order.restaurant.remove_requested_order(order)
         return customer_account_id + " Order ID : " + order_id + " is cancelled. Payment is refunded."
@@ -563,8 +567,6 @@ class Controller:
             return "Account is not rider account"
         order = self.search_rider_order_by_id(order_id)
         restaurant = self.search_restaurant_by_order_id(order_id)
-        if not order in restaurant.requested_order_list:
-            return "Order not in requested_order_list."
         order_state = order.order_state
         if self.check_order_state(order_state) != None:
             return self.check_order_state(order_state)
@@ -572,13 +574,14 @@ class Controller:
         order.customer.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Rider")
         rider_account.pocket.add_payment(order.payment)
-        order.rider.add_finished_order(order)
-        order.rider.remove_received_order(order)
+        if (isinstance(order.rider, RiderAccount)):
+            order.rider.add_finished_order(order)
+            order.rider.remove_receive_order(order)
         order.restaurant.add_finished_order(order)
         order.restaurant.remove_requested_order(order)
         return rider_account_id + " Order ID : " + order_id + " is cancelled."
 
-    def restaurant_cancel_order(self, restaurant_account_id: str, order_id: str, food_name: str, string: str):
+    def restaurant_cancel_order(self, restaurant_account_id: str, order_id: str, food_name: str):
         restaurant_account = self.search_account_from_id(restaurant_account_id)
         if not isinstance(restaurant_account, RestaurantAccount):
             return "Account is not restaurant account"
@@ -586,22 +589,19 @@ class Controller:
         if self.search_restaurant_order_by_id(order_id) == None:
             return "Order not found"
         order = self.search_restaurant_order_by_id(order_id)
-        if not order in restaurant.requested_order_list:
-            return "Order not in requested_order_list."
         if self.search_food_by_name(food_name) == None:
             return "Food not found."
-        food = self.search_food_by_name(food_name)
-        if food not in restaurant.food_list:
-            return "Food not found in restaurant."
-        if food not in order.food_list:
-            return "Food not found in order."
+        food = None
+        for food_inlist in order.food_list:
+            if food_inlist.name == food_name:
+                food = food_inlist
         order_state = order.order_state
         if self.check_order_state(order_state) != None:
             return self.check_order_state(order_state)
         if food_name in order_state:
             return "Food already cancelled."
         order.remove_food_from_order(food)
-        self.change_order_state(order, order_state + "\n" + food_name + " Cancelled : " + string)
+        self.change_order_state(order, order_state + "\n" + food_name + " Cancelled : " )
         if order.food_list == []:
             self.change_order_state(order, "Cancelled by Restaurant.")
         order.rider.pocket.pay_out(food.price)
@@ -609,7 +609,7 @@ class Controller:
         order.change_payment_status(order.payment.payment_status + " Food : " + food_name + " is Refunded")
         if order.food_list == []:
             order.rider.add_finished_order(order)
-            order.rider.remove_received_order(order)
+            order.rider.remove_receive_order(order)
             order.restaurant.add_finished_order(order)
             order.restaurant.remove_requested_order(order)
             order.change_payment_status("Refunded")
@@ -677,7 +677,7 @@ class Controller:
         return payment_dict
 
     def check_order_state(self, order_state: str):
-        if order_state == "Delivering":
+        if order_state == "delivering":
             return "Cant cancel order, rider is delivering"
         if order_state == "Cancelled by Customer":
             return "Order already cancelled by customer"
@@ -748,6 +748,7 @@ class Controller:
         if order.order_state != "get_res":
             return "order is not get_res"
         order.order_state = "denied_by_restaurant"
+        order.payment.payment_status = "Refund"
         restaurant.remove_request_order(order)
         for rider in self.rider_account_list:
             rider.remove_request_order(order)
@@ -762,6 +763,8 @@ class Controller:
         for acc in account_list:
             if acc.get_name() == username:
                 return "This username has been used"
+            if acc.profile.email == email or acc.profile.telephone_number == telephone_number:
+                return "Your data has been used"
         new_customer = CustomerAccount(password, Profile(username, telephone_number, email, fullname), Pocket(0))
         self.__customer_account_list.append(new_customer)
         customer_attribute = vars(new_customer)
@@ -773,6 +776,8 @@ class Controller:
         for acc in account_list:
             if acc.get_name() == username:
                 return "This username has been used"
+            if acc.profile.email == email or acc.profile.telephone_number == telephone_number:
+                return "Your data has been used"
         new_restaurant_account = RestaurantAccount(password, Profile(username, telephone_number, email, fullname),
                                                    Pocket(0))
         self.__restaurant_account_list.append(new_restaurant_account)
@@ -781,10 +786,12 @@ class Controller:
                 key != '_Account__pocket' and key != '_RestaurantAccount__restaurant_list'}
 
     def add_rider_account_by_request(self, password, username, telephone_number, email, fullname):
-        account_list = self.restaurant_account_list + self.customer_account_list + self.rider_account_list
+        account_list = self.restaurant_account_list + self.customer_account_list + self.rider_account_list + self.approval_rider_list
         for acc in account_list:
             if acc.get_name() == username:
                 return "This username has been used"
+            if acc.profile.email == email or acc.profile.telephone_number == telephone_number:
+                return "Your data has been used"
         new_rider_account = RiderAccount(password, Profile(username, telephone_number, email, fullname),
                                          Pocket(0))
         self.approval_rider_list.append(new_rider_account)
@@ -809,8 +816,8 @@ class Controller:
     def assign_admin(self, admin: Admin):
         if isinstance(admin, Admin):
             self.__admin = admin
-            return {'Success'}
-        return {'You are not Admin'}
+            return {'detail':'Success'}
+        return {'detail' :'You are not Admin'}
 
     @property
     def admin(self):
