@@ -795,7 +795,7 @@ class Controller:
         restaurant_dict = dict()
         restaurant_list = list()
         for restaurant in restaurant_account.restaurant_list:
-            restaurant_list.append(self.show_restaurant_detail(restaurant.restaurant_id))
+            restaurant_list.append(self.show_restaurant_detail_by_id(restaurant.restaurant_id))
         restaurant_dict[restaurant_account_id] = restaurant_list
         return restaurant_dict
     
