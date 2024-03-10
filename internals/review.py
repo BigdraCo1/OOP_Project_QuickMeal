@@ -2,11 +2,10 @@ from internals.custom_account import CustomerAccount
 
 
 class Review:
-    def __init__(self, rate: int, comment: str, customer: CustomerAccount, type: str):
+    def __init__(self, rate: int, comment: str, customer: CustomerAccount):
         self.__rate = rate
         self.__comment = comment
         self.__customer = customer
-        self.__type = type
 
     @property
     def rate(self):

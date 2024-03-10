@@ -1,8 +1,15 @@
+from uuid import uuid4
+
 class Food:
-    def __init__(self, id: str, name: str, type: str, size: dict, price: int, current_size = None):
+    ID = 1
+    def __init__(self, id:str, name: str, type: str, size: dict, price: int, current_size = None):
         if price < 0:
             raise ValueError('Price must be positive')
-        self.__id = id
+        if id == "auto":
+            self.__id = f"F{Food.ID}"
+            Food.ID += 1
+        else:
+            self.__id = id
         self.__name = name
         self.__type = type
         self.__size = size
