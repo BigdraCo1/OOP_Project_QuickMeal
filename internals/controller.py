@@ -834,7 +834,7 @@ class Controller:
     def show_rider_approval_list(self):
         show_list = []
         for rider in self.approval_rider_list:
-            rider_attribute = {'account_id': rider.account_id, 'username': rider.get_name()}
+            rider_attribute = {'account_id': rider.account_id, 'profile': rider.profile}
             show_list.append(rider_attribute)
         return show_list
 
