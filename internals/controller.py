@@ -77,13 +77,6 @@ class Controller:
             return 'Success'
         return 'Not Found'
 
-    # [method] search function
-
-    def search_current_order_by_id(self, search_order_id):
-        for customer in self.customer_account_list:
-            if customer.current_order.order_id == search_order_id:
-                return customer.current_order
-
     def search_customer_by_id(self, search_account_id):
         for customer in self.customer_account_list:
             if customer.account_id == search_account_id:
@@ -119,12 +112,6 @@ class Controller:
                 for food in restaurant.food_list:
                     if food.id == search_food_id:
                         return restaurant
-
-    def search_order_by_id(self, search_order_id):
-        for customer in self.__customer_account_list:
-            for order in customer.order_list:
-                if order.order_id == search_order_id:
-                    return order
 
     def search_restaurant(self, name: str):
         for restaurant_account in self.__restaurant_account_list:
@@ -162,18 +149,6 @@ class Controller:
                 for food in restaurant.food_list:
                     if food.name == search_food_name:
                         return food
-
-    def search_customer_current_order_by_id(self, search_order_id):
-        for customer in self.__customer_account_list:
-            for order in customer.current_order:
-                if order.order_id == search_order_id:
-                    return order
-
-    def search_current_order_list_by_id(self, search_order_id):
-        for customer in self.__customer_account_list:
-            for order in customer.current_order:
-                if order.order_id == search_order_id:
-                    return order
 
     def search_customer_order_list_by_id(self, search_order_id):
         for customer in self.__customer_account_list:
@@ -213,16 +188,7 @@ class Controller:
         for restaurant_account in self.__restaurant_account_list:
             if restaurant_account.account_id == account_id:
                 return restaurant_account
-
-    def search_restaurant_by_order_id_and_account_id(self, order_id: str, account_id: str):
-        account = self.search_account_from_id(account_id)
-        if isinstance(account, RestaurantAccount):
-            for restaurant in account.restaurant_list:
-                for order in restaurant.requested_order_list:
-                    if order.order_id == order_id:
-                        return restaurant
-        return "Not found restaurants"
-
+            
     # [method] others function
 
     def get_menu_list(self, restaurant_name: str):
@@ -396,7 +362,6 @@ class Controller:
     def new_menu(self, restaurant, request):
         real_restaurant = self.search_restaurant(restaurant)
         return real_restaurant.add_menu(request)
-
 
     def show_restaurant(self):
         show_list = []
