@@ -777,8 +777,7 @@ class Controller:
                 return restaurant_acc
         return False
 
-
-    def show_restaurant_detail(self, restaurant_id: str):
+    def show_restaurant_detail_by_id(self, restaurant_id: str):
         restaurant = self.search_restaurant_by_id(restaurant_id)
         restaurant_detail = dict()
         if not isinstance(restaurant, Restaurant):

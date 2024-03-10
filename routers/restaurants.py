@@ -14,9 +14,13 @@ async def remove_restaurant(restaurant: str, restaurant_dep : restaurant_depende
     
 
 
-@app.get("/show_restaurant_detail/{restaurant_name}", tags = ["Restaurant"])
+@app.get("/show_restaurant_detail_by_name/{restaurant_name}", tags = ["Restaurant"])
 async def show_restaurant_detail_by_name(restaurant_name: str) -> dict:
     return system.show_restaurant_detail_by_name(restaurant_name)
+
+@app.get("/show_restaurant_detail_by_id/{restaurant_id}", tags = ["Restaurant"])
+async def show_restaurant_detail_by_id(restaurant_id: str) -> dict:
+    return system.show_restaurant_detail_by_id(restaurant_id)
 
 @app.get("/show_request_order_list_in_restaurant/{restaurant_id}", tags = ["Restaurant"])
 async def show_request_order_list_in_restaurant(restaurant_id: str) -> dict:
