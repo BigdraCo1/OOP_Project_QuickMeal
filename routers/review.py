@@ -3,10 +3,10 @@ from schema import review
 from fastapi import APIRouter, HTTPException, status
 from utils.dependencies import user_dependency
 
-app = APIRouter()
+app = APIRouter(prefix='/review', tags=['Review'])
 
 #review
-@app.get("/review/show", tags=['Review'])
+@app.get("/show")
 async def get_restaurant_review(restaurant_id: str, user : user_dependency) -> dict:
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -14,7 +14,7 @@ async def get_restaurant_review(restaurant_id: str, user : user_dependency) -> d
 
 
 #add review to restaurant
-@app.post("/review/add", tags=["Review"])
+@app.post("/add")
 async def add_restaurant_review(body: review.add_review_api, user : user_dependency) -> str:
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -23,7 +23,7 @@ async def add_restaurant_review(body: review.add_review_api, user : user_depende
 
 
 #remove review from restaurant
-@app.delete("/review/remove/{customer_id}", tags=["Review"])
+@app.delete("/remove/{customer_id}")
 async def remove_restaurant_review(customer_id: str ,restaurant_id: str, user : user_dependency) -> str:
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
