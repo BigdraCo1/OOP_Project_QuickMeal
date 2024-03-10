@@ -16,14 +16,3 @@ async def cancel_food(restaurant_account_id: str, order_id: str, food_name: str,
 @app.post("/cancel_by_rider/{rider_account_id}/{order_id}", tags = ["Cancel"])
 async def cancel_rider(rider_account_id: str, order_id: str) -> dict:
     return {"message": system.rider_cancel_order(rider_account_id, order_id)}
-
-
-@app.post("/recieve_order/{restaurant_account_id}/{order_id}", tags = ["Restaurants"])
-async def recieve_order(restaurant_account_id: str, order_id: str) -> dict:
-    return {"message": system.restaurant_receive_order_from_customer(restaurant_account_id, order_id)}
-    
-@app.post("/deny_recieve_order/{restaurant_account_id}/{order_id}", tags = ["Restaurants"])
-async def deny_recieve_order(restaurant_account_id: str, order_id: str) -> dict:
-    return {"message": system.restaurant_deny_receive_order_from_customer(restaurant_account_id, order_id)}
-    
-

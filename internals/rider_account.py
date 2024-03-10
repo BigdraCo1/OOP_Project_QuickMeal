@@ -3,8 +3,10 @@ from internals.order import Order
 
 
 class RiderAccount(Account) :
+    ID = 1
     def __init__(self, password : str, profile = None, pocket = None):
-        super().__init__(password, profile, pocket)
+        super().__init__(f"RI{RiderAccount.ID}", password, profile, pocket)
+        RiderAccount.ID += 1
         self.__request_order_list = [] # all riders have all confirmed orders
         self.__receive_order_list = []
         self.__request_order_list = []

@@ -1,16 +1,17 @@
 from internals.food import Food
 
-Fondue_lal = Food("Fondue",
-                       "Food",
-                       {"Big":10,"Small": 0},
-                       20)
+Fondue_lal = Food("auto", 
+                  "Fondue",
+                  "Food",
+                  {"Big":10,"Small": 0},
+                  20)
 
-Capuliato_pop = Food("Capuliato",
+Capuliato_pop = Food("auto", "Capuliato",
                           "Drinks",
                           {"Large":20,"Medium":15,"Small":0},
                           35)
 
-maccu_lano = Food("maccu",
+maccu_lano = Food("auto", "maccu",
                        "Drinks",
                        {"Grande":40, "Large":35,"Small":0},
                        54)
@@ -28,14 +29,14 @@ italian_dishes4 = [
     Fondue_lal, maccu_lano
 ]
 
-fried_chicken = Food(
+fried_chicken = Food("auto",
                      "Fried Chicken",
                      "Food",
                      {"Large":20,"Medium":15,"Small":10},
                      30
 )
 
-grilled_chicken = Food(
+grilled_chicken = Food("auto",
                        "Grilled Chicken",
                        "Food",
                        {"Large":20,"Medium":15,"Small":10},
