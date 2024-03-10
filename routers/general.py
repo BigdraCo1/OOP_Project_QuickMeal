@@ -17,3 +17,8 @@ async def show_restaurant_menu(restaurant_id: str) -> dict:
 @app.get("/show/{food_id}/detail", tags=["General"])
 async def food_detail(food_id: str) -> dict:
     return system.show_food_detail(food_id)
+
+#show account profile
+@app.get("/show/profile/{account_id}", tags=["General"])
+async def show_account_profile(account_id: str) -> dict:
+    return system.show_account_profile(account_id)
