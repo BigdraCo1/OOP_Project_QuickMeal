@@ -8,6 +8,8 @@ from internals.review import Review
 from internals.order import Order
 from internals.pocket import Pocket
 from internals.payment import Payment
+from internals.admin import Admin
+from schema.restaurant import Restaurant_body
 
 
 class Controller:
@@ -16,7 +18,9 @@ class Controller:
         self.__customer_account_list = customer_account_list
         self.__rider_account_list = rider_account_list
         self.__restaurant_account_list = restaurant_account_list
-        self.__approval_list = []
+        self.__approval_rider_list: list[RiderAccount] = []
+        self.__approval_restaurant_list: list[Restaurant] = []
+        self.__admin = None
         self.__central_money = central_money
 
     @property
@@ -32,8 +36,12 @@ class Controller:
         return self.__restaurant_account_list
 
     @property
-    def approval_list(self):
-        return self.__approval_list
+    def approval_rider_list(self):
+        return self.__approval_rider_list
+
+    @property
+    def approval_restaurant_list(self):
+        return self.__approval_restaurant_list
 
     @property
     def central_money(self):
@@ -756,9 +764,11 @@ class Controller:
                 return "This username has been used"
         new_customer = CustomerAccount(password, Profile(username, telephone_number, email, fullname), Pocket(0))
         self.__customer_account_list.append(new_customer)
-        return vars(new_customer)
+        customer_attribute = vars(new_customer)
+        return {key: value for key, value in customer_attribute.items() if
+                key == '_Account__account_id' or key == '_Account__profile' or key == '_Account__password'}
 
-    def add_restaurant_account_by_request(self,password, username, telephone_number, email, fullname):
+    def add_restaurant_account_by_request(self, password, username, telephone_number, email, fullname):
         account_list = self.restaurant_account_list + self.customer_account_list + self.rider_account_list
         for acc in account_list:
             if acc.get_name() == username:
@@ -766,16 +776,118 @@ class Controller:
         new_restaurant_account = RestaurantAccount(password, Profile(username, telephone_number, email, fullname),
                                                    Pocket(0))
         self.__restaurant_account_list.append(new_restaurant_account)
-        return vars(new_restaurant_account)
+        new_restaurant_account_attribute = vars(new_restaurant_account)
+        return {key: value for key, value in new_restaurant_account_attribute.items() if
+                key != '_Account__pocket' and key != '_RestaurantAccount__restaurant_list'}
+
+    def add_rider_account_by_request(self, password, username, telephone_number, email, fullname):
+        account_list = self.restaurant_account_list + self.customer_account_list + self.rider_account_list
+        for acc in account_list:
+            if acc.get_name() == username:
+                return "This username has been used"
+        new_rider_account = RiderAccount(password, Profile(username, telephone_number, email, fullname),
+                                         Pocket(0))
+        self.approval_rider_list.append(new_rider_account)
+        new_rider_account_attribute = vars(new_rider_account)
+        return {key: value for key, value in new_rider_account_attribute.items() if
+                key == '_Account__account_id' or key == '_Account__profile' or key == '_Account__password'}
 
     def search_instance_by_name(self, username):
+        if username == self.admin.get_name():
+            return self.__admin
         for customer in self.customer_account_list:
             if customer.get_name() == username:
                 return customer
         for restaurant_acc in self.restaurant_account_list:
             if restaurant_acc.get_name() == username:
                 return restaurant_acc
+        for rider in self.rider_account_list:
+            if rider.get_name() == username:
+                return rider
         return False
+
+    def assign_admin(self, admin: Admin):
+        if isinstance(admin, Admin):
+            self.__admin = admin
+            return {'Success'}
+        return {'You are not Admin'}
+
+    @property
+    def admin(self):
+        return self.__admin
+
+    def check_access_by_username(self, username: str, restaurant_name: str):
+        instance = self.search_instance_by_name(username)
+        if isinstance(instance, RestaurantAccount):
+            for restaurant in instance.restaurant_list:
+                if restaurant.name_restaurant == restaurant_name:
+                    return True
+        return False
+
+    def show_rider_approval_list(self):
+        show_list = []
+        for rider in self.approval_rider_list:
+            rider_attribute = {'account_id': rider.account_id, 'username': rider.get_name()}
+            show_list.append(rider_attribute)
+        return show_list
+
+    def show_restaurant_approval_list(self):
+        show_list = []
+        for restaurant in self.approval_restaurant_list:
+            restaurant_attribute = {'restaurant_id': restaurant.restaurant_id, 'name': restaurant.name_restaurant,
+                                    'menu': restaurant.food_list}
+            show_list.append(restaurant_attribute)
+        return show_list
+
+    def remove_restaurant_in_approve_list(self, restaurant_name: str):
+        for restaurant in self.approval_restaurant_list:
+            if restaurant.name_restaurant == restaurant_name:
+                self.approval_restaurant_list.remove(restaurant)
+                del restaurant
+                return 'Success'
+        return 'Not Found'
+
+    def remove_rider_in_approve_list(self, rider_username: str):
+        for rider in self.approval_rider_list:
+            if rider.get_name() == rider_username:
+                self.approval_rider_list.remove(rider)
+                del rider
+                return 'Success'
+        return 'Not Found'
+
+    def approve_rider(self, rider_username: str):
+        for rider in self.approval_rider_list:
+            if rider.get_name() == rider_username:
+                self.add_rider_account(rider)
+                self.approval_rider_list.remove(rider)
+                return 'Success'
+        return 'Not Found'
+
+    def approve_restaurant(self, restaurant_name: str):
+        for restaurant in self.approval_restaurant_list:
+            if restaurant.name_restaurant == restaurant_name:
+                for restaurant_acc in self.restaurant_account_list:
+                    if restaurant_acc == restaurant.owner:
+                        restaurant_acc.assign_restaurant(restaurant)
+                        self.approval_restaurant_list.remove(restaurant)
+                        return 'Success'
+        return 'Not Found'
+
+    def new_restaurant(self, username: str, request: Restaurant_body):
+        for restaurant in self.approval_restaurant_list:
+            if restaurant.name_restaurant == request.name_restaurant:
+                return 'This name was taken'
+        if isinstance(self.search_restaurant(request.name_restaurant), Restaurant):
+            return 'This name was taken'
+        for restaurant_acc in self.restaurant_account_list:
+            if restaurant_acc.get_name() == username:
+                restaurant = Restaurant(request.name_restaurant, request.restaurant_location, [], [], [], [],
+                                        restaurant_acc)
+                for food in request.food:
+                    restaurant.add_menu(food)
+                self.approval_restaurant_list.append(restaurant)
+                return 'Success'
+        return 'Not Found'
 
     def show_restaurant_detail_by_id(self, restaurant_id: str):
         restaurant = self.search_restaurant_by_id(restaurant_id)
