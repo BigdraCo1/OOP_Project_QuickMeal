@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import menu, search, restaurants, basket, review, general, order_detail, cancel, order, restaurant_decision, rider_decision, customer_show, auth
+from routers import menu, search, restaurants, basket, review, general, order_detail,admin_approve, cancel, order, restaurant_decision, rider_decision, customer_show, auth
 import uvicorn
 
 app = FastAPI()
@@ -14,6 +14,7 @@ app.add_middleware(
     expose_headers=["Authorization"]
 )
 
+app.include_router(admin_approve.app)
 app.include_router(menu.app)
 app.include_router(search.app)
 app.include_router(restaurants.app)

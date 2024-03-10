@@ -1,5 +1,3 @@
-from internals.payment import Payment
-from datetime import datetime
 
 class Pocket:
     def __init__(self, balance = 0):
@@ -18,11 +16,3 @@ class Pocket:
 
     def pay_out(self, amount):
         self.__balance -= amount
-
-    def deposite(self, amount):
-        self.__balance += amount
-        self.__payment_list.append(Payment("deposite", datetime.now(), amount))
-
-    def withdraw(self, amount):
-        self.__balance -= amount
-        self.__payment_list.append(Payment("withdraw", datetime.now(), amount))

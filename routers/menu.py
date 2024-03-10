@@ -38,9 +38,3 @@ async def new_menu(restaurant: str, request: food.Food,  restaurant_dep : restau
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.new_menu(restaurant, request)
 
-@app.delete("/{restaurant}",  status_code=status.HTTP_204_NO_CONTENT)
-async def remove_restaurant(restaurant: str, restaurant_dep : restaurant_dependency):
-    if restaurant_dep is None or not system.check_access_by_username(restaurant_dep["username"], restaurant):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    if system.remove_restaurant(restaurant) != 'Success':
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"There is no restaurant name : {restaurant}")

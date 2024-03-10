@@ -1,6 +1,4 @@
 from internals.food import Food
-from internals.restaurant_account import RestaurantAccount
-from uuid import uuid4
 
 
 class Order:

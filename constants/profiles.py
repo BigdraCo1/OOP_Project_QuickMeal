@@ -35,3 +35,5 @@ rider_profile1 = Profile("Rider",
                                  "rider@gmail.com",
                                  "Rider Fullname"
                                  )
+
+admin_profile = Profile("Admin", "080123456322", "huyegw@gmail.com", "Biehd")

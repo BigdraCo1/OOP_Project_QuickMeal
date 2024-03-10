@@ -10,7 +10,7 @@ system = Controller([],
                     [],
                     [],
                     Pocket(1000000))
-
+system.assign_admin(admin_account)
 system.add_restaurant_account(restaurant_owner_account1)
 system.add_restaurant_account(restaurant_owner_account2)
 restaurant_owner_account1.assign_restaurant(restaurant1)

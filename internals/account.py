@@ -1,6 +1,6 @@
 from internals.profile import Profile
 from internals.pocket import Pocket
-from uuid import uuid4
+
 
 class Account:
     def __init__(self, id:str, password: str, profile: Profile = None, pocket: Pocket = None):

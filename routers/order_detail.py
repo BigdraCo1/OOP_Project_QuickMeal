@@ -1,12 +1,13 @@
 from constants.controller import system
 from fastapi import APIRouter, HTTPException, status
-
+from utils.dependencies import user_dependency, restaurant_dependency, rider_dependency
 
 app = APIRouter()
 
 @app.get("/show_order_detail/{order_id}", tags = ["General"])
-async def show_order_detail(order_id: str) -> dict:
-    return system.show_order_detail(order_id)
+async def show_order_detail(order_id: str, user : user_dependency, restaurant : restaurant_dependency, rider : rider_dependency) -> dict:
+    if (user is None) or (restaurant is None) or (rider is None):
+        return system.show_order_detail(order_id)
 
 @app.get("/show_pocket/{account_id}", tags = ["General"])
 async def show_pocket(account_id: str) -> dict:

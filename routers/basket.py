@@ -1,35 +1,54 @@
 from constants.controller import system
 from schema import basket
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
+from utils.dependencies import user_dependency
 
-app = APIRouter()
+app = APIRouter(prefix='/basket')
+
 
 #show basket 
-@app.get("/basket/{customer_id}", tags=["Basket"])
-async def get_basket(customer_id: str) -> dict:
+@app.get("/custom/{customer_id}", tags=["Basket"])
+async def get_basket(customer_id: str, user : user_dependency) -> dict:
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.show_basket(customer_id)
 
+
 #show address 
-@app.get("/basket/address/{customer_id}", tags=["Basket"])
-async def show_address(customer_id: str) -> list:
+@app.get("/address/{customer_id}", tags=["Basket"])
+async def show_address(customer_id: str, user : user_dependency) -> list:
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.show_address(customer_id)
 
+
 #add food to basket 
-@app.post("/basket/add/food", tags=["Basket"])
-async def add_food(body: basket.add_food_api) -> str:
+@app.post("/add/food", tags=["Basket"])
+async def add_food(body: basket.add_food_api, user : user_dependency) -> str:
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.add_food_to_basket(body.customer_id, body.food_id, body.size, body.quantity)
 
+
 #add address for basket
-@app.post("/basket/add/address", tags=["Basket"])
-async def add_address(body: basket.add_address_api) -> str:
+@app.post("/add/address", tags=["Basket"])
+async def add_address(body: basket.add_address_api, user : user_dependency) -> str:
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.add_address_to_basket(body.customer_id, body.address)
 
+
 #change quantity of food in basket
-@app.put("/basket/food/quantity", tags=["Basket"])
-async def change_quantity(body: basket.quantity_food_api) -> str:
+@app.put("/food/quantity", tags=["Basket"])
+async def change_quantity(body: basket.quantity_food_api, user : user_dependency) -> str:
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.change_quantity(body.customer_id, body.food_id, body.quantity, body.new_quantity, body.size)
 
+
 #change size of food in basket
-@app.put("/basket/food/size", tags=["Basket"])
-async def change_size(body: basket.size_food_api) -> str:
+@app.put("/food/size", tags=["Basket"])
+async def change_size(body: basket.size_food_api, user : user_dependency) -> str:
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.change_size(body.customer_id, body.food_id, body.size, body.new_size)
