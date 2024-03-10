@@ -500,10 +500,8 @@ class Controller:
             return {}
         else:
             dct = {}
-            num = 1
             for review in restaurant.reviewed_list:
-                dct[f"{num}"] = [review.rate, review.comment]
-                num += 1
+                dct[f"{review.customer.get_name()}"] = [review.rate, review.comment]
         return dct
 
     def add_review_to_restaurant(self, customer_id, rating, comment, restaurant_id):
@@ -511,6 +509,11 @@ class Controller:
         restaurant = self.search_restaurant_by_id(restaurant_id)
         if not (0 <= rating <= 5):
             raise ValueError('rating value is between 0 to 5')
+        for review in restaurant.reviewed_list:
+            if review.customer == customer:
+                restaurant.reviewed_list.remove(review)
+                customer.reviewed_list.remove(review)
+                del review
         for order in customer.order_list:
             if order.restaurant.restaurant_id == restaurant.restaurant_id:
                 review = Review(rating, comment, customer)
