@@ -4,6 +4,7 @@ from internals.rider_account import RiderAccount
 from constants.profiles import *
 from constants.pocket import *
 from utils.dependencies import bcrypt_context
+from internals.admin import Admin
 
 restaurant_owner_account1 = RestaurantAccount(bcrypt_context.hash('edhbejhdbw'), restaurant_owner_profile1,
                                               restaurant_owner_account1_pocket)
@@ -28,3 +29,5 @@ customer_account2 = CustomerAccount(bcrypt_context.hash('edhbejrfvcervhdbw'),
 rider_account1 = RiderAccount(bcrypt_context.hash('edhefvcervcbejhdbw'),
                               rider_profile1,
                               rider_account1_pocket)
+
+admin_account = Admin(bcrypt_context.hash('qwerty1234'), admin_profile, Pocket(100000000000))
