@@ -9,8 +9,6 @@ class RiderAccount(Account) :
         RiderAccount.ID += 1
         self.__request_order_list = [] # all riders have all confirmed orders
         self.__receive_order_list = []
-        self.__request_order_list = []
-        self.__recieve_order_list = []
         self.__finished_order_list = []
         self.__review_list = []
     # getter
@@ -18,19 +16,18 @@ class RiderAccount(Account) :
     def request_order_list(self):
         return self.__request_order_list
 
-    def recieve_order_list(self):
+    @property
+    def receive_order_list(self):
         return self.__recieve_order_list
     
-    def add_recieve_order_list(self, order):
+    def add_receive_order_list(self, order):
         self.__recieve_order_list.append(order)
         
     @property
     def finished_order_list(self):
         return self.__finished_order_list
 
-    @property  # what the hell is variable?
-    def order_list(self):
-        return self.__request_order_list
+    
 
     def add_order(self, order: Order):
         self.__request_order_list.append(order)
