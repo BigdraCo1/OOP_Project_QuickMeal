@@ -4,12 +4,14 @@ from internals.order import Order
 from internals.pocket import Pocket
 
 class CustomerAccount(Account):
+    ID = 1
     def __init__(self, password: str, profile: Profile, pocket : Pocket):
         if not isinstance(profile, Profile):
             ValueError("Error")
         if not isinstance(pocket, Pocket):
             ValueError("Error")
-        super().__init__(password, profile, pocket)
+        super().__init__(f"C{CustomerAccount.ID}", password, profile, pocket)
+        CustomerAccount.ID += 1
         self.__address_list = []
         self.__reviewed_list = []
         self.__current_order = []

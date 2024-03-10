@@ -7,7 +7,7 @@ class Order:
     ID = 1
     def __init__(self, customer=None, customer_address=None, rider=None, restaurant=None,
                  food_list=[], order_state=None, payment=None):
-        self.__order_id = str(Order.ID)
+        self.__order_id = f"O{Order.ID}"
         Order.ID += 1
         self.__customer = customer
         self.__customer_address = customer_address

@@ -4,9 +4,11 @@ from internals.order import Order
 
 
 class Restaurant:
-    def __init__(self, id: str, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
+    ID = 1
+    def __init__(self, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
                  finished_order_list, reviewed_list: list[Review], owner):
-        self.__restaurant_id = id
+        self.__restaurant_id = f"R{Restaurant.ID}"
+        Restaurant.ID += 1
         self.__owner = owner
         self.__name_restaurant = name_restaurant
         self.__restaurant_location = restaurant_location

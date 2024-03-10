@@ -6,7 +6,7 @@ class Food:
         if price < 0:
             raise ValueError('Price must be positive')
         if id == "auto":
-            self.__id = str(Food.ID)
+            self.__id = f"F{Food.ID}"
             Food.ID += 1
         else:
             self.__id = id
