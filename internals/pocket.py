@@ -10,19 +10,18 @@ class Pocket:
     def balance(self):
         return self.__balance
 
+    @property
+    def payment_list(self):
+        return self.__payment_list
+
     def add_payment(self, new_payment):
         self.__payment_list.append(new_payment)
+
+    def remove_payment(self, payment):
+        self.__payment_list.remove(payment)
 
     def top_up(self, amount):
         self.__balance += amount
 
     def pay_out(self, amount):
         self.__balance -= amount
-
-    def deposite(self, amount):
-        self.__balance += amount
-        self.__payment_list.append(Payment("deposite", datetime.now(), amount))
-
-    def withdraw(self, amount):
-        self.__balance -= amount
-        self.__payment_list.append(Payment("withdraw", datetime.now(), amount))

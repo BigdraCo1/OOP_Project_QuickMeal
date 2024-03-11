@@ -15,9 +15,9 @@ async def customer_register(request: CreatUserRequest):
     register = None
     if request.role == 'customer':
         register = system.add_customer_account_by_request(bcrypt_context.hash(request.password), request.username, request.telephone_number, request.email, request.fullname)
-    if request.role == 'restaurant':
+    elif request.role == 'restaurant':
         register = system.add_restaurant_account_by_request(bcrypt_context.hash(request.password), request.username,request.telephone_number, request.email, request.fullname)
-    if request.role == 'rider':
+    elif request.role == 'rider':
         register = system.add_rider_account_by_request(bcrypt_context.hash(request.password), request.username,request.telephone_number, request.email, request.fullname)
     else:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)

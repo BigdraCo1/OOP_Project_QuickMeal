@@ -54,3 +54,10 @@ async def add_restaurant(request: Restaurant_body, restaurant_dep : restaurant_d
     if system.new_restaurant(restaurant_dep["username"] , request) != 'Success':
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return { 'detail' : 'Success'}
+
+
+@app.get("/show_food_in_order/{order_id}")
+async def show_food_in_order(order_id: str, restaurant_dep : restaurant_dependency) -> dict:
+    if restaurant_dep is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    return system.show_food_in_order(order_id)

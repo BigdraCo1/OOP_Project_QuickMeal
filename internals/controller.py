@@ -665,15 +665,14 @@ class Controller:
             payment_dict["Account_Not_Found"] = account_id + " is not found in list"
             return payment_dict
         if isinstance(account, RestaurantAccount):
-            for restaurant in account.restaurant_list:
-                for order in restaurant.requested_order_list:
-                    payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
+            for payment in account.pocket.payment_list:
+                payment_dict[payment.transaction_id] = [payment.order_id, payment.payment_status, payment.amount]
         elif isinstance(account, CustomerAccount):
-            for order in account.order_list:
-                payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
+            for payment in account.pocket.payment_list:
+                payment_dict[payment.transaction_id] = [payment.order_id, payment.payment_status, payment.amount]
         elif isinstance(account, RiderAccount):
-            for order in account.receive_order_list:
-                payment_dict[order.payment.transaction_id] = [order.payment.payment_status, order.payment.amount]
+            for payment in account.pocket.payment_list:
+                payment_dict[payment.transaction_id] = [payment.order_id, payment.payment_status, payment.amount]
         return payment_dict
 
     def check_order_state(self, order_state: str):
@@ -967,3 +966,16 @@ class Controller:
             order_detail_list.append(self.show_order_detail(finished_order.order_id))
         finish_order_dict[restaurant.name_restaurant] = order_detail_list
         return finish_order_dict
+
+    def show_food_in_order(self, order_id: str):
+        order = None
+        if self.search_customer_order_list_by_id(order_id) != None:
+            order = self.search_customer_order_list_by_id(order_id)
+        elif self.search_customer_current_order_by_id(order_id) != None:
+            order = self.search_customer_current_order_by_id(order_id)
+        food_dict = dict()
+        food_list = list()
+        for food in order.food_list:
+            food_list.append(self.show_food_detail(food.id))
+        food_dict[order_id] = food_list
+        return food_dict
