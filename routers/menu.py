@@ -7,7 +7,7 @@ app = APIRouter(tags=["Editing menu"], responses={404: {"description": "Not foun
 
 
 @app.get("/{restaurant}", status_code=status.HTTP_200_OK)
-async def menu_list(restaurant : str , restaurant_dep : restaurant_dependency):
+async def menu_list(restaurant: str, restaurant_dep: restaurant_dependency):
     if restaurant_dep is None or not system.check_access_by_username(restaurant_dep["username"], restaurant):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if isinstance(system.get_menu_list(restaurant), str):
@@ -16,7 +16,7 @@ async def menu_list(restaurant : str , restaurant_dep : restaurant_dependency):
 
 
 @app.get("/{restaurant}/{menu}", status_code=status.HTTP_200_OK)
-async def menu_list(restaurant: str , menu: str , restaurant_dep : restaurant_dependency):
+async def menu_list(restaurant: str, menu: str, restaurant_dep : restaurant_dependency):
     if restaurant_dep is None or not system.check_access_by_username(restaurant_dep["username"], restaurant):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if isinstance(system.get_menu(restaurant, menu), str):

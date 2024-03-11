@@ -16,7 +16,7 @@ async def get_basket(customer_id: str, user : user_dependency) -> dict:
 
 #show address
 @app.get("/address/{customer_id}")
-async def show_address(customer_id: str, user : user_dependency) -> list:
+async def show_address(customer_id: str, user: user_dependency) -> list:
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.show_address(customer_id)
@@ -40,7 +40,7 @@ async def add_address(body: basket.add_address_api, user : user_dependency) -> s
 
 #change quantity of food in basket
 @app.put("/food/quantity")
-async def change_quantity(body: basket.quantity_food_api, user : user_dependency) -> str:
+async def change_quantity(body: basket.quantity_food_api, user: user_dependency) -> str:
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.change_quantity(body.customer_id, body.food_id, body.quantity, body.new_quantity, body.size)
@@ -52,6 +52,7 @@ async def change_size(body: basket.size_food_api, user : user_dependency) -> str
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.change_size(body.customer_id, body.food_id, body.size, body.new_size)
+
 
 #delete address
 @app.delete("/delete/address")
