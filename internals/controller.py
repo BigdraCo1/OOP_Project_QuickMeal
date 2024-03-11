@@ -910,8 +910,6 @@ class Controller:
             if restaurant_acc.get_name() == username:
                 restaurant = Restaurant(request.name_restaurant, request.restaurant_location, [], [], [], [],
                                         restaurant_acc)
-                for food in request.food:
-                    restaurant.add_menu(food)
                 self.approval_restaurant_list.append(restaurant)
                 return 'Success'
         return 'Not Found'
