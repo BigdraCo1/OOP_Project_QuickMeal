@@ -30,13 +30,13 @@ async def accept_restaurant_in_approval_list(restaurant_name: str, admin : admin
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.approve_restaurant(restaurant_name)
 
-@app.get("/rider_approval_list")
+@app.get("/rider/approval_list")
 async def show_rider_in_approval_list(admin : admin_dependency):
     if admin is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.show_rider_approval_list()
 
-@app.get("/restaurant_approval_list")
+@app.get("/restaurant/approval_list")
 async def show_restaurant_in_approval_list(admin : admin_dependency):
     if admin is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
