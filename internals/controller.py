@@ -268,6 +268,8 @@ class Controller:
             amount = sum(food.price + food.size[food.current_size] for food in order_lp01.food_list)
             if customer.pocket.balance < amount:
                 return "Insufficient balance"
+            if order_lp01.customer_address == None:
+                return "Address not found"
             order_lp01.order_state = "pending"
             customer.add_order_list(order_lp01)
             customer.pocket.pay_out(amount)
@@ -275,15 +277,15 @@ class Controller:
             restaurant = order_lp01.restaurant
             restaurant.add_request_order(order_lp01)
             payment_time = datetime.now()
-            payment = Payment(amount, "online", restaurant, str(payment_time.strftime("%c")), "paid")
+            payment = Payment(amount, "online", restaurant, str(payment_time.strftime("%c")), "paid", order_lp01.order_id)
             order_lp01.payment = payment
+            customer.pocket.add_payment(payment)
             display_01.append({"order_id": order_lp01.order_id,
                                "order_state": order_lp01.order_state,
                                "restaurant": order_lp01.restaurant.restaurant_id,
                                "amount": order_lp01.payment.amount})
         for order_lp02 in reversed(customer.current_order):
             customer.remove_current_order(order_lp02)
-        # display_02 = [{f"customer {customer_id} balance": customer.pocket.balance, "central balance": self.central_money.balance}]
         return [display_01]
 
     def accept_order_by_rider(self, rider_id, order_id):
@@ -341,6 +343,9 @@ class Controller:
         restaurant = order.restaurant
         restaurant_account = self.search_restaurant_account_by_restaurant_id(restaurant.restaurant_id)
         restaurant_account.pocket.top_up(restaurant_amount)
+        payment_time = datetime.now()
+        payment = Payment(restaurant_amount, "online", order.restaurant, str(payment_time.strftime("%c")), "deposite", order.order_id)
+        restaurant_account.pocket.add_payment(payment)
         return self.show_order_detail(order_id)
 
     def deliver_order(self, rider_id, order_id):
@@ -362,6 +367,10 @@ class Controller:
             rider_amount = main_order.payment.amount * 0.1
             self.central_money.pay_out(rider_amount)
             main_rider.pocket.top_up(rider_amount)
+            payment_time = datetime.now()
+            payment = Payment(rider_amount, "online", main_order.restaurant, str(payment_time.strftime("%c")),
+                              "deposite", main_order.order_id)
+            main_rider.pocket.add_payment(payment)
             return self.show_order_detail(order_id)
 
     def show_request_order(self, rider_id):
