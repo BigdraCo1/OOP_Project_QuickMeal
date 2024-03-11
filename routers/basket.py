@@ -52,3 +52,10 @@ async def change_size(body: basket.size_food_api, user : user_dependency) -> str
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.change_size(body.customer_id, body.food_id, body.size, body.new_size)
+
+#delete address
+@app.delete("/delete/address")
+async def add_address(customer_id:str, address:str, user : user_dependency) -> str:
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    return system.delete_address(customer_id, address)

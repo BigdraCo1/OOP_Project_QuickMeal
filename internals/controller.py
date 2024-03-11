@@ -1000,3 +1000,18 @@ class Controller:
             food_list.append(self.show_food_detail(food.id))
         food_dict[order_id] = food_list
         return food_dict
+
+    def get_menu(self, restaurant_name: str , menu_name: str):
+        restaurant = self.search_restaurant(restaurant_name)
+        if isinstance(restaurant, str):
+            return restaurant
+        for food in restaurant.food_list:
+            if menu_name == food.name:
+                return food
+        return 'Not Found'
+
+    def delete_address(self, customer_id, address):
+        customer = self.search_customer_by_id(customer_id)
+        if address in customer.address_list:
+            customer.remove_address(address)
+        return f"{address} is now remove from your address"
