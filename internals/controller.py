@@ -862,7 +862,7 @@ class Controller:
         show_list = []
         for restaurant in self.approval_restaurant_list:
             restaurant_attribute = {'restaurant_id': restaurant.restaurant_id, 'name': restaurant.name_restaurant,
-                                    'menu': restaurant.food_list}
+                                    'location': restaurant.restaurant_location}
             show_list.append(restaurant_attribute)
         return show_list
 
