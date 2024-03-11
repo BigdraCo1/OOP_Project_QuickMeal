@@ -73,5 +73,8 @@ class Order:
     def change_payment_status(self, status: str):
         self.__payment.payment_status = status
 
-    def remove_food_from_order(self, food: Food):
-        self.__food_list.remove(food)
+    def remove_food_from_order_by_name(self, food_name: str):
+        for food in self.__food_list:
+            if food.name == food_name:
+                while food in self.__food_list:
+                    self.__food_list.remove(food)

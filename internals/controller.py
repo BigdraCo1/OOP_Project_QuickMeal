@@ -560,7 +560,6 @@ class Controller:
         if self.check_order_state(order_state) != None:
             return self.check_order_state(order_state)
         order.change_payment_status("Refunded")
-        customer_account.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Customer")
         customer_account.pocket.add_payment(order.payment)
         if (isinstance(order.rider, RiderAccount)):
@@ -568,6 +567,13 @@ class Controller:
             order.rider.remove_receive_order(order)
         order.restaurant.add_finished_order(order)
         order.restaurant.remove_requested_order(order)
+        total = 0
+        for food in order.food_list:
+            total += food.price + food.size[food.current_size]
+        order.customer.pocket.top_up(total)
+        restaurant_account = self.search_restaurant_account_by_restaurant_id(restaurant.restaurant_id)
+        restaurant_account.pocket.add_payment(Payment(order.payment.amount * 0.8, "online", order.restaurant, str(datetime.now().strftime("%c")), "Cancel", order.order_id))
+        order.rider.pocket.add_payment(Payment(order.payment.amount * 0.1, "online", order.rider, str(datetime.now().strftime("%c")), "Cancel", order.order_id))
         return customer_account_id + " Order ID : " + order_id + " is cancelled. Payment is refunded."
 
     def rider_cancel_order(self, rider_account_id: str, order_id: str):
@@ -580,7 +586,6 @@ class Controller:
         if self.check_order_state(order_state) != None:
             return self.check_order_state(order_state)
         order.change_payment_status("Refunded")
-        order.customer.pocket.top_up(order.payment.amount)
         self.change_order_state(order, "Cancelled by Rider")
         rider_account.pocket.add_payment(order.payment)
         if (isinstance(order.rider, RiderAccount)):
@@ -588,13 +593,17 @@ class Controller:
             order.rider.remove_receive_order(order)
         order.restaurant.add_finished_order(order)
         order.restaurant.remove_requested_order(order)
+        total = 0
+        for food in order.food_list:
+            total += food.price + food.size[food.current_size]
+        order.customer.pocket.top_up(total)
+        restaurant_account = self.search_restaurant_account_by_restaurant_id(restaurant.restaurant_id)
+        restaurant_account.pocket.add_payment(Payment(order.payment.amount * 0.8, "online", order.restaurant, str(datetime.now().strftime("%c")), "Cancel", order.order_id))
+        order.rider.pocket.add_payment(Payment(order.payment.amount * 0.1, "online", order.rider, str(datetime.now().strftime("%c")), "Cancel", order.order_id))
         return rider_account_id + " Order ID : " + order_id + " is cancelled."
 
-    def restaurant_cancel_order(self, restaurant_account_id: str, order_id: str, food_name: str):
-        restaurant_account = self.search_account_from_id(restaurant_account_id)
-        if not isinstance(restaurant_account, RestaurantAccount):
-            return "Account is not restaurant account"
-        restaurant = self.search_restaurant_by_order_id(order_id)
+    def restaurant_cancel_order(self, restaurant_id: str, order_id: str, food_name: str):
+        restaurant = self.search_restaurant_by_id(restaurant_id)
         if self.search_restaurant_order_by_id(order_id) == None:
             return "Order not found"
         order = self.search_restaurant_order_by_id(order_id)
@@ -607,14 +616,13 @@ class Controller:
         order_state = order.order_state
         if self.check_order_state(order_state) != None:
             return self.check_order_state(order_state)
-        if food_name in order_state:
-            return "Food already cancelled."
-        order.remove_food_from_order(food)
+        total = 0
+        for food_price in order.food_list:
+            total += food_price.price + food_price.size[food_price.current_size]
+        order.remove_food_from_order_by_name(food.name)
         self.change_order_state(order, order_state + "\n" + food_name + " Cancelled : " )
         if order.food_list == []:
             self.change_order_state(order, "Cancelled by Restaurant.")
-        order.rider.pocket.pay_out(food.price)
-        order.customer.pocket.top_up(food.price)
         order.change_payment_status(order.payment.payment_status + " Food : " + food_name + " is Refunded")
         if order.food_list == []:
             order.rider.add_finished_order(order)
@@ -622,8 +630,12 @@ class Controller:
             order.restaurant.add_finished_order(order)
             order.restaurant.remove_requested_order(order)
             order.change_payment_status("Refunded")
-            return restaurant_account_id + " Order ID : " + order_id + " is cancelled."
-        return restaurant_account_id + " " + food.name + " in " + order_id + " is refund."
+            order.customer.pocket.top_up(total)
+            restaurant_account = self.search_restaurant_account_by_restaurant_id(restaurant.restaurant_id)
+            restaurant_account.pocket.add_payment(Payment(order.payment.amount * 0.8, "online", order.restaurant, str(datetime.now().strftime("%c")), "Cancel", order.order_id))
+            order.rider.pocket.add_payment(Payment(order.payment.amount * 0.1, "online", order.rider, str(datetime.now().strftime("%c")), "Cancel", order.order_id))
+            return restaurant_id + " Order ID : " + order_id + " is cancelled."
+        return restaurant_id + " " + food.name + " in " + order_id + " is refund."
 
     # [method] order function
 
