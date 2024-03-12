@@ -1,6 +1,6 @@
 from constants.controller import system
-from fastapi import APIRouter,HTTPException , status
-from utils.dependencies import account_dependency
+from fastapi import APIRouter,HTTPException , status, Depends
+from typing import Annotated
 
 app = APIRouter()
 
@@ -21,7 +21,7 @@ async def food_detail(food_id: str) -> dict:
 
 #show account profile
 @app.get("/show/profile/{account_id}", tags=["General"])
-async def show_account_profile(account_id: str, acc : account_dependency) -> dict:
+async def show_account_profile(account_id: str, acc : Annotated[dict, Depends(system.get_current_account)]) -> dict:
     if acc is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.show_account_profile(account_id)
