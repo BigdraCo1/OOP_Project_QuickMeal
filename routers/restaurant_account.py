@@ -24,7 +24,7 @@ async def show_finish_order_list_in_restaurant_account(account_id: str, restaura
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.show_finish_order_list_in_restaurant_account(account_id)
 
-@app.get("/restaurant_account/{account_id}")
+@app.get("/restaurant/account/{account_id}")
 async def show_restaurant_by_restaurant_account_id(account_id: str, restaurant : restaurant_dependency) -> dict:
     if restaurant is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

@@ -6,7 +6,7 @@ from schema.restaurant import Restaurant_body
 app = APIRouter(prefix='/restaurant', tags = ["Restaurant"])
 
 
-@app.delete("/{restaurant}",  status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/delete/{restaurant}",  status_code=status.HTTP_204_NO_CONTENT)
 async def remove_restaurant(restaurant: str, restaurant_dep : restaurant_dependency):
     if restaurant_dep is None or not system.check_access_by_username(restaurant_dep["username"], restaurant):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

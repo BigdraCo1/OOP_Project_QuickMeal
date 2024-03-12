@@ -5,12 +5,12 @@ from utils.dependencies import account_dependency
 app = APIRouter()
 
 #show every restaurant
-@app.get("/show/restaurant", tags=["General"])
+@app.get("/show/restaurant/mainpage", tags=["General"])
 async def show_restaurant():
     return system.show_restaurant()
 
 #show every menu in clicked restaurant
-@app.get("/show/{restaurant_id}/menu", tags=["General"])
+@app.get("/main/{restaurant_id}/menu", tags=["General"])
 async def show_restaurant_menu(restaurant_id: str) -> dict:
     return system.show_restaurant_menu(restaurant_id)
 

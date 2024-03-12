@@ -24,7 +24,10 @@ class Restaurant:
 
     @property
     def rate(self):
-        self.__rate = sum([review.rate for review in self.__reviewed_list])/len(self.__reviewed_list)
+        if len(self.__reviewed_list) == 0:
+            self.__rate = 0
+        else:
+            self.__rate = sum([review.rate for review in self.__reviewed_list]) / len(self.__reviewed_list)
         return self.__rate
 
     @property
