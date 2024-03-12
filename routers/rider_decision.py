@@ -1,11 +1,11 @@
 from constants.controller import system
-from fastapi import APIRouter, HTTPException, status,Depends
-from typing import Annotated
+from fastapi import APIRouter, HTTPException, status
+from utils.dependencies import rider_dependency
 
 app = APIRouter(prefix='/rider', tags = ["Rider"])
 
 @app.get("/{rider_id}/show/recieved_order_list")
-async def show_request_order_list(rider_id: str, rider : Annotated[dict,Depends(system.get_current_rider)]) -> dict:
+async def show_request_order_list(rider_id: str, rider : rider_dependency) -> dict:
     if rider is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {
@@ -13,7 +13,7 @@ async def show_request_order_list(rider_id: str, rider : Annotated[dict,Depends(
     }
     
 @app.get("/{rider_id}/show/requested_order_list")
-async def show_receive_order_list(rider_id: str, rider : Annotated[dict,Depends(system.get_current_rider)]) -> dict:
+async def show_receive_order_list(rider_id: str, rider : rider_dependency) -> dict:
     if rider is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {
@@ -21,7 +21,7 @@ async def show_receive_order_list(rider_id: str, rider : Annotated[dict,Depends(
     }
     
 @app.get("/{rider_id}/show/finished_order_list")
-async def show_finished_order_list(rider_id: str, rider : Annotated[dict,Depends(system.get_current_rider)]) -> dict:
+async def show_finished_order_list(rider_id: str, rider : rider_dependency) -> dict:
     if rider is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {
@@ -29,7 +29,7 @@ async def show_finished_order_list(rider_id: str, rider : Annotated[dict,Depends
     }
     
 @app.put("/rider/{rider_id}/accept/{order_id}")
-async def accept_rider_order(rider_id: str, order_id: str, rider : Annotated[dict,Depends(system.get_current_rider)]) -> dict:
+async def accept_rider_order(rider_id: str, order_id: str, rider : rider_dependency) -> dict:
     if rider is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {
@@ -37,7 +37,7 @@ async def accept_rider_order(rider_id: str, order_id: str, rider : Annotated[dic
     }
     
 @app.put("/rider/{rider_id}/deny/{order_id}")
-async def deny_rider_order(rider_id: str, order_id: str, rider : Annotated[dict,Depends(system.get_current_rider)]) -> dict:
+async def deny_rider_order(rider_id: str, order_id: str, rider : rider_dependency) -> dict:
     if rider is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {
@@ -45,7 +45,7 @@ async def deny_rider_order(rider_id: str, order_id: str, rider : Annotated[dict,
     }
     
 @app.put("/rider/{rider_id}/receive/{order_id}")
-async def receive_rider_order(rider_id: str, order_id: str, rider : Annotated[dict,Depends(system.get_current_rider)]) -> dict:
+async def receive_rider_order(rider_id: str, order_id: str, rider : rider_dependency) -> dict:
     if rider is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {
@@ -53,7 +53,7 @@ async def receive_rider_order(rider_id: str, order_id: str, rider : Annotated[di
     }
     
 @app.put("/{rider_id}/delivere/{order_id}")
-async def deliver_rider_order(rider_id: str, order_id: str, rider : Annotated[dict,Depends(system.get_current_rider)]) -> dict:
+async def deliver_rider_order(rider_id: str, order_id: str, rider : rider_dependency) -> dict:
     if rider is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {

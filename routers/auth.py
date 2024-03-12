@@ -1,7 +1,8 @@
 from fastapi import Depends, HTTPException, APIRouter
 from starlette import status
 from schema.auth import *
-from constants.controller import system, bcrypt_context
+from constants.controller import system
+from utils.dependencies import bcrypt_context, authenticate_user, create_access_token
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from datetime import timedelta
@@ -24,11 +25,11 @@ async def customer_register(request: CreatUserRequest):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=register)
     return register
 
-
 @app.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    user = system.authenticate_user(form_data.username, form_data.password)
+    user = authenticate_user(form_data.username, form_data.password, system)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate')
-    token = system.create_access_token(user.get_name(), user.account_id, timedelta(minutes=30))
+
+    token = create_access_token(user.get_name(), user.account_id, timedelta(minutes=30), system)
     return {'access_token': token, 'token_type': 'bearer'}

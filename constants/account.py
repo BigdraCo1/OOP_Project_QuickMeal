@@ -3,7 +3,7 @@ from internals.custom_account import CustomerAccount
 from internals.rider_account import RiderAccount
 from constants.profiles import *
 from constants.pocket import *
-from internals.controller import bcrypt_context
+from utils.dependencies import bcrypt_context
 from internals.admin import Admin
 
 restaurant_owner_account1 = RestaurantAccount(bcrypt_context.hash('edhbejhdbw'), restaurant_owner_profile1,
