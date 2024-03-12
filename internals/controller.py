@@ -662,15 +662,15 @@ class Controller:
         if not isinstance(order, Order):
             return order
         order_detail["Order_ID"] = order.order_id
-        order_detail["Customer"] = order.customer.profile.username
+        order_detail["Customer"] = order.customer.account_id
         if isinstance(order.rider, RiderAccount):
-            order_detail["Rider"] = order.rider.profile.username
+            order_detail["Rider"] = order.rider.account_id
         else:
             order_detail["Rider"] = "No rider_id"
-        order_detail["Restaurant"] = order.restaurant.name_restaurant
+        order_detail["Restaurant"] = order.restaurant.restaurant_id
         food_list = []
         for food in order.food_list:
-            food_list.append(f"{food.current_size} {food.name} {food.price+food.size[food.current_size]}")
+            food_list.append(f"{food.current_size} {food.name}")
         order_detail["Food"] = food_list
         order_detail["Order_State"] = order.order_state
         if isinstance(order.payment, Payment):
