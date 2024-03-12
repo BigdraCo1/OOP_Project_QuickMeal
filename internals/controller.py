@@ -1024,3 +1024,16 @@ class Controller:
         if address in customer.address_list:
             customer.remove_address(address)
         return f"{address} is now remove from your address"
+
+    def topup_pocket(self, id, amount):
+        account = None
+        if (self.search_account_from_id(id) != None):
+            account = self.search_account_from_id(id)
+        elif (self.search_restaurant_by_id(id) != None):
+            account = self.search_restaurant_by_id(id)
+        elif (self.search_rider_by_id(id) != None):
+            account = self.search_rider_by_id(id)
+        else:
+            return account
+        account.pocket.top_up(amount)
+        return f"your pocket is now {account.pocket.balance} baht"

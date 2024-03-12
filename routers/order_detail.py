@@ -24,4 +24,12 @@ async def show_payment(account_id: str,acc : account_dependency) -> dict:
     if acc is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.show_payment_detail(account_id)
+
+
+@app.post("/show/pocket/topup/{account_id}/{amount}", tags = ["General"])
+async def topup_pocket(account_id: str, amount : int ,acc : account_dependency) -> str:
+    top_up = system.topup_pocket(account_id, amount)
+    if top_up is None or acc is None :
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    return top_up
     
