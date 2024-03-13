@@ -1133,4 +1133,4 @@ class Controller:
         for restaurant_acc in self.restaurant_account_list:
             for restaurant_in_acc in restaurant_acc.restaurant_list:
                 if restaurant_in_acc == restaurant:
-                    return {"Restaurant Owner": restaurant_acc.account_id}
+                    return {"restaurant_owner": restaurant_acc.account_id}
