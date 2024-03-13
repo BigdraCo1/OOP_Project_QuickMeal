@@ -834,13 +834,38 @@ class Controller:
     def admin(self):
         return self.__admin
 
-    def check_access_by_username(self, username: str, restaurant_name: str):
+    def check_access_restaurant_by_restaurant_name(self, username: str, restaurant_name: str):
         instance = self.search_instance_by_name(username)
         if isinstance(instance, RestaurantAccount):
             for restaurant in instance.restaurant_list:
                 if restaurant.name_restaurant == restaurant_name:
                     return True
         return False
+
+    def check_access_restaurant_by_restaurant_id(self, username: str, restaurant_id: str):
+        instance = self.search_instance_by_name(username)
+        if isinstance(instance, RestaurantAccount):
+            for restaurant in instance.restaurant_list:
+                if restaurant.restaurant_id == restaurant_id:
+                    return True
+        return False
+
+
+    def check_access_customer_by_id(self, user_id: str, customer_id):
+        if user_id != customer_id:
+            return False
+        return True
+
+
+    def check_access_rider_by_id(self, user_id: str, rider_id):
+        if user_id != rider_id:
+            return False
+        return True
+
+    def check_access_restaurant_acc_by_id(self, user_id: str, restaurant_acc_id):
+        if user_id != restaurant_acc_id:
+            return False
+        return True
 
     def show_rider_approval_list(self):
         show_list = []

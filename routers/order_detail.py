@@ -27,9 +27,9 @@ async def show_payment(account_id: str,acc : Annotated[dict,Depends(system.get_c
 
 
 @app.post("/show/pocket/topup/{account_id}/{amount}", tags = ["General"])
-async def topup_pocket(account_id: str, amount : int ,acc : Annotated[dict,Depends(system.get_current_account)]) -> str:
+async def topup_pocket(account_id: str, amount: int, acc: Annotated[dict,Depends(system.get_current_account)]) -> str:
     top_up = system.topup_pocket(account_id, amount)
-    if top_up is None or acc is None :
+    if top_up is None or acc is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return top_up
     

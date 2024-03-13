@@ -94,6 +94,8 @@ class Restaurant:
 
     def edit_menu(self, menu: str, request):
         food = self.search_menu(menu)
+        if (not isinstance(request.size, dict)) or request.size == {}:
+            return False
         if isinstance(food, Food):
             food.name = request.name
             food.type = request.type
@@ -105,6 +107,8 @@ class Restaurant:
 
     def add_menu(self, request):
         food_list = self.food_list
+        if (not isinstance(request.size, dict)) or request.size == {}:
+            return False
         new_menu = Food("auto", request.name, request.type, request.size, request.price)
         food_list.append(new_menu)
         return new_menu

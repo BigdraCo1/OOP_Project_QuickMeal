@@ -23,6 +23,6 @@ async def add_restaurant_review(body: review.add_review_api, user : Annotated[di
 #remove review from restaurant
 @app.delete("/remove/{customer_id}")
 async def remove_restaurant_review(customer_id: str ,restaurant_id: str, user : Annotated[dict,Depends(system.get_current_customer)]) -> str:
-    if user is None:
+    if user is None or not system.check_access_customer_by_id(user["id"], customer_id):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.remove_review_from_restaurant(customer_id, restaurant_id)

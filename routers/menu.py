@@ -7,8 +7,9 @@ app = APIRouter(tags=["Editing menu"], responses={404: {"description": "Not foun
 
 
 @app.get("/{restaurant}", status_code=status.HTTP_200_OK)
-async def menu_list(restaurant: str, restaurant_dep: Annotated[dict,Depends(system.get_current_restaurant)]):
-    if restaurant_dep is None or not system.check_access_by_username(restaurant_dep["username"], restaurant):
+async def menu_list(restaurant: str, restaurant_dep: Annotated[dict, Depends(system.get_current_restaurant)]):
+    if restaurant_dep is None or not system.check_access_restaurant_by_restaurant_name(restaurant_dep["username"],
+                                                                                       restaurant):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if isinstance(system.get_menu_list(restaurant), str):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=system.get_menu_list(restaurant))
@@ -16,8 +17,10 @@ async def menu_list(restaurant: str, restaurant_dep: Annotated[dict,Depends(syst
 
 
 @app.get("/{restaurant}/{menu}", status_code=status.HTTP_200_OK)
-async def menu_list(restaurant: str, menu: str, restaurant_dep : Annotated[dict,Depends(system.get_current_restaurant)]):
-    if restaurant_dep is None or not system.check_access_by_username(restaurant_dep["username"], restaurant):
+async def menu_list(restaurant: str, menu: str,
+                    restaurant_dep: Annotated[dict, Depends(system.get_current_restaurant)]):
+    if restaurant_dep is None or not system.check_access_restaurant_by_restaurant_name(restaurant_dep["username"],
+                                                                                       restaurant):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if isinstance(system.get_menu(restaurant, menu), str):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=system.get_menu_list(restaurant))
@@ -25,15 +28,19 @@ async def menu_list(restaurant: str, menu: str, restaurant_dep : Annotated[dict,
 
 
 @app.put("/{restaurant}/{menu}", status_code=status.HTTP_202_ACCEPTED)
-async def edit_menu(restaurant: str, menu: str, request: food.Food, restaurant_dep : Annotated[dict,Depends(system.get_current_restaurant)]):
-    if restaurant_dep is None or not system.check_access_by_username(restaurant_dep["username"], restaurant):
+async def edit_menu(restaurant: str, menu: str, request: food.Food,
+                    restaurant_dep: Annotated[dict, Depends(system.get_current_restaurant)]):
+    if restaurant_dep is None or not system.check_access_restaurant_by_restaurant_name(restaurant_dep["username"],
+                                                                                       restaurant):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.edit_menu(restaurant, menu, request)
 
 
 @app.delete("/{restaurant}/{menu}", status_code=status.HTTP_204_NO_CONTENT)
-async def remove_menu(restaurant: str, menu: str, restaurant_dep : Annotated[dict,Depends(system.get_current_restaurant)]):
-    if restaurant_dep is None or not system.check_access_by_username(restaurant_dep["username"], restaurant):
+async def remove_menu(restaurant: str, menu: str,
+                      restaurant_dep: Annotated[dict, Depends(system.get_current_restaurant)]):
+    if restaurant_dep is None or not system.check_access_restaurant_by_restaurant_name(restaurant_dep["username"],
+                                                                                       restaurant):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     if system.remove_menu(restaurant, menu) != 'Removed Food from menu':
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -41,7 +48,12 @@ async def remove_menu(restaurant: str, menu: str, restaurant_dep : Annotated[dic
 
 
 @app.post("/{restaurant}", status_code=status.HTTP_201_CREATED)
-async def new_menu(restaurant: str, request: food.Food, restaurant_dep : Annotated[dict,Depends(system.get_current_restaurant)]):
-    if restaurant_dep is None or not system.check_access_by_username(restaurant_dep["username"], restaurant):
+async def new_menu(restaurant: str, request: food.Food,
+                   restaurant_dep: Annotated[dict, Depends(system.get_current_restaurant)]):
+    if restaurant_dep is None or not system.check_access_restaurant_by_restaurant_name(restaurant_dep["username"],
+                                                                                       restaurant):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    return system.new_menu(restaurant, request)
+    menu = system.new_menu(restaurant, request)
+    if not menu:
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    return menu
