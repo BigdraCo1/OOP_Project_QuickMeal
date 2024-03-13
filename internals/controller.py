@@ -351,7 +351,7 @@ class Controller:
         order = rider.search_receive_order_by_id(order_id)
         if order == None:
             return f"order_id : {order_id} not found"
-        if order.order_state != "get_ri":
+        if "get_ri" not in order.order_state:
             return "order is not get_ri"
         order.order_state = "delivering"
         restaurant_amount = order.payment.amount * 0.8
@@ -637,17 +637,15 @@ class Controller:
         order = self.search_restaurant_order_by_id(order_id)
         if self.search_food_by_name(food_name) == None:
             return "Food not found."
-        food = None
+        total = 0
         for food_inlist in order.food_list:
             if food_inlist.name == food_name:
                 food = food_inlist
+                total += food_inlist.price + food_inlist.size[food_inlist.current_size]
         order_state = order.order_state
         if self.check_order_state(order_state) != None:
             return self.check_order_state(order_state)
         order.remove_food_from_order_by_name(food.name)
-        total = 0
-        for food_price in order.food_list:
-            total += food_price.price + food_price.size[food_price.current_size]
         self.change_order_state(order, order_state + "\n" + food_name + " Cancelled : " )
         order.customer.pocket.top_up(total)
         order.change_payment_status(order.payment.payment_status + " Food : " + food_name + " is Refunded")
