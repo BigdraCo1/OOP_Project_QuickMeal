@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 class Food:
     ID = 1
     def __init__(self, id:str, name: str, type: str, size: dict, price: int, current_size = None):
