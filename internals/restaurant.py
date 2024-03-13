@@ -109,6 +109,13 @@ class Restaurant:
         food_list = self.food_list
         if (not isinstance(request.size, dict)) or request.size == {}:
             return False
+        else:
+            for key, value in request.size.items():
+                if not key or not value:
+                    return False
+        for food in food_list:
+            if food.name == request.name:
+                return False
         new_menu = Food("auto", request.name, request.type, request.size, request.price)
         food_list.append(new_menu)
         return new_menu

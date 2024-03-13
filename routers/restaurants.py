@@ -61,3 +61,8 @@ async def show_food_in_order(order_id: str, restaurant_dep : Annotated[dict, Dep
     if restaurant_dep is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return system.show_food_in_order(order_id)
+
+
+@app.get("/get_restaurant_owner_id_by_restaurant_name/{restaurant_name}")
+async def get_restaurant_owner_id_by_restaurant_name(restaurant_name: str) -> dict:
+    return system.get_restaurant_owner_id_by_restaurant_name(restaurant_name)

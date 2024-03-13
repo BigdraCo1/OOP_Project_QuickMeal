@@ -1126,3 +1126,11 @@ class Controller:
             return {'username': username, 'id': user_id, 'role': user_role}
         except JWTError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate')
+
+
+    def get_restaurant_owner_id_by_restaurant_name(self, restaurant_name: str):
+        restaurant = self.search_restaurant(restaurant_name)
+        for restaurant_acc in self.restaurant_account_list:
+            for restaurant_in_acc in restaurant_acc.restaurant_list:
+                if restaurant_in_acc == restaurant:
+                    return {"Restaurant Owner": restaurant_acc.account_id}
