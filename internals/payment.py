@@ -21,12 +21,15 @@ class Payment:
     @property
     def amount(self):
         return self.__amount
+
     @property
     def payment_status(self):
         return self.__payment_status
+
     @property
     def transaction_id(self):
         return self.__transaction_id
+
     #setter
     @payment_status.setter
     def payment_status(self, status: str):

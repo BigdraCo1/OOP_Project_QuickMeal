@@ -122,13 +122,6 @@ class Restaurant:
         new_menu = Food("auto", request.name, request.type, request.size, request.price)
         food_list.append(new_menu)
         return new_menu
-
-    
-    def receive_order_from_customer(self, order):
-        for order in self.__request_order_list:
-            self.__requested_order_list.append(order)
-            order.state = "Get_Restaurant"
-            self.__request_order_list.remove(order)
             
     def add_request_order(self, order: Order):
         self.__request_order_list.append(order)
@@ -144,22 +137,9 @@ class Restaurant:
         
     def add_finished_order(self, order: Order):
         self.__finished_order_list.append(order)
-
-    def remove_finished_order(self, order: Order):
-        self.__finished_order_list.remove(order)
         
     def search_request_order_by_id(self, order_id):
         for order in self.__request_order_list:
-            if order.order_id == order_id: return order
-        return None
-    
-    def search_requested_order_by_id(self, order_id):
-        for order in self.__requested_order_list:
-            if order.order_id == order_id: return order
-        return None
-    
-    def search_finished_order_by_id(self, order_id):
-        for order in self.__finished_order_list:
             if order.order_id == order_id: return order
         return None
 

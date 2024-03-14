@@ -17,9 +17,6 @@ class Pocket:
     def add_payment(self, new_payment):
         self.__payment_list.append(new_payment)
 
-    def remove_payment(self, payment):
-        self.__payment_list.remove(payment)
-
     def top_up(self, amount):
         self.__balance += amount
 

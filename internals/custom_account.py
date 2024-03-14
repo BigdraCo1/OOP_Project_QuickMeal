@@ -17,16 +17,9 @@ class CustomerAccount(Account):
         self.__current_order = []
         self.__order_list = []
         
-    def get_current_order(self):
-        return self.__current_order
-        
     @property
     def current_order(self):
         return self.__current_order
-
-    @current_order.setter
-    def current_order(self, order):
-        self.__current_order = order
     
     @property
     def order_list(self):
@@ -74,14 +67,6 @@ class CustomerAccount(Account):
                     for food in order.food_list:
                         if food.id == food_id and food.current_size == size:
                             order.food_list.remove(food)
-                    
-    def search_order_by_id(self, order_id):
-        for order in self.__current_order:
-            if order.order_id == order_id: return order
-        return None
-    
-    def add_current_order(self, order):
-        self.__current_order.append(order)
         
     def remove_current_order(self, order):
         self.__current_order.remove(order)
