@@ -55,5 +55,5 @@ async def new_menu(restaurant: str, request: food.Food,
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     menu = system.new_menu(restaurant, request)
     if not menu:
-        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     return menu

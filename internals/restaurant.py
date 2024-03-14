@@ -116,9 +116,8 @@ class Restaurant:
             for key, value in request.size.items():
                 if not key or not value:
                     return False
-        for food in food_list:
-            if food.name == request.name:
-                return False
+        if isinstance(self.search_menu(request.name), Food):
+            return False
         new_menu = Food("auto", request.name, request.type, request.size, request.price)
         food_list.append(new_menu)
         return new_menu

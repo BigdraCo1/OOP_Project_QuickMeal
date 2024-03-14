@@ -403,6 +403,8 @@ class Controller:
 
     def new_menu(self, restaurant, request):
         real_restaurant = self.search_restaurant(restaurant)
+        if isinstance(real_restaurant, str):
+            return None
         return real_restaurant.add_menu(request)
 
 
