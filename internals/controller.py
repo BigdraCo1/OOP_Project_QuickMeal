@@ -478,6 +478,12 @@ class Controller:
         for order in basket:
             order.customer_address = address
         return f"{address} is now set as address of your order"
+    
+    def delete_address(self, customer_id, address):
+        customer = self.search_customer_by_id(customer_id)
+        if address in customer.address_list:
+            customer.remove_address(address)
+        return f"{address} is now remove from your address"
 
     def show_food_detail(self, food_id):
         food = self.search_food_by_id(food_id)

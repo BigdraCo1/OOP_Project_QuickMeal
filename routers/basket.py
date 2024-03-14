@@ -38,6 +38,14 @@ async def add_address(body: basket.add_address_api, user: Annotated[dict, Depend
     return system.add_address_to_basket(body.customer_id, body.address)
 
 
+#delete address
+@app.delete("/delete/address")
+async def add_address(customer_id:str, address:str, user : user_dependency) -> str:
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    return system.delete_address(customer_id, address)
+
+
 #change quantity of food in basket
 @app.put("/food/quantity")
 async def change_quantity(body: basket.quantity_food_api, user: Annotated[dict, Depends(system.get_current_customer)]) -> str:
