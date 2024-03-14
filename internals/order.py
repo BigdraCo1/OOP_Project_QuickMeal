@@ -1,10 +1,6 @@
-from internals.food import Food
-from internals.restaurant_account import RestaurantAccount
-from uuid import uuid4
-
-
 class Order:
     ID = 1
+
     def __init__(self, customer=None, customer_address=None, rider=None, restaurant=None,
                  food_list=[], order_state=None, payment=None):
         self.__order_id = f"O{Order.ID}"
@@ -32,7 +28,7 @@ class Order:
     @property
     def rider(self):
         return self.__rider
-    
+
     @rider.setter
     def rider(self, new_rider):
         self.__rider = new_rider
@@ -56,7 +52,7 @@ class Order:
     @order_state.setter
     def order_state(self, new_order_state: str):
         self.__order_state = new_order_state
-        
+
     @payment.setter
     def payment(self, new_payment):
         self.__payment = new_payment

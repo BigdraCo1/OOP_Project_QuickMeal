@@ -5,6 +5,7 @@ from internals.order import Order
 
 class Restaurant:
     ID = 1
+
     def __init__(self, name_restaurant: str, restaurant_location: str, food_list, requested_order_list,
                  finished_order_list, reviewed_list: list[Review], owner):
         self.__restaurant_id = f"R{Restaurant.ID}"
@@ -49,7 +50,7 @@ class Restaurant:
     @property
     def food_list(self):
         return self.__food_list
-    
+
     @property
     def request_order_list(self):
         return self.__request_order_list
@@ -65,12 +66,10 @@ class Restaurant:
     @property
     def reviewed_list(self):
         return self.__reviewed_list
-    
 
     @requested_order_list.setter
     def requested_order_list(self, order):
         self.__requested_order_list.append(order)
-
 
     @request_order_list.setter
     def request_order_list(self, order):
@@ -123,47 +122,25 @@ class Restaurant:
         food_list.append(new_menu)
         return new_menu
 
-    
-    def receive_order_from_customer(self, order):
-        for order in self.__request_order_list:
-            self.__requested_order_list.append(order)
-            order.state = "Get_Restaurant"
-            self.__request_order_list.remove(order)
-            
     def add_request_order(self, order: Order):
         self.__request_order_list.append(order)
 
     def remove_request_order(self, order: Order):
         self.__request_order_list.remove(order)
-        
+
     def add_requested_order(self, order: Order):
         self.__requested_order_list.append(order)
 
     def remove_requested_order(self, order: Order):
         self.__requested_order_list.remove(order)
-        
+
     def add_finished_order(self, order: Order):
         self.__finished_order_list.append(order)
 
-    def remove_finished_order(self, order: Order):
-        self.__finished_order_list.remove(order)
-        
     def search_request_order_by_id(self, order_id):
         for order in self.__request_order_list:
-            if order.order_id == order_id: return order
-        return None
-    
-    def search_requested_order_by_id(self, order_id):
-        for order in self.__requested_order_list:
-            if order.order_id == order_id: return order
-        return None
-    
-    def search_finished_order_by_id(self, order_id):
-        for order in self.__finished_order_list:
             if order.order_id == order_id: return order
         return None
 
     def add_review(self, review):
         self.__reviewed_list.append(review)
-
-

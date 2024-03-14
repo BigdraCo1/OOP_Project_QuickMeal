@@ -1,8 +1,9 @@
 from internals.payment import Payment
 from datetime import datetime
 
+
 class Pocket:
-    def __init__(self, balance = 0):
+    def __init__(self, balance=0):
         self.__balance = balance
         self.__payment_list = []
 
@@ -16,9 +17,6 @@ class Pocket:
 
     def add_payment(self, new_payment):
         self.__payment_list.append(new_payment)
-
-    def remove_payment(self, payment):
-        self.__payment_list.remove(payment)
 
     def top_up(self, amount):
         self.__balance += amount

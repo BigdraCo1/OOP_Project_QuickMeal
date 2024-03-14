@@ -2,7 +2,7 @@ from internals.profile import Profile
 
 restaurant_owner_profile1 = Profile("chingchongma",
                                             "1212343563",
-                                            "nigga@gmail.com",
+                                            "yilong888mar@gmail.com",
                                             "boon"
                                             )
 
@@ -36,4 +36,4 @@ rider_profile1 = Profile("Rider",
                                  "Rider Fullname"
                                  )
 
-admin_profile = Profile("Admin", "080123456322", "huyegw@gmail.com", "Biehd")
+admin_profile = Profile("Admin", "080123456322", "oogway@gmail.com", "Ufufuey")

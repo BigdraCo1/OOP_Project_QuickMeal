@@ -4,7 +4,6 @@ class Profile:
         self.__telephone_number = telephone_number
         self.__email = email
         self.__fullname = fullname
-        
 
     @property
     def username(self):
@@ -19,7 +18,7 @@ class Profile:
         return self.__fullname
 
     @fullname.setter
-    def fullname(self, name:str):
+    def fullname(self, name: str):
         self.__fullname = name
 
     @property

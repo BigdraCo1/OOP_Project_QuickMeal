@@ -3,8 +3,9 @@ from internals.account import Account, Profile
 
 class RestaurantAccount(Account):
     ID = 1
-    def __init__(self, password: str, profile: Profile, pocket : object):
-        super().__init__(f"RA{RestaurantAccount.ID}",password, profile, pocket)
+
+    def __init__(self, password: str, profile: Profile, pocket: object):
+        super().__init__(f"RA{RestaurantAccount.ID}", password, profile, pocket)
         RestaurantAccount.ID += 1
         self.__restaurant_list = []
 

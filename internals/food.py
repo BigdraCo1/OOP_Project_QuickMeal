@@ -1,6 +1,7 @@
 class Food:
     ID = 1
-    def __init__(self, id:str, name: str, type: str, size: dict, price: int, current_size = None):
+
+    def __init__(self, id: str, name: str, type: str, size: dict, price: int, current_size=None):
         if price < 0:
             raise ValueError('Price must be positive')
         if id == "auto":
@@ -17,7 +18,7 @@ class Food:
     @property
     def id(self):
         return self.__id
-    
+
     @property
     def name(self):
         return self.__name
