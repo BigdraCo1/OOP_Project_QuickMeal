@@ -631,23 +631,22 @@ class Controller:
         return rider_account_id + " Order ID : " + order_id + " is cancelled."
 
     def restaurant_cancel_order(self, restaurant_id: str, order_id: str, food_name: str):
+        food = None
         restaurant = self.search_restaurant_by_id(restaurant_id)
         if self.search_restaurant_order_by_id(order_id) == None:
             return "Order not found"
         order = self.search_restaurant_order_by_id(order_id)
         if self.search_food_by_name(food_name) == None:
             return "Food not found."
-        food = None
+        total = 0
         for food_inlist in order.food_list:
             if food_inlist.name == food_name:
                 food = food_inlist
+                total += food_inlist.price + food_inlist.size[food_inlist.current_size]
         order_state = order.order_state
         if self.check_order_state(order_state) != None:
             return self.check_order_state(order_state)
         order.remove_food_from_order_by_name(food.name)
-        total = 0
-        for food_price in order.food_list:
-            total += food_price.price + food_price.size[food_price.current_size]
         self.change_order_state(order, order_state + "\n" + food_name + " Cancelled : " )
         order.customer.pocket.top_up(total)
         order.change_payment_status(order.payment.payment_status + " Food : " + food_name + " is Refunded")
@@ -662,7 +661,7 @@ class Controller:
             restaurant_account.pocket.add_payment(Payment(order.payment.amount * 0.8, "online", order.restaurant, str(datetime.now().strftime("%c")), "Cancel", order.order_id))
             order.rider.pocket.add_payment(Payment(order.payment.amount * 0.1, "online", order.rider, str(datetime.now().strftime("%c")), "Cancel", order.order_id))
             return restaurant_id + " Order ID : " + order_id + " is cancelled."
-        return restaurant_id + " " + food.name + " in " + order_id + " is refund."
+        return restaurant_id + " " + food_name + " in " + order_id + " is refund."
 
     # [method] order function
 
@@ -748,7 +747,7 @@ class Controller:
         for rider in self.rider_account_list:
             rider.add_request_order(order)
         return self.show_order_detail(order_id)
-    
+
     def deny_order_by_restaurant(self, restaurant_id, order_id):
         restaurant = self.search_restaurant_by_id(restaurant_id)
         if restaurant == None:
@@ -940,7 +939,7 @@ class Controller:
         restaurant_detail["Restaurant_Location"] = restaurant.restaurant_location
         restaurant_detail["Rate"] = restaurant.rate
         return restaurant_detail
-    
+
     def show_restaurant_by_restaurant_account_id(self, restaurant_account_id: str):
         restaurant_account = self.search_account_from_id(restaurant_account_id)
         if not isinstance(restaurant_account, RestaurantAccount):
@@ -951,7 +950,7 @@ class Controller:
             restaurant_list.append(self.show_restaurant_detail_by_id(restaurant.restaurant_id))
         restaurant_dict[restaurant_account_id] = restaurant_list
         return restaurant_dict
-    
+
     def show_account_profile(self, account_id: str):
         account = self.search_account_from_id(account_id)
         account_profile = dict()
@@ -974,7 +973,7 @@ class Controller:
         restaurant_detail["Rate"] = restaurant.rate
         restaurant_detail["Restaurant_ID"] = restaurant.restaurant_id
         return restaurant_detail
-    
+
     def show_request_order_list_in_restaurant(self, restaurant_id: str):
         restaurant = self.search_restaurant_by_id(restaurant_id)
         request_order_dict = dict()
@@ -983,7 +982,7 @@ class Controller:
             order_detail_list.append(self.show_order_detail(request_order.order_id))
         request_order_dict[restaurant.name_restaurant] = order_detail_list
         return request_order_dict
-    
+
     def show_requested_order_list_in_restaurant(self, restaurant_id: str):
         restaurant = self.search_restaurant_by_id(restaurant_id)
         requested_order_dict = dict()
@@ -992,7 +991,7 @@ class Controller:
             order_detail_list.append(self.show_order_detail(requested_order.order_id))
         requested_order_dict[restaurant.name_restaurant] = order_detail_list
         return requested_order_dict
-    
+
     def show_finished_order_list_in_restaurant(self, restaurant_id: str):
         restaurant = self.search_restaurant_by_id(restaurant_id)
         finish_order_dict = dict()
