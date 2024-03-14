@@ -80,18 +80,6 @@ class Controller:
 
     # [method] remove function
 
-    def remove_customer_account(self, customer_account: CustomerAccount):
-        self.__customer_account_list.remove(customer_account)
-        del customer_account
-
-    def remove_rider_account(self, rider_account: RiderAccount):
-        self.__rider_account_list.remove(rider_account)
-        del rider_account
-
-    def remove_restaurant_account(self, restaurant_account: RestaurantAccount):
-        self.__restaurant_account_list.remove(restaurant_account)
-        del restaurant_account
-
     def remove_restaurant(self, restaurant_name: str):
         restaurant = self.search_restaurant(restaurant_name)
         if isinstance(restaurant, Restaurant):
