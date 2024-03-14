@@ -74,7 +74,8 @@ class Order:
         self.__payment.payment_status = status
 
     def remove_food_from_order_by_name(self, food_name: str):
-        for food in self.__food_list:
+        temp_food_list = self.__food_list.copy() 
+        for food in temp_food_list:
             if food.name == food_name:
-                while food in self.__food_list:
-                    self.__food_list.remove(food)
+                self.__food_list.remove(food)
+                

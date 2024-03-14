@@ -35,15 +35,7 @@ async def accept_rider_order(rider_id: str, order_id: str, rider : Annotated[dic
     return {
         "data": system.accept_order_by_rider(rider_id, order_id)
     }
-    
-@app.put("/rider/{rider_id}/deny/{order_id}")
-async def deny_rider_order(rider_id: str, order_id: str, rider : Annotated[dict,Depends(system.get_current_rider)]) -> dict:
-    if rider is None or not system.check_access_rider_by_id(rider["id"], rider_id):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    return {
-        "data": system.deny_order_by_rider(rider_id, order_id)
-    }
-    
+      
 @app.put("/rider/{rider_id}/receive/{order_id}")
 async def receive_rider_order(rider_id: str, order_id: str, rider : Annotated[dict,Depends(system.get_current_rider)]) -> dict:
     if rider is None or not system.check_access_rider_by_id(rider["id"], rider_id):
