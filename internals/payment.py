@@ -4,7 +4,6 @@ from uuid import uuid4
 class Payment:
     def __init__(self, amount: float, payment_method: str, paid_to: object, date_time: str, payment_status: str,
                  order_id=None):
-        self.__food_list = []
         self.__order_id = order_id
         self.__amount = amount
         self.__payment_method = payment_method
