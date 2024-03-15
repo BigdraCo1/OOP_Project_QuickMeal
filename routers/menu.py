@@ -17,8 +17,7 @@ async def menu_list(restaurant: str, restaurant_dep: Annotated[dict, Depends(sys
 
 
 @app.get("/{restaurant}/{menu}", status_code=status.HTTP_200_OK)
-async def menu_list(restaurant: str, menu: str,
-                    restaurant_dep: Annotated[dict, Depends(system.get_current_restaurant)]):
+async def menu(restaurant: str, menu: str, restaurant_dep: Annotated[dict, Depends(system.get_current_restaurant)]):
     if restaurant_dep is None or not system.check_access_restaurant_by_restaurant_name(restaurant_dep["username"],
                                                                                        restaurant):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
