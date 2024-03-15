@@ -972,8 +972,7 @@ class Controller:
         account.pocket.top_up(amount)
         return f"your pocket is now {account.pocket.balance} baht"
 
-
-def authenticate_user(self, username: str, password: str):
+    def authenticate_user(self, username: str, password: str):
         user = self.search_instance_by_name(username)
         if user is None:
             return False
