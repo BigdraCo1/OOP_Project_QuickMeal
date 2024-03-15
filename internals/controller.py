@@ -477,16 +477,7 @@ class Controller:
                     customer.current_order.remove(order)
                     return f"{size} {food.name} is remove from basket"
 
-    # ถ้ามาพร้อม change_quantity ให้ change_quantity ก่อน
-    def change_size(self, customer_id, food_id, size, new_size):
-        customer = self.search_customer_by_id(customer_id)
-        basket = customer.current_order
-        food = self.search_food_by_id(food_id)
-        for order in basket:
-            for customer_food in order.food_list:
-                if customer_food.id == food.id and customer_food.current_size == size:
-                    customer_food.current_size = new_size
-        return f"{size} {food.name} is now {new_size}"
+
 
     def show_review(self, restaurant_id):
         restaurant = self.search_restaurant_by_id(restaurant_id)
@@ -873,7 +864,7 @@ class Controller:
                                         restaurant_acc)
                 self.approval_restaurant_list.append(restaurant)
                 return 'Success'
-        return 'Not Found'
+        return 'Request Failed'
 
     def show_restaurant_detail_by_id(self, restaurant_id: str):
         restaurant = self.search_restaurant_by_id(restaurant_id)

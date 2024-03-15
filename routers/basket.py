@@ -46,13 +46,6 @@ async def change_quantity(body: basket.quantity_food_api, user: Annotated[dict, 
     return system.change_quantity(body.customer_id, body.food_id, body.quantity, body.new_quantity, body.size)
 
 
-#change size of food in basket
-@app.put("/food/size")
-async def change_size(body: basket.size_food_api, user: Annotated[dict, Depends(system.get_current_customer)]) -> str:
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    return system.change_size(body.customer_id, body.food_id, body.size, body.new_size)
-
 
 #delete address
 @app.delete("/delete/address/{customer_id}/{address}")
