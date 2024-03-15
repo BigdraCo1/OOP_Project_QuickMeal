@@ -37,16 +37,3 @@ class Profile:
     def email(self, new_email: str):
         self.__email = new_email
 
-    @property
-    def balance(self):
-        return self.__balance
-
-    @balance.setter
-    def balance(self, amount: int):
-        self.__balance = amount
-
-    def pay_out(self, amount: int):
-        self.__balance -= amount
-
-    def top_up(self, amount: int):
-        self.__balance += amount
