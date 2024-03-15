@@ -477,8 +477,6 @@ class Controller:
                     customer.current_order.remove(order)
                     return f"{size} {food.name} is remove from basket"
 
-
-
     def show_review(self, restaurant_id):
         restaurant = self.search_restaurant_by_id(restaurant_id)
         if restaurant.reviewed_list == []:
