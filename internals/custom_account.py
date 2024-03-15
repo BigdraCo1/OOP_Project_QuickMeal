@@ -23,10 +23,6 @@ class CustomerAccount(Account):
     def current_order(self):
         return self.__current_order
 
-    @current_order.setter
-    def current_order(self, order):
-        self.__current_order = order
-
     @property
     def order_list(self):
         return self.__order_list
