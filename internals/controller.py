@@ -505,16 +505,6 @@ class Controller:
                 return f"you have writing a review to {restaurant.name_restaurant}"
         return f"you've never ordered food from {restaurant.name_restaurant}"
 
-    def remove_review_from_restaurant(self, customer_id, restaurant_id):
-        customer = self.search_customer_by_id(customer_id)
-        restaurant = self.search_restaurant_by_id(restaurant_id)
-        for review in restaurant.reviewed_list:
-            if review.customer == customer:
-                restaurant.reviewed_list.remove(review)
-                customer.reviewed_list.remove(review)
-                del review
-        return f"you have remove a review from {restaurant.name_restaurant}"
-
     def change_order_state(self, order: Order, order_state: str):
         order.order_state = order_state
         return "Order state changed"
