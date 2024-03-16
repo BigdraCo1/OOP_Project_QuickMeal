@@ -539,7 +539,6 @@ class Controller:
                 order.rider.remove_request_order(order)
             if order in order.rider.receive_order_list:
                 order.rider.remove_receive_order(order)
-            order.rider.pocket.add_payment(order)
             order.rider.pocket.add_payment(
                 Payment(order.payment.amount * 0.1, "online", order.rider, str(datetime.now().strftime("%c")), "Cancel",
                         order.order_id))
